@@ -7,50 +7,22 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useWindowDimensions} from 'react-native';
 import {TabView} from 'react-native-tab-view';
-import {useLazyQuery} from '@apollo/react-hooks';
 
 // import StyledText from 'toktokfood/components/StyledText';
 import ShopItemList from 'toktokfood/compositions/ShopOverview/ShopItemList';
 
 import type {PropsType} from './types';
 import {AnimatedTabBar, Loader, LoaderContainer, ShopTabBar, TabBarTitle} from './Styled';
-
-// Query
-import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_PRODUCT_CATEGORIES} from 'toktokfood/graphql/toktokfood';
+import { useSelector } from 'react-redux';
 
 const ShopTabView = (props: PropsType): React$Node => {
-  const {scrollY, shopId, listRefArr, isListGliding} = props;
+  const {scrollY, shopId, listRefArr, isListGliding, loading = false, routes = []} = props;
+
+  const {scrollAnimation} = useSelector(state => state.toktokFood)
   let listOffset = useRef({});
 
   const layout = useWindowDimensions();
-
-  // data fetching for product categories/tabs
-  const [getProductCategories, {loading}] = useLazyQuery(GET_PRODUCT_CATEGORIES, {
-    variables: {
-      input: {
-        id: shopId,
-      },
-    },
-    client: TOKTOK_FOOD_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    onCompleted: ({getProductCategories: categories}) => {
-      setRoutes(categories);
-    },
-  });
-
   const [index, setIndex] = useState(0);
-  const [routes, setRoutes] = useState([
-    {
-      key: 'allitems',
-      title: 'All Menu',
-    },
-  ]);
-
-  // console.log(routes[index]);
-  useEffect(() => {
-    getProductCategories();
-  }, [shopId]);
 
   useEffect(() => {
     scrollY.addListener(({value}) => {
@@ -138,8 +110,8 @@ const ShopTabView = (props: PropsType): React$Node => {
 
   const renderTabBar = tabprops => {
     const y = scrollY.interpolate({
-      inputRange: [0, 300],
-      outputRange: [300, 0],
+      inputRange: [0, scrollAnimation[2]],
+      outputRange: [scrollAnimation[2], 0],
       extrapolateRight: 'clamp',
     });
     return (

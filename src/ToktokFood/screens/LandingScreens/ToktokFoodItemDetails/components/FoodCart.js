@@ -26,7 +26,7 @@ import Loader from 'toktokfood/components/Loader';
 import DialogMessage from 'toktokfood/components/DialogMessage';
 import {onErrorAlert} from 'src/util/ErrorUtility';
 import {useAlert} from 'src/hooks';
-export const FoodCart = ({loading, action}) => {
+export const FoodCart = ({loading, action, cartRefetch}) => {
   const alert = useAlert();
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -201,6 +201,8 @@ export const FoodCart = ({loading, action}) => {
     if (required.length > 0) {
       Alert.alert(`${required[0]} is required.`);
     } else {
+      // checkItemToCartQuantity();
+      // console.log('temporary cart', temporaryCart);
       processAddToCart();
     }
   };
@@ -216,6 +218,24 @@ export const FoodCart = ({loading, action}) => {
     }
     return addons.sort();
   };
+
+  // const checkItemToCartQuantity = () => {
+  //   const productId = productDetails.variants.length > 0 ? selectedVariants?.Id : productDetails.Id;
+  //   if (temporaryCart?.items.length > 0) {
+  //     const hasThisItem = temporaryCart.items.find(item => {
+  //       return item.productid === productId;
+  //     });
+  //     if (hasThisItem && Object.keys(hasThisItem).length > 0) {
+  //       const totalItemQuantity = hasThisItem.quantity + count.quantity;
+  //       if (hasThisItem.maxQtyIsset > 0 && totalItemQuantity > hasThisItem.maxQty) {
+
+  //         return processAddToCart(hasThisItem.maxQty);
+  //       }
+        
+  //     }
+  //   }
+  //   return processAddToCart(count.quantity);
+  // };
 
   // PROCESS ADD TO CART
   const processAddToCart = async () => {
@@ -325,7 +345,9 @@ export const FoodCart = ({loading, action}) => {
         setTimeout(() => {
           setLoader(false);
           Toast.show('Cart Updated', Toast.SHORT);
-          navigation.navigate('ToktokFoodRestaurantOverview', {item: {id: productDetails.sysShop}});
+          cartRefetch?.();
+          navigation.goBack();
+          // navigation.navigate('ToktokFoodRestaurantOverview', {item: {id: productDetails.sysShop}});
         }, 1000);
       } else {
         setLoader(false);
@@ -343,7 +365,8 @@ export const FoodCart = ({loading, action}) => {
         setTimeout(() => {
           setLoader(false);
           Toast.show('Added to cart', Toast.SHORT);
-          navigation.navigate('ToktokFoodRestaurantOverview', {item: {id: productDetails.sysShop}});
+          navigation.goBack();
+          // navigation.navigate('ToktokFoodShopOverview', {item: items});
         }, 1000);
       } else {
         setLoader(false);

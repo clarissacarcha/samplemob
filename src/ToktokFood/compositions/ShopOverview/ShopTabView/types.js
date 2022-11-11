@@ -20,4 +20,6 @@ export type PropsType = {
   // index: number,
   // routes: any,
   // setIndex: any => any | null,
+  loading: boolean,
+  routes: Array<Object>,
 };

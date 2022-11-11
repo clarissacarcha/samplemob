@@ -1,19 +1,20 @@
-import React, { createContext, useState } from 'react';
-import { availableTips } from 'toktokfood/helper/strings';
+import React, {createContext, useState} from 'react';
+import {availableTips} from 'toktokfood/helper/strings';
 
-export const VerifyContext = createContext()
-const {Provider} = VerifyContext
+export const VerifyContext = createContext();
+const {Provider} = VerifyContext;
 
-export const VerifyContextProvider = ({children})=> {
-
+export const VerifyContextProvider = ({children}) => {
   const [searchProduct, setSearchProduct] = useState('');
   const [foodCartHeight, setFoodCartHeight] = useState(0);
   const [navBartHeight, setNavBarHeight] = useState(0);
   const [temporaryCart, setTemporaryCart] = useState({
     cartItemsLength: 0,
     totalAmount: 0,
-    items: []
+    items: [],
   });
+  const [pabiliShopServiceFee, setPabiliShopServiceFee] = useState(0);
+  const [pabiliShopDetails, setPabiliShopDetails] = useState(null);
 
   return (
     <Provider
@@ -25,10 +26,11 @@ export const VerifyContextProvider = ({children})=> {
         foodCartHeight,
         setFoodCartHeight,
         navBartHeight,
-        setNavBarHeight
-      }}
-    >
+        setNavBarHeight,
+        setPabiliShopServiceFee,
+        setPabiliShopDetails,
+      }}>
       {children}
     </Provider>
-  )
-}
+  );
+};

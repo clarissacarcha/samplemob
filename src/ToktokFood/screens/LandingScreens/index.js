@@ -5,9 +5,11 @@ export TokTokFoodSplashScreen from './TokTokFoodSplashScreen';
 export ToktokFoodCart from './ToktokFoodCart';
 export ToktokFoodHome from './ToktokFoodHome';
 export ToktokFoodSearch from './ToktokFoodSearch';
+export ToktokFoodHomeSearch from './ToktokFoodHomeSearch';
 export ToktokFoodDriver from './ToktokFoodDriver';
 export ToktokFoodOrder from './ToktokFoodOrder';
 export ToktokFoodActivities from './ToktokFoodActivities';
+export ToktokFoodPlaceOrder from './ToktokFoodPlaceOrder';
 export ToktokFoodItemDetails from './ToktokFoodItemDetails';
 export ToktokFoodFavorites from './ToktokFoodFavorites';
 export ToktokFoodNotifications from './ToktokFoodNotifications';
@@ -26,3 +28,4 @@ export ToktokFoodTermsAndConditions from './ToktokFoodTermsAndConditions';
 export ToktokFoodPrivacyPolicy from './ToktokFoodPrivacyPolicy';
 export ToktokFoodContactUs from './ToktokFoodContactUs';
 export ToktokFoodEmptyCart from './ToktokFoodEmptyCart';
+

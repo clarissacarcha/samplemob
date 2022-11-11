@@ -2,11 +2,12 @@
 import React, {useEffect, useState} from 'react';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation} from '@react-navigation/native';
-import {FlatList, Image, RefreshControl, View, Text, TouchableOpacity} from 'react-native';
+import {FlatList, Image, RefreshControl, View, Text, Platform} from 'react-native';
 import {useQuery} from '@apollo/react-hooks';
 import {useIsFocused} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
-
+import Header from 'toktokfood/components/Header';
+import styled from 'styled-components/native';
 import styles from './styles';
 
 import {VectorIcon, ICON_SET} from 'src/revamp';
@@ -19,6 +20,18 @@ import {empty_notification} from 'toktokfood/assets/images';
 // Queries
 import {GET_TOKTOKFOOD_NOTIFICATIONS} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+
+const StyledHeader = styled(Header).attrs(props => ({
+  ...props,
+  title: 'Notifications',
+  hasBack: true,
+  titleStyle: {
+    fontSize: 17,
+  },
+  centerContainerStyle: {
+    top: Platform.OS === 'ios' ? 5 : 8,
+  },
+}))``;
 
 const ToktokFoodNotifications = () => {
   const {customerInfo} = useSelector(state => state.toktokFood);
@@ -37,7 +50,6 @@ const ToktokFoodNotifications = () => {
       },
     },
     onCompleted: ({getToktokFoodNotifications}) => {
-      // console.log(getToktokFoodNotifications);
       setNotification(getToktokFoodNotifications);
     },
   });
@@ -51,6 +63,11 @@ const ToktokFoodNotifications = () => {
   const getStatus = ({declinedBy, orderStatus, orderIsfor, referenceNum, shopname, refundTotal}) => {
     // return {title: 'null', desc: 'test'};
     switch (orderStatus) {
+      case 'lf':
+        return {
+          title: 'Looking for driver',
+          desc: `Your order ${referenceNum} has been confirmed.  We're now finding you a nearby driver!`,
+        };
       case 'c':
         if (declinedBy === 2) {
           return {title: 'Cancelled Order', desc: `Oh, snap! Your order ${referenceNum} has been cancelled`};
@@ -94,7 +111,12 @@ const ToktokFoodNotifications = () => {
           title: 'Edited Order',
           desc: `Heads-up, ka-toktok! Your order ${referenceNum} from ${shopname} has been modified.`,
         };
-      default: 
+      case 'lf': 
+        return {
+          title: 'Looking for driver',
+          desc: `Your order ${referenceNum} has been confirmed. We're now finding you a nearby driver!`,
+        };
+      default:
         return {title: '', desc: ''}
  
     }
@@ -136,9 +158,10 @@ const ToktokFoodNotifications = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <StyledHeader />
+      {/* <View style={styles.header}>
         <Text style={styles.headerLabel}>Notifications</Text>
-      </View>
+      </View> */}
       <View style={styles.listContainer}>
         <FlatList
           data={notification}

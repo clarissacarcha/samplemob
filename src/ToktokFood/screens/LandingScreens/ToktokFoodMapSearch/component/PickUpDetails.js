@@ -130,7 +130,7 @@ const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
         btn1Title="OK"
         onCloseModal={() => {
           setShowSuccess(false);
-          isCart ? navigation.navigate('ToktokFoodHome') : navigation.pop();
+          isCart ? navigation.navigate('ToktokFoodHomeScreen') : navigation.pop();
         }}
       />
       <DialogMessage

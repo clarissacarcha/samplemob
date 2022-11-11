@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /**
  * @format
  * @flow
@@ -67,9 +68,21 @@ const OrderDeliveryLogs = (props: PropsType): React$Node => {
         {renderDashComponent()}
         {renderLogsComponent('Order placed', state?.dateOrdered)}
         {state?.isdeclined ? (
-          <DeclinedText>
-            Order was cancelled by <DeclinedText mode="semibold">{state?.shopDetails?.shopname}</DeclinedText>
-          </DeclinedText>
+          state?.declinedBy === 3 ? (
+            <DeclinedText mode="semibold">
+              Cancelled automatically by toktokfood’s system{'\n'}
+              <DeclinedText>
+                Total refund amount for this transaction should be credited to your toktokwallet account.{' '}
+              </DeclinedText>
+            </DeclinedText>
+          ) : (
+            <DeclinedText>
+              Order was cancelled by{' '}
+              <DeclinedText mode="semibold">
+                {state?.declinedBy === 4 ? 'driver' : state?.shopDetails?.shopname}
+              </DeclinedText>
+            </DeclinedText>
+          )
         ) : (
           <DeclinedText>You cancelled this order</DeclinedText>
         )}
@@ -90,7 +103,10 @@ const OrderDeliveryLogs = (props: PropsType): React$Node => {
       {state?.deliveryImgurl ? renderDeliveryImageComponent(state?.deliveryImgurl) : renderDashComponent()}
       {renderLogsComponent('Preparing order', state?.dateBookingConfirmed)}
       {renderDashComponent()}
-      {renderLogsComponent('Finding driver', state?.dateOrderProcessed)}
+      {renderLogsComponent(
+        'Finding driver',
+        state?.serviceType === 'toktokfood' ? state?.dateOrderProcessed : state?.dateOrdered,
+      )}
       {renderDashComponent()}
       {renderLogsComponent('Order placed', state?.dateOrdered)}
     </React.Fragment>
