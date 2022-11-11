@@ -98,6 +98,7 @@ const BtProceedButton = (props: PropsType): React$Node => {
       setLoading(true);
       checkLimit = await AmountLimitHelper.postCheckOutgoingLimit({
         amount,
+        action: 'FUND_TRANSFER',
         setErrorMessage: error => {
           changeErrorMessages('amount', error);
         },
