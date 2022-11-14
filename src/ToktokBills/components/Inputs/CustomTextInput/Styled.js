@@ -50,6 +50,7 @@ export const Error: ComponentType<any> = styled(Text).attrs(props => ({
 export const InfoContainer: ComponentType<any> = styled.View`
   flex-direction: row;
   align-items: center;
+  margin-bottom: ${moderateScale(5)}px;
 `;
 
 export const InfoIcon: ComponentType<any> = styled(Image).attrs(props => ({
