@@ -65,7 +65,6 @@ export const ContentContainer: ComponentType<any> = styled(Animated.View).attrs(
   border-top-color: #c4c4c470;
   border-top-width: 1px;
   padding-bottom: ${moderateScale(8)}px;
-  opacity: ${props => props.opacity};
 `;
 
 export const ContentSubContainer: ComponentType<any> = styled.View`
