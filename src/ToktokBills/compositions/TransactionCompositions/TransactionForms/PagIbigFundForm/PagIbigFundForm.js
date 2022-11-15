@@ -134,7 +134,7 @@ const PagIbigFundForm = (props: PropsType): React$Node => {
           onSelectedValue={date => {
             changeDataValue('periodCoveredFrom', date);
             changeErrorMessages('periodCoveredFrom', '');
-            if (data.periodCoveredTo && moment(data.periodCoveredTo).isAfter(moment(date))) {
+            if (data.periodCoveredTo && moment(date).isAfter(moment(data.periodCoveredTo))) {
               changeDataValue('periodCoveredTo', '');
             }
           }}
