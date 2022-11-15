@@ -35,7 +35,7 @@ export const VoucherRemovedModal = ({
             ) : voucherTextMessage == 'WrongPaymentMethod' ? (
               <Text style={styles.modalDescription}>
                 Pasensya ka na, ka-toktok, but the voucher you used is not applicable to your selected payment method.
-                Gusto mo ba tanggalin or magswitch nalang ng payment method?
+                Would you like to proceed and remove the voucher?
               </Text>
             ) : null}
             <View style={{flexDirection: 'row'}}>
