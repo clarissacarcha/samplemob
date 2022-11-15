@@ -18,10 +18,9 @@ const BillerTypeItem = (props: PropsType): React$Node => {
 
   const {index, item, showMore, onPressItem} = props;
   const {icon, name} = item;
-  const condition = index === 11 && showMore;
 
   const onPress = () => {
-    condition ? onPressItem(index) : navigation.navigate('ToktokBiller', {billType: item});
+    navigation.navigate('ToktokBiller', {billType: item});
   };
 
   const onThrottledPress = useThrottle(onPress, 2000);
@@ -35,13 +34,13 @@ const BillerTypeItem = (props: PropsType): React$Node => {
           </LoadingContainer>
         )}
         <LogoImage
-          source={condition ? more_ic : {uri: icon}}
+          source={{uri: icon, priority: FastImage.priority.high}}
           resizeMode={FastImage.resizeMode.contain}
           onLoadStart={() => setImageLoading(true)}
           onLoadEnd={() => setImageLoading(false)}
         />
       </LogoContainer>
-      <Description>{condition ? 'More...' : name}</Description>
+      <Description>{name}</Description>
     </ButtonContainer>
   );
 };

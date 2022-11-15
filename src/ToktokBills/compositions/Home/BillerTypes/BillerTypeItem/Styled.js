@@ -29,8 +29,8 @@ export const LoadingContainer: ComponentType<any> = styled.View`
 export const LogoImage: ComponentType<any> = styled(FastImage).attrs(props => ({
   ...props,
 }))`
-  height: ${moderateScale(35)}px;
-  width: ${moderateScale(35)}px;
+  height: ${moderateScale(45)}px;
+  width: ${moderateScale(45)}px;
   resize-mode: 'contain';
 `;
 export const DetailsContainer: ComponentType<any> = styled.View`

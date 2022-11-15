@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, Dimensions, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {moderateScale} from 'toktokbills/helper';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 import {useThrottle} from 'src/hooks';
 
 import {LoadingIndicator} from 'toktokbills/components';
@@ -45,8 +46,8 @@ export const Biller = ({item, index}) => {
               <LoadingIndicator isLoading={true} size="small" />
             </View>
           )}
-          <Image
-            source={{uri: item.node.logo}}
+          <FastImage
+            source={{uri: item.node.logo, priority: FastImage.priority.high}}
             style={styles.itemLogo}
             onLoadStart={() => setImageLoading(true)}
             onLoadEnd={() => setImageLoading(false)}
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderBottomColor: '#F8F8F8',
     borderBottomWidth: 1,
-    marginHorizontal: moderateScale(16),
+    marginHorizontal: moderateScale(20),
   },
   item: {
     flexDirection: 'row',

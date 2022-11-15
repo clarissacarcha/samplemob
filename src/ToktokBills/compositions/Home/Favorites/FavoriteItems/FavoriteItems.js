@@ -66,7 +66,7 @@ const FavoriteItems = (props: PropsType): React$Node => {
             </LoadingContainer>
           )}
           <LogoImage
-            source={{uri: logo}}
+            source={{uri: logo, priority: FastImage.priority.high}}
             resizeMode={FastImage.resizeMode.contain}
             onLoadStart={() => setImageLoading(true)}
             onLoadEnd={() => setImageLoading(false)}
