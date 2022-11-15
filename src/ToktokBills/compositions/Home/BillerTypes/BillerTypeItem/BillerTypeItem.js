@@ -41,7 +41,7 @@ const BillerTypeItem = (props: PropsType): React$Node => {
           onLoadEnd={() => setImageLoading(false)}
         />
       </LogoContainer>
-      <Description>{condition ? 'More...' : name}</Description>
+      <Description name={name}>{condition ? 'More...' : name}</Description>
     </ButtonContainer>
   );
 };
