@@ -34,7 +34,7 @@ export const AddressButtons = ({
       )}
 
       {addressObj?.id && (
-        <View style={[styles.submitContainer, styles.editAddressContainer]}>
+        <View style={[styles.submitContainer, styles.editAddressContainer, {paddingHorizontal: 16}]}>
           <ThrottledOpacity delay={4000} onPress={onAddressDelete} underlayColor={COLOR} style={{borderRadius: 10}}>
             <View style={styles.deleteButtonWraper}>
               <Text style={[styles.submitText, {color: CONSTANTS.COLOR.ORANGE}]}>Delete</Text>
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: '18%',
+    paddingHorizontal: '16%',
     borderWidth: 1,
     borderColor: CONSTANTS.COLOR.ORANGE,
     backgroundColor: CONSTANTS.COLOR.WHITE,
