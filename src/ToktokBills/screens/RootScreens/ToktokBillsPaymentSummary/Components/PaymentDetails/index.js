@@ -20,9 +20,9 @@ export const PaymentDetails = ({paymentData}) => {
   const navigation = useNavigation();
   const {firstField, secondField, amount, email, billType, convenienceFee, billItemSettings} = paymentData;
   const totalAmount =
-    parseInt(amount) +
-    billItemSettings?.commissionRateDetails?.providerServiceFee +
-    billItemSettings?.commissionRateDetails?.systemServiceFee;
+    parseFloat(amount) +
+    parseFloat(billItemSettings?.commissionRateDetails?.providerServiceFee) +
+    parseFloat(billItemSettings?.commissionRateDetails?.systemServiceFee);
   const [logo, setLogo] = useState({height: 0, width: 0});
   const [imageLoading, setImageLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
