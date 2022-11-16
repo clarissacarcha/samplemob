@@ -28,11 +28,11 @@ const {width, height} = Dimensions.get('window');
 
 const getConvenienceFeeText = ({convenienceFee, toktokSeviceFee}) => {
   if (convenienceFee > 0 && toktokSeviceFee > 0) {
-    return `Additional ${currencyCode}${convenienceFee} convenience fee and ${currencyCode}${toktokSeviceFee} toktok service fee will be charge in this transaction.`;
+    return `Additional ${currencyCode}${convenienceFee} convenience fee and ${currencyCode}${toktokSeviceFee} toktok service fee will be charged in this transaction.`;
   } else if (convenienceFee > 0) {
-    return `Additional ${currencyCode}${convenienceFee} convenience fee will be charge in this transaction.`;
+    return `Additional ${currencyCode}${convenienceFee} convenience fee will be charged in this transaction.`;
   } else if (toktokSeviceFee > 0) {
-    return `Additional ${currencyCode}${toktokSeviceFee} toktok service fee will be charge in this transaction.`;
+    return `Additional ${currencyCode}${toktokSeviceFee} toktok service fee will be charged in this transaction.`;
   } else {
     return 'Convenience Fee is waived for this transaction.';
   }
