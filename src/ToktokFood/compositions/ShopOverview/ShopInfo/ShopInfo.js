@@ -51,7 +51,7 @@ const ShopInfo = (props: PropsType): React$Node => {
 
   const copyToClipboard = item => {
     Clipboard.setString(item.voucherCode);
-    Toast.show(item.voucherCode);
+    Toast.show('Voucher Code Copied!');
   };
 
   return (
