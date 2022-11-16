@@ -132,7 +132,8 @@ const Pabili = ({navigation, session, route}) => {
   let scheduledDateFromRebook = null;
   if (route.params?.delivery) {
     rebookDeliveryData = route.params?.delivery;
-    scheduledDateFromRebook = moment(rebookDeliveryData.senderStop.scheduledFrom, 'MM/DD/YYYY - HH:mm A');
+    const date = moment(rebookDeliveryData.senderStop.scheduledFrom, 'MM/DD/YYYY - HH:mm A');
+    scheduledDateFromRebook = date.isValid() ? date : moment();
   }
   const INITIAL_ORDER_DATA = {
     hash: '',
@@ -222,11 +223,10 @@ const Pabili = ({navigation, session, route}) => {
       }
       if (scheduledDate.isAfter(moment())) {
         setOrderType('SCHEDULED');
-        const date = moment(scheduledDate).diff(moment(), 'days');
         let dateToShow = null;
-        if (date === 0) {
+        if (moment(scheduledDate).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')) {
           dateToShow = 'Today';
-        } else if (date === 1) {
+        } else if (moment(scheduledDate).format('YYYY-MM-DD') === moment().add(1, 'day').format('YYYY-MM-DD')) {
           dateToShow = 'Tomorrow';
         } else {
           dateToShow = scheduledDate.format('ddd MMM D');
@@ -235,8 +235,30 @@ const Pabili = ({navigation, session, route}) => {
         const time = scheduledDate.format('HH:mm A') === '23:59 PM' ? 'Anytime' : scheduledDate.format('HH:mm A');
         setFormattedScheduledAt(`${dateToShow} - ${time}`);
       }
-      if (scheduledDate.isBefore(moment())) {
+      if (scheduledDate.isBefore(moment()) || !scheduledDate.isValid()) {
         AlertHook({message: 'Scheduled date and time has passed, please input new schedule.'});
+        setOrderType('ASAP');
+        setFormattedScheduledAt('ASAP');
+        bottomSheetRef.current.snapTo(0);
+        setOrderData({
+          ...orderData,
+          orderType: 'ASAP',
+          scheduledAt: 'null',
+          senderStop: {
+            ...orderData.senderStop,
+            orderType: 'ASAP',
+            scheduledFrom: null,
+            scheduledTo: null,
+          },
+          recipientStop: [
+            {
+              ...orderData.recipientStop[0],
+              orderType: 'ASAP',
+              scheduledFrom: null,
+              scheduledTo: null,
+            },
+          ],
+        });
       }
     }
   }, []);

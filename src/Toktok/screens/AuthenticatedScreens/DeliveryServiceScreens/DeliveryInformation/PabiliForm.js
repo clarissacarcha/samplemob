@@ -6,20 +6,20 @@ import {useAlert} from '../../../../../hooks';
 
 import {COLOR, FONT, FONT_SIZE} from '../../../../../res/variables';
 
-const CashOnDeliveryForm = ({value, onChange, onAmountChange, constants}) => {
+const CashOnDeliveryForm = ({value, amount, onChange, onAmountChange, constants}) => {
   const maxValue = constants.maxCashOnDelivery;
 
-  const [switchState, setSwitchState] = useState(false);
-  const [amount, setAmount] = useState(0);
+  const [switchState, setSwitchState] = useState(value);
+  const [getAmount, setAmount] = useState(amount);
   const AlertHook = useAlert();
 
-  const onValueChange = (value) => {
+  const onValueChange = value => {
     setSwitchState(value);
     onChange(value);
     onAmountChange(0);
   };
 
-  const onCashOnDeliveryValueChange = (value) => {
+  const onCashOnDeliveryValueChange = value => {
     const decimal = value.split('.')[1];
 
     if (isNaN(value)) {
@@ -31,8 +31,8 @@ const CashOnDeliveryForm = ({value, onChange, onAmountChange, constants}) => {
 
     if (value && decimal) {
       if (decimal.toString().length > 2) {
-        setAmount(amount); //force no change
-        onAmountChange(amount);
+        setAmount(getAmount); //force no change
+        onAmountChange(getAmount);
         return;
       }
     }
@@ -72,7 +72,7 @@ const CashOnDeliveryForm = ({value, onChange, onAmountChange, constants}) => {
           <Text style={{fontFamily: FONT.BOLD, marginTop: 16}}>Cash on Delivery Amount</Text>
           <TextInput
             style={styles.input}
-            value={amount}
+            value={getAmount}
             onChangeText={onCashOnDeliveryValueChange}
             placeholder={`Max Amount: PHP ${constants.maxCashOnDelivery}.00`}
             placeholderTextColor={LIGHT}
@@ -85,7 +85,7 @@ const CashOnDeliveryForm = ({value, onChange, onAmountChange, constants}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   constants: state.constants,
 });
 

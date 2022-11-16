@@ -18,7 +18,7 @@ import {useAlert} from '../../../../../hooks/useAlert';
 import {OnDeliveryStatusChangeSubscriber, OnDeliveryAcceptedSubscriber} from '../../../../../components/subscribers';
 import {YellowIcon} from '../../../../../components/ui';
 import {YellowButton} from '../../../../../revamp/buttons/YellowButton';
-import {DARK, ORANGE, APP_FLAVOR} from '../../../../../res/constants';
+import {DARK, ORANGE, APP_FLAVOR, FONT_FAMILY} from '../../../../../res/constants';
 import {FONT, FONT_SIZE} from '../../../../../res/variables';
 import {PATCH_DELIVERY_DELETE} from '../../../../../graphql';
 import {onError} from '../../../../../util/ErrorUtility';
@@ -152,6 +152,20 @@ const SelectedDelivery = ({navigation, route}) => {
 
         {/*---------------------------------------- DELIVERY TRACKING ----------------------------------------*/}
         {[2, 3, 4, 5].includes(getDelivery.status) && <DriverLocationCard driver={getDelivery.driver} />}
+        {[6, 9].includes(getDelivery.status) && !isRateButtonShown() && (
+          <View style={{flexDirection: 'row', marginBottom: 16}}>
+            {!delivery?.partnerBranch?.id && (
+              <TouchableHighlight
+                onPress={rebookDelivery}
+                underlayColor={DARK}
+                style={{borderRadius: 10, flex: 1, marginRight: 10}}>
+                <View style={styles.rebook}>
+                  <Text style={{color: DARK, fontSize: 16, fontFamily: FONT.BOLD}}>Rebook</Text>
+                </View>
+              </TouchableHighlight>
+            )}
+          </View>
+        )}
 
         {/* <StatusSection delivery={delivery} />
         <SenderRecipientSection delivery={delivery} />
