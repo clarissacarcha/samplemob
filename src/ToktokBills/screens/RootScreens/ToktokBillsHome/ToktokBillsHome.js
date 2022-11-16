@@ -68,7 +68,6 @@ const ToktokBillsHome = (props: PropsType): React$Node => {
       if (result.length > 0 || data.getBillTypes.length !== billTypes.length) {
         setBillTypes(data.getBillTypes);
       }
-      setShowMore(data.getBillTypes.length > 12);
       setRefreshing(false);
     },
   });

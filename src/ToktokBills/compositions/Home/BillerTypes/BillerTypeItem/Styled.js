@@ -14,7 +14,7 @@ const {FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 export const ButtonContainer: ComponentType<any> = styled(TouchableOpacity).attrs(props => ({
   ...props,
 }))`
-  width: ${'25%'};
+  width: 33.33%;
   align-items: center;
   margin-vertical: ${moderateScale(8)}px;
 `;
@@ -29,8 +29,8 @@ export const LoadingContainer: ComponentType<any> = styled.View`
 export const LogoImage: ComponentType<any> = styled(FastImage).attrs(props => ({
   ...props,
 }))`
-  height: ${moderateScale(35)}px;
-  width: ${moderateScale(35)}px;
+  height: ${moderateScale(45)}px;
+  width: ${moderateScale(45)}px;
   resize-mode: 'contain';
 `;
 export const DetailsContainer: ComponentType<any> = styled.View`
