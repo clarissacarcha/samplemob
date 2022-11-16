@@ -63,7 +63,7 @@ const SelectedDelivery = ({navigation, route}) => {
     },
   });
 
-  const onCancelCallback = (returnData) => {
+  const onCancelCallback = returnData => {
     setDelivery(returnData);
     Toast.show('Order successfully cancelled.');
   };
@@ -75,7 +75,7 @@ const SelectedDelivery = ({navigation, route}) => {
     });
   };
 
-  const onDeliveryRated = (rating) => {
+  const onDeliveryRated = rating => {
     setDelivery({
       ...getDelivery,
       ...rating,
@@ -102,6 +102,18 @@ const SelectedDelivery = ({navigation, route}) => {
     2000,
     {leading: true, trailing: false},
   );
+
+  const rebookDelivery = () => {
+    if (delivery.description) {
+      navigation.pop(2);
+      navigation.navigate('ToktokLandingHome');
+      navigation.push('Pabili', {delivery: delivery});
+    } else {
+      navigation.pop(2);
+      navigation.navigate('ToktokLandingHome');
+      navigation.push('ToktokDelivery', {delivery: delivery});
+    }
+  };
 
   return (
     <View style={{flex: 1}}>
@@ -159,6 +171,16 @@ const SelectedDelivery = ({navigation, route}) => {
                 <Text style={{color: COLOR.YELLOW, fontSize: 16}}>Delete Order</Text>
               </View>
             </TouchableHighlight>
+            {!delivery?.partnerBranch?.id && (
+              <TouchableHighlight
+                onPress={rebookDelivery}
+                underlayColor={DARK}
+                style={{borderRadius: 10, flex: 1, marginRight: 10}}>
+                <View style={styles.rebook}>
+                  <Text style={{color: DARK, fontSize: 16}}>Rebook</Text>
+                </View>
+              </TouchableHighlight>
+            )}
           </View>
         )}
 
@@ -221,6 +243,15 @@ const styles = StyleSheet.create({
   submit: {
     flexDirection: 'row',
     backgroundColor: DARK,
+    height: 50,
+    borderRadius: 5,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  rebook: {
+    flexDirection: 'row',
+    backgroundColor: COLOR.YELLOW,
     height: 50,
     borderRadius: 5,
     paddingHorizontal: 20,

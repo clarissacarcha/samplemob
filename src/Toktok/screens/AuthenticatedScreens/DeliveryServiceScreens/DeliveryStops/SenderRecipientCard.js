@@ -17,9 +17,10 @@ const SenderRecipientCard = ({
   onRecipientPress = () => {},
   onLocationDetected = () => {},
   hasAddressFromSearch = false,
+  hasAddressFromRebook = false,
 }) => {
   const [userStop, setUserStop] = useState(senderStop);
-  const session = useSelector((state) => state.session);
+  const session = useSelector(state => state.session);
 
   const [getGoogleGeocodeReverse, {loading, error}] = useLazyQuery(GET_GOOGLE_GEOCODE_REVERSE, {
     fetchPolicy: 'network-only',
@@ -38,7 +39,7 @@ const SenderRecipientCard = ({
       setSenderStop(updatedUserStop);
       setUserStop(updatedUserStop);
     },
-    onError: (error) => console.log({error}),
+    onError: error => console.log({error}),
   });
 
   const getLocationHash = async () => {
@@ -74,7 +75,7 @@ const SenderRecipientCard = ({
     //   console.log('___________________');
 
     // }
-    if (!hasAddressFromSearch) {
+    if (!hasAddressFromSearch && !hasAddressFromRebook) {
       getLocationHash();
     }
   }, []);
