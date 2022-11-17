@@ -151,6 +151,7 @@ export const PaymentForm = ({billItemSettings}) => {
           onChangeText={changeEmail}
           value={email}
           returnKeyType="done"
+          autoCapitalize="none"
         />
         {!!emailError && <Text style={styles.error}>{emailError}</Text>}
       </View>

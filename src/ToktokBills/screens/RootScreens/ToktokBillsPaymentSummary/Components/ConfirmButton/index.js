@@ -145,7 +145,7 @@ export const ConfirmButton = ({paymentData}) => {
       <View style={styles.container}>
         <Text style={styles.terms}>
           <Text style={styles.footerText}>Please review the accuracy of the details provided and read our </Text>
-          <Text style={[styles.tnc, styles.footerText]} onPress={onPressTermsAndContidions}>
+          <Text style={[styles.footerText, styles.tnc]} onPress={onPressTermsAndContidions}>
             Terms and Conditions{' '}
           </Text>
           <Text style={styles.footerText}>before you proceed with your transaction.</Text>
@@ -200,5 +200,6 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: FONT_SIZE.S,
+    color: '#525252',
   },
 });
