@@ -45,7 +45,10 @@ export const HeaderBack = ({onBack}) => {
 const styles = StyleSheet.create({
   box: {
     height: 50,
+    width: 100,
+    // width: 50,
     justifyContent: 'center',
-    paddingHorizontal: 16,
+    paddingLeft: 17,
+    // alignItems: 'center',
   },
 });
