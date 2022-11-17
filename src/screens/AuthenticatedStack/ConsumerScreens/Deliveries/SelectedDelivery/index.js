@@ -153,18 +153,12 @@ const SelectedDelivery = ({navigation, route}) => {
         {/*---------------------------------------- DELIVERY TRACKING ----------------------------------------*/}
         {[2, 3, 4, 5].includes(getDelivery.status) && <DriverLocationCard driver={getDelivery.driver} />}
         {[6, 9].includes(getDelivery.status) && !isRateButtonShown() && (
-          <View style={{flexDirection: 'row', marginBottom: 16}}>
+          <>
+            {/*-------------------- REBOOK BUTTON --------------------*/}
             {!delivery?.partnerBranch?.id && (
-              <TouchableHighlight
-                onPress={rebookDelivery}
-                underlayColor={DARK}
-                style={{borderRadius: 10, flex: 1, marginRight: 10}}>
-                <View style={styles.rebook}>
-                  <Text style={{color: DARK, fontSize: 16, fontFamily: FONT.BOLD}}>Rebook</Text>
-                </View>
-              </TouchableHighlight>
+              <YellowButton onPress={rebookDelivery} label="Rebook" style={{marginBottom: 8}} />
             )}
-          </View>
+          </>
         )}
 
         {/* <StatusSection delivery={delivery} />
@@ -173,29 +167,14 @@ const SelectedDelivery = ({navigation, route}) => {
         <PaymentMethodSection delivery={delivery} />
         <CashOnDeliveryPabiliSection delivery={delivery} /> */}
 
-        {/*-------------------- DELETE/REBOOK BUTTON DETAILS --------------------*/}
+        {/*-------------------- REBOOK BUTTON DETAILS --------------------*/}
         {getDelivery.status === 7 && (
-          <View style={{flexDirection: 'row', marginBottom: 16}}>
-            {/*-------------------- DELETE BUTTON --------------------*/}
-            <TouchableHighlight
-              onPress={patchDeliveryDelete}
-              underlayColor={COLOR.YELLOW}
-              style={{borderRadius: 10, flex: 1, marginRight: 10}}>
-              <View style={styles.submit}>
-                <Text style={{color: COLOR.YELLOW, fontSize: 16}}>Delete Order</Text>
-              </View>
-            </TouchableHighlight>
+          <>
+            {/*-------------------- REBOOK BUTTON --------------------*/}
             {!delivery?.partnerBranch?.id && (
-              <TouchableHighlight
-                onPress={rebookDelivery}
-                underlayColor={DARK}
-                style={{borderRadius: 10, flex: 1, marginRight: 10}}>
-                <View style={styles.rebook}>
-                  <Text style={{color: DARK, fontSize: 16}}>Rebook</Text>
-                </View>
-              </TouchableHighlight>
+              <YellowButton onPress={rebookDelivery} label="Rebook" style={{marginBottom: 8}} />
             )}
-          </View>
+          </>
         )}
 
         {/*-------------------- DELIVERY ID --------------------*/}
