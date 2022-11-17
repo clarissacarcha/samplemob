@@ -59,22 +59,20 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
   });
 
   const onPressSelected = () => {
-    setProcessingVisible(true);
-    setTimeout(() => {
-      if (data?.collectable && !data.voucherWallet) {
-        postCollectVoucher({
-          variables: {
-            input: {
-              voucherId: data.id,
-            },
+    // setProcessingVisible(true);
+    if (data?.collectable && !data.voucherWallet) {
+      postCollectVoucher({
+        variables: {
+          input: {
+            voucherId: data.id,
           },
-        });
-      } else {
-        navigation.pop();
-        onPress();
-        setProcessingVisible(false);
-      }
-    }, 3000);
+        },
+      });
+    } else {
+      navigation.pop();
+      onPress();
+      setProcessingVisible(false);
+    }
   };
 
   return (

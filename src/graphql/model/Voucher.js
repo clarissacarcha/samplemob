@@ -63,6 +63,14 @@ export const GET_VOUCHER = gql`
   }
 `;
 
+export const GET_ENTERPRISE_VOUCHER = gql`
+  query getEnterpriseVoucher($input: GetEnterpriseVoucherInput!) {
+    getEnterpriseVoucher(input: $input) {
+      ${TokwaVoucher}
+    }
+  }
+`;
+
 export const POST_COLLECT_VOUCHER = gql`
   mutation postCollectVoucher($input: PostCollectVoucherInput) {
     postCollectVoucher(input: $input) {

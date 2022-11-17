@@ -84,7 +84,7 @@ export const SavedAddressCard = ({navigation, item, image, onPress, lastItem = f
                 <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, color: CONSTANTS.COLOR.BLACK}}>{item.label}</Text>
               </View>
             )}
-            <View style={{width: windowWidth * 0.8}}>
+            <View style={{width: windowWidth * 0.8, marginLeft: 18}}>
               <Text
                 style={{
                   fontSize: CONSTANTS.FONT_SIZE.S,
