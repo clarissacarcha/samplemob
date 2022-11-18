@@ -27,21 +27,35 @@ const BankTransferAllFavorites = (props: PropsType): React$Node => {
   const navigation = useNavigation();
   const [imageLoading, setImageLoading] = useState(true);
 
-  const {item, onPressFavorite, onRefreshFavorite, screenLabel} = props;
+  const {item, onPressFavorite, onRefreshFavorite, screenLabel, postCheckFavorite} = props;
   const {accountName, accountNumber, bank, id} = item.node;
   const {name, image} = bank;
   const isFavorite = true;
 
-  const onPress = () => {
-    navigation.navigate('ToktokWalletBankTransferTransaction', {
-      bankDetails: bank,
-      favoriteDetails: {
-        id,
-        accountName,
-        accountNumber,
+  const onPress = async () => {
+    await postCheckFavorite({
+      variables: {
+        input: {
+          amount: 1,
+          cashOutBankId: item.node.cashOutBankId,
+        },
       },
-      onRefreshFavorite,
-      screenLabel,
+    }).then(res => {
+      if (res) {
+        navigation.navigate('ToktokWalletBankTransferTransaction', {
+          bankDetails: bank,
+          favoriteDetails: {
+            id,
+            accountName,
+            accountNumber,
+          },
+          onRefreshFavorite,
+          screenLabel,
+          event: 'see all',
+        });
+      } else {
+        onRefreshFavorite();
+      }
     });
   };
 

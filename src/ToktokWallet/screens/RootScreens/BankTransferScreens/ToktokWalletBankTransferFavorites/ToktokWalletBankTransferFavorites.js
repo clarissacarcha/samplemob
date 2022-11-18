@@ -59,6 +59,7 @@ const ToktokWalletBankTransferFavorites = (props: PropsType): React$Node => {
   const [isMounted, setIsMounted] = useState(false);
   const onEndReachedCalledDuringMomentum = useRef(null);
   const onRefreshHomeFavorite = route.params?.onRefreshHomeFavorite ? route.params.onRefreshHomeFavorite : null;
+  const postCheckFavorite = route.params.postCheckFavorite;
 
   const [
     getBankAccountsPaginate,
@@ -274,6 +275,7 @@ const ToktokWalletBankTransferFavorites = (props: PropsType): React$Node => {
             index={index}
             onRefreshFavorite={onRefreshFavorite}
             onPressFavorite={() => onPressFavorite(item, index)}
+            postCheckFavorite={postCheckFavorite}
           />
         )}
         keyExtractor={(item, index) => index.toString()}
