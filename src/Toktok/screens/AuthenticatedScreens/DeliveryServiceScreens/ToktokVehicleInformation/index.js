@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
@@ -37,6 +37,19 @@ const Screen = ({navigation, route, session}) => {
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Select', 'Vehicle']} />,
   });
+
+  const getSelectedVehicleFromRebook = () => {
+    if (orderData.vehicleType !== null) {
+      const vehicleType = vehicleTypesData.find(vehicle => vehicle.name === orderData.vehicleType.name);
+      if (vehicleType?.id) {
+        setSelectedVehicleType(vehicleType);
+      }
+    }
+  };
+
+  useLayoutEffect(() => {
+    getSelectedVehicleFromRebook();
+  }, []);
 
   const onVehicleSelected = ({quotation}) => {
     const updatedOrderData = {

@@ -37,7 +37,7 @@ const Partner = ({partner, onBranchSelect}) => {
   );
 };
 
-const PabiliPartners = ({orderData, setOrderData}) => {
+const PabiliPartners = ({orderData, setOrderData, rebookDeliveryData}) => {
   //#region HOOKS
   const navigation = useNavigation();
   const {data, loading, error} = useQuery(GET_PARTNERS, {
@@ -66,6 +66,7 @@ const PabiliPartners = ({orderData, setOrderData}) => {
       orderData: updatedOrderData,
       setOrderData,
       partnerBranch: selectedBranch,
+      rebookDeliveryData,
     });
   };
   //#endregion

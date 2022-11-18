@@ -70,6 +70,10 @@ const Delivery = `
     feedback
     createdAt
   }
+  partnerBranch {
+    id
+    branchName
+  }
   vehicleType {
     name
   }

@@ -11,7 +11,11 @@ const PurchaseForm = ({item, length, index, onRemovePress, onItemChange, onQuant
     <View style={{flexDirection: 'row', marginBottom: 10}}>
       <TextInput
         value={item.description}
-        onChangeText={(value) => {
+        onChangeText={value => {
+          const specialChars = /[`!@#$%{()}^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+          if (value.match(specialChars)) {
+            return false;
+          }
           onItemChange({description: value, index});
         }}
         placeholder="ex. Apples"
@@ -21,7 +25,11 @@ const PurchaseForm = ({item, length, index, onRemovePress, onItemChange, onQuant
       <View style={{width: 10}} />
       <TextInput
         value={item.quantity}
-        onChangeText={(value) => {
+        onChangeText={value => {
+          const specialChars = /[`!@#$%{()}^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+          if (value.match(specialChars)) {
+            return false;
+          }
           onQuantityChange({quantity: value, index});
         }}
         placeholder="ex. 1 pack"
@@ -61,7 +69,7 @@ const FORM_DATA = {description: '', quantity: ''};
 const PromoForm = ({initialData: itemsToPurchase, onDataChange}) => {
   // const [itemsToPurchase, setItemsToPurchase] = useState(initialData);
 
-  const removeItemFormOnIndex = (index) => {
+  const removeItemFormOnIndex = index => {
     const itemsMirror = [...itemsToPurchase];
     console.log({REMOVING: itemsMirror});
     itemsMirror.splice(index, 1);
@@ -156,7 +164,7 @@ const PromoForm = ({initialData: itemsToPurchase, onDataChange}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   session: state.session,
 });
 
