@@ -242,6 +242,7 @@ const StopDetails = ({navigation, route}) => {
           onSearchResultChange={value => setSearchResult(value)}
           searchEnabled={!showMap}
           onSearchLoadingChange={setSearchLoading}
+          navigation={navigation}
         />
       </View>
 
