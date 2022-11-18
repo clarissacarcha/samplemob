@@ -339,8 +339,7 @@ const styles = StyleSheet.create({
   },
   sheet: {
     flex: 1,
-    // paddingHorizontal: 10,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-evenly',
   },
   back: {
     justifyContent: 'center',
