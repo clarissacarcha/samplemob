@@ -33,7 +33,7 @@ const BillerTypeList = (props: PropsType): React$Node => {
         </SeeAllContainer>
       </HeaderContainer>
       <List
-        data={showMore ? billTypes.slice(0, 12) : billTypes}
+        data={billTypes}
         renderItem={({item, index}) => (
           <BillerTypeItem item={item} onPressItem={onPressItem} showMore={showMore} index={index} />
         )}

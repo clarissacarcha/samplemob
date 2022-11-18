@@ -49,6 +49,6 @@ export const SeeAllIcon: ComponentType<any> = styled(VectorIcon).attrs(props => 
 }))``;
 export const List: ComponentType<any> = styled(FlatList).attrs(props => ({
   ...props,
-  numColumns: 4,
+  numColumns: 3,
   marginVertical: moderateScale(15),
 }))``;
