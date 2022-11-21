@@ -151,6 +151,7 @@ export const AddressForm = ({
               borderRightWidth: 1,
               paddingHorizontal: 16,
               justifyContent: 'center',
+              marginRight: 16,
             }}>
             <Text>+63</Text>
           </View>

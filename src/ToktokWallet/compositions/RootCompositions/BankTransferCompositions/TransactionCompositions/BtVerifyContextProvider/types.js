@@ -8,4 +8,5 @@ export type PropsType = {
   theme?: Object,
   children: any,
   favoriteDetails: any,
+  onRefreshFavorite: any,
 };

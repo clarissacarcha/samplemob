@@ -4,7 +4,7 @@
 
 import type {ComponentType} from 'react';
 import styled from 'styled-components/native';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, Text} from 'react-native';
 import {moderateScale} from 'toktokbills/helper';
 import FastImage from 'react-native-fast-image';
 
@@ -36,10 +36,14 @@ export const LogoImage: ComponentType<any> = styled(FastImage).attrs(props => ({
 export const DetailsContainer: ComponentType<any> = styled.View`
   margin-vertical: ${moderateScale(10)}px;
 `;
-export const Description: ComponentType<any> = styled.Text`
+export const Description: ComponentType<any> = styled(Text).attrs(props => ({
+  ...props,
+  numberOfLines: props.name === 'Transportation' ? 1 : 2,
+  adjustsFontSizeToFit: true,
+}))`
   font-family: ${FONT.REGULAR};
   font-size: ${moderateScale(FONT_SIZE.M)}px;
   text-align: center;
-  margin-top: ${moderateScale(5)}px;
+  margin-top: ${props => (props.name === 'Transportation' ? moderateScale(6) : moderateScale(5))}px;
   margin-horizontal: ${moderateScale(5)}px;
 `;

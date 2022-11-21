@@ -26,4 +26,5 @@ export const AnimationText: ComponentType<any> = styled(StyledText).attrs(props 
   color: props.title ? props.theme.color.orange : props.theme.color.black,
 }))`
   margin-bottom: ${props => (props.title ? moderateScale(10) : 0)};
+  text-align: center;
 `;

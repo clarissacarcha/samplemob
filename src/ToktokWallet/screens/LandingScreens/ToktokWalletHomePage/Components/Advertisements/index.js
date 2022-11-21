@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useQuery} from '@apollo/react-hooks';
+import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_ADVERTISEMENT_CATEGORIES} from 'toktokwallet/graphql';
 import Banner from './Banner';
@@ -10,12 +10,12 @@ import CONSTANTS from 'common/res/constants';
 
 const {MARGIN, COLOR, FONT_SIZE, FONT_FAMILY: FONT} = CONSTANTS;
 
-export const Advertisements = () => {
+export const Advertisements = ({refreshing}) => {
   const [banner, setBanner] = useState(null);
   const [grid, setGrid] = useState(null);
   const [ads, setAds] = useState([]);
 
-  const {data, loading, error} = useQuery(GET_ADVERTISEMENT_CATEGORIES, {
+  const [getAdvertisement, {loading, error}] = useLazyQuery(GET_ADVERTISEMENT_CATEGORIES, {
     fetchPolicy: 'network-only',
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: ({getAdvertisementCategories}) => {
@@ -23,9 +23,21 @@ export const Advertisements = () => {
     },
   });
 
-  if (loading) return <View style={styles.separator} />;
+  useEffect(() => {
+    getAdvertisement();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  if (error) return <View style={styles.separator} />;
+  useEffect(() => {
+    if (refreshing) {
+      getAdvertisement();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshing]);
+
+  // if (loading) return <View style={styles.separator} />;
+
+  // if (error) return <View style={styles.separator} />;
 
   return (
     <View>
@@ -44,7 +56,9 @@ export const Advertisements = () => {
           </>
         } */}
       {ads.map(ad => {
-        if (ad.advertisement.length == 0) return null;
+        if (ad.advertisement.length === 0) {
+          return null;
+        }
         return (
           <>
             <View style={styles.separator} />
@@ -58,7 +72,9 @@ export const Advertisements = () => {
                 {ad.description}
               </Text>
             </View>
-            <Slider bannerType={ad.bannerType} ads={ad.advertisement} />
+            <View style={{paddingBottom: 16}}>
+              <Slider bannerType={ad.bannerType} ads={ad.advertisement} />
+            </View>
           </>
         );
       })}

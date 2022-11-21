@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef, useState, useEffect} from 'react';
+import React, {useCallback, useMemo, useRef, useState, useEffect, useLayoutEffect} from 'react';
 import {connect} from 'react-redux';
 import {
   View,
@@ -128,6 +128,13 @@ const SCHEDULE_DAYS = createDays().map(item => {
 });
 
 const Pabili = ({navigation, session, route}) => {
+  let rebookDeliveryData = {};
+  let scheduledDateFromRebook = null;
+  if (route.params?.delivery) {
+    rebookDeliveryData = route.params?.delivery;
+    const date = moment(rebookDeliveryData.senderStop.scheduledFrom, 'MM/DD/YYYY - HH:mm A');
+    scheduledDateFromRebook = date.isValid() ? date : moment();
+  }
   const INITIAL_ORDER_DATA = {
     hash: '',
     consumerId: session.user.consumer.id,
@@ -136,41 +143,125 @@ const Pabili = ({navigation, session, route}) => {
     distance: 0,
     duration: 0,
     directions: null,
-    collectPaymentFrom: 'RECIPIENT',
-    isCashOnDelivery: false,
-    cashOnDelivery: 0,
-    isExpress: false,
-    cargo: '',
-    notes: '',
+    collectPaymentFrom: rebookDeliveryData.collectPaymentFrom === 'S' ? 'SENDER' : 'RECIPIENT',
+    isCashOnDelivery: parseFloat(rebookDeliveryData.cashOnDelivery) > 0 ? true : false,
+    cashOnDelivery: parseFloat(rebookDeliveryData.cashOnDelivery) > 0 ? rebookDeliveryData.cashOnDelivery : 0,
+    isExpress: parseFloat(rebookDeliveryData.expressFee) > 0 ? true : false,
+    cargo: rebookDeliveryData.cargo ? rebookDeliveryData.cargo : '',
+    notes: rebookDeliveryData.notes ? rebookDeliveryData.notes : '',
     promoCode: '',
-    orderType: 'ASAP',
+    orderType: rebookDeliveryData.senderStop?.orderType === 1 ? 'ASAP' : 'SCHEDULED',
     scheduledDate: moment().format('YYYY-MM-DD').toString(),
-    senderStop: {
-      latitude: null,
-      longitude: null,
-      formattedAddress: '',
-      name: `${session.user.person.firstName} ${session.user.person.lastName}`,
-      mobile: session.user.username.replace('+63', ''),
-      landmark: '',
-      orderType: 'ASAP',
-      scheduledFrom: null,
-      scheduledTo: null,
-    },
+    senderStop: rebookDeliveryData.senderStop?.name
+      ? {
+          latitude: rebookDeliveryData.senderStop.latitude,
+          longitude: rebookDeliveryData.senderStop.longitude,
+          formattedAddress: rebookDeliveryData.senderStop.formattedAddress,
+          name: `${session.user.person.firstName} ${session.user.person.lastName}`,
+          mobile: session.user.username.replace('+63', ''),
+          landmark: rebookDeliveryData.senderStop.landmark,
+          orderType: rebookDeliveryData.senderStop?.orderType === 1 ? 'ASAP' : 'SCHEDULED',
+          scheduledFrom:
+            rebookDeliveryData.senderStop?.orderType === 1
+              ? null
+              : `${scheduledDateFromRebook.format('YYYY-MM-DD HH:mm:ss')}`,
+          scheduledTo:
+            rebookDeliveryData.senderStop?.orderType === 1
+              ? null
+              : `${scheduledDateFromRebook.format('YYYY-MM-DD HH:mm:ss')}`,
+        }
+      : {
+          latitude: null,
+          longitude: null,
+          formattedAddress: '',
+          name: `${session.user.person.firstName} ${session.user.person.lastName}`,
+          mobile: session.user.username.replace('+63', ''),
+          landmark: '',
+          orderType: 'ASAP',
+          scheduledFrom: null,
+          scheduledTo: null,
+        },
     recipientStop: [
-      {
-        latitude: null,
-        longitude: null,
-        formattedAddress: '',
-        name: '',
-        mobile: '',
-        landmark: '',
-        orderType: 'ASAP',
-        scheduledFrom: null,
-        scheduledTo: null,
-      },
+      rebookDeliveryData.recipientStop?.name
+        ? {
+            latitude: rebookDeliveryData.recipientStop.latitude,
+            longitude: rebookDeliveryData.recipientStop.longitude,
+            formattedAddress: rebookDeliveryData.recipientStop.formattedAddress,
+            name: `${session.user.person.firstName} ${session.user.person.lastName}`,
+            mobile: session.user.username.replace('+63', ''),
+            landmark: rebookDeliveryData.recipientStop.landmark,
+            orderType: rebookDeliveryData.recipientStop?.orderType === 1 ? 'ASAP' : 'SCHEDULED',
+            scheduledFrom:
+              rebookDeliveryData.senderStop?.orderType === 1
+                ? null
+                : `${scheduledDateFromRebook.format('YYYY-MM-DD HH:mm:ss')}`,
+            scheduledTo:
+              rebookDeliveryData.senderStop?.orderType === 1
+                ? null
+                : `${scheduledDateFromRebook.format('YYYY-MM-DD HH:mm:ss')}`,
+          }
+        : {
+            latitude: null,
+            longitude: null,
+            formattedAddress: '',
+            name: '',
+            mobile: '',
+            landmark: '',
+            orderType: 'ASAP',
+            scheduledFrom: null,
+            scheduledTo: null,
+          },
     ],
   };
   const [orderData, setOrderData] = useState(INITIAL_ORDER_DATA);
+
+  useLayoutEffect(() => {
+    if (rebookDeliveryData.senderStop) {
+      const scheduledDate = moment(rebookDeliveryData.senderStop.scheduledFrom, 'MM/DD/YYYY - HH:mm A');
+      if (rebookDeliveryData.senderStop?.orderType === 1) {
+        return;
+      }
+      if (scheduledDate.isAfter(moment())) {
+        setOrderType('SCHEDULED');
+        let dateToShow = null;
+        if (moment(scheduledDate).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')) {
+          dateToShow = 'Today';
+        } else if (moment(scheduledDate).format('YYYY-MM-DD') === moment().add(1, 'day').format('YYYY-MM-DD')) {
+          dateToShow = 'Tomorrow';
+        } else {
+          dateToShow = scheduledDate.format('ddd MMM D');
+        }
+
+        const time = scheduledDate.format('HH:mm A') === '23:59 PM' ? 'Anytime' : scheduledDate.format('HH:mm A');
+        setFormattedScheduledAt(`${dateToShow} - ${time}`);
+      }
+      if (scheduledDate.isBefore(moment()) || !scheduledDate.isValid()) {
+        AlertHook({message: 'Scheduled date and time has passed, please input new schedule.'});
+        setOrderType('ASAP');
+        setFormattedScheduledAt('ASAP');
+        bottomSheetRef.current.snapTo(0);
+        setOrderData({
+          ...orderData,
+          orderType: 'ASAP',
+          scheduledAt: 'null',
+          senderStop: {
+            ...orderData.senderStop,
+            orderType: 'ASAP',
+            scheduledFrom: null,
+            scheduledTo: null,
+          },
+          recipientStop: [
+            {
+              ...orderData.recipientStop[0],
+              orderType: 'ASAP',
+              scheduledFrom: null,
+              scheduledTo: null,
+            },
+          ],
+        });
+      }
+    }
+  }, []);
 
   const AlertHook = useAlert();
 
@@ -187,6 +278,7 @@ const Pabili = ({navigation, session, route}) => {
         senderStop: value,
       },
       setOrderData,
+      rebookDeliveryData,
     });
   };
 
@@ -385,7 +477,7 @@ const Pabili = ({navigation, session, route}) => {
         )}
         <View style={{height: 10, backgroundColor: COLOR.LIGHT, marginTop: 20, marginBottom: 10}} />
 
-        <PabiliPartners orderData={orderData} setOrderData={setOrderData} />
+        <PabiliPartners orderData={orderData} setOrderData={setOrderData} rebookDeliveryData={rebookDeliveryData} />
       </View>
       <BottomSheet
         ref={bottomSheetRef}

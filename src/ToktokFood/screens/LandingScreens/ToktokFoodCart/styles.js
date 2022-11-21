@@ -324,6 +324,25 @@ const styles = StyleSheet.create({
   unavailableText: {
     color: '#FF6200',
   },
+  serviceFeeLabelWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+
+    alignItems: 'center',
+  },
+  seviceFeeIcon: {marginLeft: 5},
+  pabiliInfoWrapper: {paddingHorizontal: 12, paddingVertical: 25},
+  pabiliInfoText: {textAlign: 'center', marginBottom: 22},
+  pabiliSubInfoWrapper: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    backgroundColor: '#FFFCF4',
+    height: 60,
+    paddingHorizontal: 13,
+    justifyContent: 'flex-start',
+  },
+  pabiliSubInfoText: {fontSize: 11, color: '#F6841F'},
+  pabiliSubInfoIcon: {marginRight: 6},
 });
 
 export default styles;

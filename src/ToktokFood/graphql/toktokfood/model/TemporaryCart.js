@@ -17,6 +17,9 @@ const tempCart = `
     productName
     productLogo
     notes
+    maxQty
+    maxQtyIsset
+    shopAddress
     shopLatitude
     shopLongitude
     shopCity
@@ -69,7 +72,10 @@ const voucherType = `
   voucher_type
   voucher_code
   voucher_name
+  voucher_category
   vcode_isset
+  reimburse_amount
+  service_fee_discount
   discounted_totalamount
   discount_totalamount
   discount_type
@@ -94,6 +100,10 @@ const voucherType = `
     discount_amount
     discount_totalamount
     on_top
+    service_fee
+    tokfood_comm
+    single_servicefee_discount
+    item_servicefee_discount
   }
 `;
 
@@ -108,6 +118,14 @@ export const GET_ALL_TEMPORARY_CART = gql`
   query getAllTemporaryCart($input: GetAllTemporaryCartInput) {
     getAllTemporaryCart(input: $input) {
       srpTotalAmount
+      pabiliShopServiceFee
+      pabiliShopResellerDiscount
+      pabiliShopDetails {
+        isShopPabiliMerchant
+        shopServiceFeeType
+        shopServiceFeeValue
+        shopTokfoodServiceFeeComm
+      }
       ${tempCart}
     }
   }
