@@ -91,7 +91,7 @@ const CartPaymentMethod = (props: PropsType): React$Node => {
 
   const onToktokWalletRegisterNavigate = () => {
     setIsModalVisible(false);
-    navigation.navigate('ToktokWalletVerification');
+    navigation.navigate('ToktokWalletLoginPage');
   };
 
   const onPaymentMethodSelection = pm => {
