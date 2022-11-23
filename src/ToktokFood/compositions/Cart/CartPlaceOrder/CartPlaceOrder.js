@@ -464,9 +464,9 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
       setIsAlertVisible(true);
     } else {
       if (
-        (!customerWallet && paymentMethod === 'toktokwallet') ||
-        (customerWallet && amountText > MAX_AMOUNT_LIMIT_WITH_TOKWA && paymentMethod === 'cash') ||
-        (!customerWallet && amountText > MAX_AMOUNT_LIMIT_WITHOUT_TOKWA && paymentMethod === 'cash')
+        (customerWallet?.status !== 1 && paymentMethod === 'toktokwallet') ||
+        (customerWallet?.status === 1 && amountText > MAX_AMOUNT_LIMIT_WITH_TOKWA && paymentMethod === 'cash') ||
+        (customerWallet?.status !== 1 && amountText > MAX_AMOUNT_LIMIT_WITHOUT_TOKWA && paymentMethod === 'cash')
       ) {
         playAnimation();
       } else {
