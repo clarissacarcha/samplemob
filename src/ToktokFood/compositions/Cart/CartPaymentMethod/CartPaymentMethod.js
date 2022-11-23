@@ -103,34 +103,34 @@ const CartPaymentMethod = (props: PropsType): React$Node => {
   };
 
   const isButtonDisabled = () => {
-    if (customerWallet && amountText > MAX_AMOUNT_LIMIT_WITH_TOKWA) {
+    if (customerWallet?.status === 1 && amountText > MAX_AMOUNT_LIMIT_WITH_TOKWA) {
       return true;
     }
-    if (!customerWallet && amountText > MAX_AMOUNT_LIMIT_WITHOUT_TOKWA) {
+    if (customerWallet?.status !== 1 && amountText > MAX_AMOUNT_LIMIT_WITHOUT_TOKWA) {
       return true;
     }
-    if (!customerWallet && numberOfCompletedOrders >= 2) {
+    if (customerWallet?.status !== 1 && numberOfCompletedOrders >= 2) {
       return true;
     }
     return false;
   };
 
   const renderLimitComponent = () => {
-    if (customerWallet && amountText > MAX_AMOUNT_LIMIT_WITH_TOKWA) {
+    if (customerWallet?.status === 1 && amountText > MAX_AMOUNT_LIMIT_WITH_TOKWA) {
       return (
         <LimitContainer>
           <LimitText>Order exceeded the limit of ₱{MAX_AMOUNT_LIMIT_WITH_TOKWA} worth of items.</LimitText>
         </LimitContainer>
       );
     }
-    if (!customerWallet && amountText > MAX_AMOUNT_LIMIT_WITHOUT_TOKWA) {
+    if (customerWallet?.status !== 1 && amountText > MAX_AMOUNT_LIMIT_WITHOUT_TOKWA) {
       return (
         <LimitContainer>
           <LimitText>Order exceeded the limit of ₱{MAX_AMOUNT_LIMIT_WITHOUT_TOKWA} worth of items.</LimitText>
         </LimitContainer>
       );
     }
-    if (!customerWallet && numberOfCompletedOrders >= 2) {
+    if (customerWallet?.status !== 1 && numberOfCompletedOrders >= 2) {
       return (
         <LimitContainer>
           <LimitText>We’re sorry but you already ordered twice via cash.</LimitText>
