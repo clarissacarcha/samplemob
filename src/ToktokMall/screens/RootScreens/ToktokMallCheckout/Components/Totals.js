@@ -87,14 +87,18 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
 
               let shopDiscount = CheckoutContextData.getShopItemDiscount(item2.shopId, item2.id)
               if(shopDiscount){
-                total = total + parseFloat(item2.product.compareAtPrice)
+                total = total + parseFloat(item2.product.compareAtPrice * item2.qty)
               }else{
                 // total = total + parseFloat(item2.product.price)
                 total = total + parseFloat(item2.product.compareAtPrice * item2.qty)
-              }
-              
+              }              
             }else{
-              total = total + parseFloat(item2.amount)
+              if(referral && referral?.franchiseeCode != null){
+                let itemsrpprice = parseFloat(item2.product.compareAtPrice * item2.qty)
+                total = total + itemsrpprice
+              }else{
+                total = total + parseFloat(item2.amount)
+              }
             }
             // total = total + parseFloat(item.data[0][i].amount);
           }

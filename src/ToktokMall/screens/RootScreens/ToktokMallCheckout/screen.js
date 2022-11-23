@@ -517,7 +517,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         transactionTypeId: 110
       })
       setIsLoading(false)
-
+      console.log("REQUEST MONEY PAYLOAD", transactionPayload)
            
       const req = await WalletApiCall("request_money", transactionPayload, true)
 
