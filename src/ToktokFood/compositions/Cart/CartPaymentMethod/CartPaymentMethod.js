@@ -167,18 +167,6 @@ const CartPaymentMethod = (props: PropsType): React$Node => {
       </StyledText>
     );
 
-    if (!customerWallet) {
-      return (
-        <Row>
-          <Row>
-            <Image source={toktokwallet_ic} selected="toktokwallet" />
-            <Column>{coloredText()}</Column>
-          </Row>
-          {renderCashInButton()}
-        </Row>
-      );
-    }
-
     if (customerWallet?.status === 1) {
       if (loading) {
         return <ContentLoader active title={false} pRows={1} pWidth={90} pHeight={22} />;
@@ -209,18 +197,28 @@ const CartPaymentMethod = (props: PropsType): React$Node => {
         </React.Fragment>
       );
     }
+
+    return (
+      <Row>
+        <Row>
+          <Image source={toktokwallet_ic} selected="toktokwallet" />
+          <Column>{coloredText()}</Column>
+        </Row>
+        {renderCashInButton()}
+      </Row>
+    );
   };
 
   const renderCashInButton = () => {
-    if (!customerWallet) {
-      return (
-        <TouchableOpacity activeOpacity={0.9} onPress={onToktokWalletRegisterNavigate}>
-          <CreateAccountText>Create your toktokwallet{'\n'}account now!</CreateAccountText>
-        </TouchableOpacity>
-      );
+    if (customerWallet?.status === 1) {
+      return <CashInButton onPress={onToktokWalletCashInNavigate} />;
     }
 
-    return <CashInButton onPress={onToktokWalletCashInNavigate} />;
+    return (
+      <TouchableOpacity activeOpacity={0.9} onPress={onToktokWalletRegisterNavigate}>
+        <CreateAccountText>Create your toktokwallet{'\n'}account now!</CreateAccountText>
+      </TouchableOpacity>
+    );
   };
 
   const renderSelectedPaymentMethod = () =>
