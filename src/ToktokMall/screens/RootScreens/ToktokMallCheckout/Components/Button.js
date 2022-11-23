@@ -18,6 +18,7 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
 
   const CheckoutContextData = useContext(CheckoutContext)
   const [btnDisabled, setBtnDisabled] = useState(false)
+  const [buttonPressed, setButtonPressed] = useState(false)
 
   const isDisabled = () => {
     if(total > 0 && !loading && shipping && CheckoutContextData.shippingFeeRates.length > 0 && balance >= total && CheckoutContextData.voucherErrors.length === 0) return false
@@ -55,7 +56,10 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
               disabled={btnDisabled} 
               style={btnDisabled ? styles.invalidButton : styles.activeButton} 
               onPress={() => {
-                onPressPlaceOrder()
+                if(!buttonPressed){
+                  setButtonPressed(true)
+                  onPressPlaceOrder()
+                }
               }}
             >
                 {!loading && <Text style={styles.buttonText}>Place Order</Text>}
