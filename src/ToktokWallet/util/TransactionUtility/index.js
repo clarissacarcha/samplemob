@@ -23,6 +23,7 @@ export class TransactionUtility {
     onPress = null,
     isNewFt = false,
     isPop = true,
+    message,
   }) => {
     const {graphQLErrors, networkError} = error;
 
@@ -137,7 +138,7 @@ export class TransactionUtility {
       }
 
       const finalPrompType = graphQLErrors[0]?.payload?.errorType ? graphQLErrors[0]?.payload?.errorType : promptType;
-      let promptMessage = graphQLErrors[0]?.message;
+      let promptMessage = message ? message : graphQLErrors[0]?.message;
       if (
         event == 'fundTransfer' &&
         graphQLErrors[0]?.code == 'INTERNAL_SERVER_ERROR' &&
@@ -146,6 +147,9 @@ export class TransactionUtility {
         promptTitle = 'Transaction Pending';
         promptMessage = '';
       }
+      // if (graphQLErrors[0]?.payload?.errorCode === 'BANK_DEACTIVATED') {
+      //   promptMessage = 'Bank is no longer available. This will be removed from your favorites.';
+      // }
 
       prompt({
         type: finalPrompType,

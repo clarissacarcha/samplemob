@@ -120,7 +120,7 @@ const Notifications = ({navigation, route, session, createSession}) => {
             borderBottomWidth: 1,
             borderBottomColor: COLOR.LIGHT,
           }}>
-          <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Notifications</Text>
+          <Text style={{fontSize: FONT_SIZE.XL + 1}}>Notifications</Text>
         </View>
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <ActivityIndicator size="large" color={COLOR.YELLOW} />
@@ -143,7 +143,7 @@ const Notifications = ({navigation, route, session, createSession}) => {
             borderBottomWidth: 1,
             borderBottomColor: COLOR.LIGHT,
           }}>
-          <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Notifications</Text>
+          <Text style={{fontSize: FONT_SIZE.XL + 1}}>Notifications</Text>
         </View>
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text>Something Went Wrong</Text>
@@ -182,7 +182,7 @@ const Notifications = ({navigation, route, session, createSession}) => {
             borderBottomWidth: 1,
             borderBottomColor: COLOR.LIGHT,
           }}>
-          <Text style={{fontSize: FONT_SIZE.L, fontFamily: FONT.BOLD}}>Notifications</Text>
+          <Text style={{fontSize: FONT_SIZE.XL + 1}}>Notifications</Text>
         </View>
         <View style={{marginHorizontal: SIZE.MARGIN, flexDirection: 'row', paddingVertical: 8}}>
           <View style={{width: 22, height: 22, marginHorizontal: SIZE.MARGIN, alignItems: 'center'}}>

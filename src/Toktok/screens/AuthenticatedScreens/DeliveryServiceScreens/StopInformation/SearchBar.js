@@ -1,5 +1,5 @@
 import React, {useRef, useEffect, useCallback} from 'react';
-import {TextInput, TouchableOpacity} from 'react-native';
+import {TextInput, TouchableOpacity, Image} from 'react-native';
 import {debounce} from 'lodash';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -7,6 +7,8 @@ import ENVIRONMENTS from '../../../../../common/res/environments';
 import {HeaderBack} from '../../../../../components';
 import {COLOR} from '../../../../../res/variables';
 import {VectorIcon, ICON_SET} from '../../../../../revamp';
+import {ThrottledOpacity} from '../../../../../components_section';
+import BackIcon from '../../../../../assets/icons/arrow-left-icon.png';
 
 const INITIAL_RESULT = {
   payload: {
@@ -57,6 +59,7 @@ const SearchBar = ({
   onSearchResultChange,
   searchEnabled,
   onSearchLoadingChange,
+  navigation,
 }) => {
   const useIsMounted = () => {
     const isMountedRef = useRef(true);
@@ -169,7 +172,13 @@ const SearchBar = ({
 
   return (
     <>
-      <HeaderBack />
+      {/* <HeaderBack /> */}
+      <ThrottledOpacity
+        style={{alignSelf: 'center', paddingHorizontal: 16}}
+        onPress={() => navigation.pop()}
+        delay={4000}>
+        <Image source={BackIcon} resizeMode={'contain'} style={{width: 15, height: 15}} />
+      </ThrottledOpacity>
       {searchEnabled && (
         <>
           <SearchBarInput searchText={searchText} placeholder={placeholder} onChangeText={onChangeText} />

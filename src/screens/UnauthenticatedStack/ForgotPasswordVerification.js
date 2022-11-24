@@ -245,7 +245,9 @@ const Verification = ({navigation, route, createSession}) => {
         }}>
         <AlertOverlay visible={loading} />
 
-        <TouchableOpacity onPress={() => navigation.pop()} style={{zIndex: 999}}>
+        <TouchableOpacity
+          onPress={() => navigation.pop()}
+          style={{zIndex: 999, marginTop: Platform.OS === 'ios' ? 16 : 0}}>
           <Image
             style={{height: 15, width: 10, top: StatusBar.currentHeight - 10, margin: 16}}
             source={ArrowLeft}

@@ -133,6 +133,9 @@ export const ToktokLandingMenu = ({navigation}) => {
   };
 
   const imageRender = () => {
+    if (!session?.user?.person?.avatar) {
+      return User;
+    }
     const splitBySlash = session.user.person.avatar.split('/');
     const splitByQuestion = splitBySlash[3].split('?');
     const extracted = splitByQuestion[0];

@@ -1,4 +1,5 @@
 import React, {useState, useCallback, useEffect} from 'react';
+import {KeyboardAvoidingView, Platform} from 'react-native';
 import {BackHandler, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import {MAP_DELTA_LOW} from '../../../../res/constants';
@@ -478,7 +479,12 @@ const AddEditLocation = ({navigation, route, session}) => {
   }, [isEdited]);
 
   return (
-    <>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{
+        flex: 1,
+        justifyContent: 'space-between',
+      }}>
       <InfoAddressModal
         visible={showInfoAddressModal}
         modalType={'DeleteDefault'}
@@ -544,7 +550,7 @@ const AddEditLocation = ({navigation, route, session}) => {
         addressObj={addressObj}
         addressIdFromService={addressIdFromService}
       />
-    </>
+    </KeyboardAvoidingView>
   );
 };
 

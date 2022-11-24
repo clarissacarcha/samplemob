@@ -36,9 +36,11 @@ const Details = ({transaction, visible, setVisible}) => {
         <Text style={styles.labelText}>{phrase}</Text>
         {renderDetails({details})}
         <View style={{marginTop: 15}}>
-          <Text style={styles.labelText}>
-            <Text style={{fontFamily: FONT.BOLD}}>Status:</Text> {status}
-          </Text>
+          {status !== 'Failed' && (
+            <Text style={styles.labelText}>
+              <Text style={{fontFamily: FONT.BOLD}}>Status:</Text> {status}
+            </Text>
+          )}
           <Text style={styles.labelText}>
             <Text style={{fontFamily: FONT.BOLD}}>Amount:</Text> {amount}
           </Text>

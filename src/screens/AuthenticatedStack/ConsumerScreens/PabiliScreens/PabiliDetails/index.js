@@ -115,6 +115,16 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
       };
       setPartnerBranch(cleanPartner);
     }
+
+    if (route.params?.rebookDeliveryData?.description) {
+      const orders = JSON.parse(route.params?.rebookDeliveryData?.description);
+      const descriptionFromRebook = orders?.orders?.map(val => {
+        const dataArray = val.split('-');
+        const item = {description: dataArray[1].trim(), quantity: dataArray[0].trim()};
+        return item;
+      });
+      setItemsToPurchase(descriptionFromRebook);
+    }
   }, []);
 
   useEffect(() => {

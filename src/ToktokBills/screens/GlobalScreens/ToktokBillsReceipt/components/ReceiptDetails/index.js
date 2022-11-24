@@ -31,7 +31,7 @@ export const ReceiptDetails = ({route}) => {
   } = receipt;
   const {email, billItemSettings} = paymentData;
   const {firstFieldName, secondFieldName} = billItemSettings;
-  const totalAmount = parseInt(amount) + convenienceFee;
+  const totalAmount = parseFloat(amount) + parseFloat(convenienceFee);
   const [logo, setLogo] = useState({height: 0, width: 0});
   const [imageLoading, setImageLoading] = useState(true);
   const [footerHeight, setFooterHeight] = useState(80);

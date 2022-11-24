@@ -86,7 +86,7 @@ export const PaymentMethod = ({loadDetails, onCashIn}) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: moderateScale(25),
+    paddingHorizontal: moderateScale(16),
     paddingVertical: moderateScale(20),
   },
   title: {
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   balance: {
     color: '#525252',
-    fontSize: FONT_SIZE.XS,
+    fontSize: FONT_SIZE.S,
   },
   cashinContainer: {
     flex: 1,

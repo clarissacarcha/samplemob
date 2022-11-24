@@ -18,7 +18,7 @@ import {useAlert} from '../../../../../hooks/useAlert';
 import {OnDeliveryStatusChangeSubscriber, OnDeliveryAcceptedSubscriber} from '../../../../../components/subscribers';
 import {YellowIcon} from '../../../../../components/ui';
 import {YellowButton} from '../../../../../revamp/buttons/YellowButton';
-import {DARK, ORANGE, APP_FLAVOR} from '../../../../../res/constants';
+import {DARK, ORANGE, APP_FLAVOR, FONT_FAMILY} from '../../../../../res/constants';
 import {FONT, FONT_SIZE} from '../../../../../res/variables';
 import {PATCH_DELIVERY_DELETE} from '../../../../../graphql';
 import {onError} from '../../../../../util/ErrorUtility';
@@ -63,7 +63,7 @@ const SelectedDelivery = ({navigation, route}) => {
     },
   });
 
-  const onCancelCallback = (returnData) => {
+  const onCancelCallback = returnData => {
     setDelivery(returnData);
     Toast.show('Order successfully cancelled.');
   };
@@ -75,7 +75,7 @@ const SelectedDelivery = ({navigation, route}) => {
     });
   };
 
-  const onDeliveryRated = (rating) => {
+  const onDeliveryRated = rating => {
     setDelivery({
       ...getDelivery,
       ...rating,
@@ -102,6 +102,18 @@ const SelectedDelivery = ({navigation, route}) => {
     2000,
     {leading: true, trailing: false},
   );
+
+  const rebookDelivery = () => {
+    if (delivery.description) {
+      navigation.pop(2);
+      navigation.navigate('ToktokLandingHome');
+      navigation.push('Pabili', {delivery: delivery});
+    } else {
+      navigation.pop(2);
+      navigation.navigate('ToktokLandingHome');
+      navigation.push('ToktokDelivery', {delivery: delivery});
+    }
+  };
 
   return (
     <View style={{flex: 1}}>
@@ -140,6 +152,14 @@ const SelectedDelivery = ({navigation, route}) => {
 
         {/*---------------------------------------- DELIVERY TRACKING ----------------------------------------*/}
         {[2, 3, 4, 5].includes(getDelivery.status) && <DriverLocationCard driver={getDelivery.driver} />}
+        {[6, 9].includes(getDelivery.status) && !isRateButtonShown() && (
+          <>
+            {/*-------------------- REBOOK BUTTON --------------------*/}
+            {!delivery?.partnerBranch?.id && (
+              <YellowButton onPress={rebookDelivery} label="Rebook" style={{marginBottom: 8}} />
+            )}
+          </>
+        )}
 
         {/* <StatusSection delivery={delivery} />
         <SenderRecipientSection delivery={delivery} />
@@ -147,19 +167,14 @@ const SelectedDelivery = ({navigation, route}) => {
         <PaymentMethodSection delivery={delivery} />
         <CashOnDeliveryPabiliSection delivery={delivery} /> */}
 
-        {/*-------------------- DELETE/REBOOK BUTTON DETAILS --------------------*/}
+        {/*-------------------- REBOOK BUTTON DETAILS --------------------*/}
         {getDelivery.status === 7 && (
-          <View style={{flexDirection: 'row', marginBottom: 16}}>
-            {/*-------------------- DELETE BUTTON --------------------*/}
-            <TouchableHighlight
-              onPress={patchDeliveryDelete}
-              underlayColor={COLOR.YELLOW}
-              style={{borderRadius: 10, flex: 1, marginRight: 10}}>
-              <View style={styles.submit}>
-                <Text style={{color: COLOR.YELLOW, fontSize: 16}}>Delete Order</Text>
-              </View>
-            </TouchableHighlight>
-          </View>
+          <>
+            {/*-------------------- REBOOK BUTTON --------------------*/}
+            {!delivery?.partnerBranch?.id && (
+              <YellowButton onPress={rebookDelivery} label="Rebook" style={{marginBottom: 8}} />
+            )}
+          </>
         )}
 
         {/*-------------------- DELIVERY ID --------------------*/}
@@ -221,6 +236,15 @@ const styles = StyleSheet.create({
   submit: {
     flexDirection: 'row',
     backgroundColor: DARK,
+    height: 50,
+    borderRadius: 5,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  rebook: {
+    flexDirection: 'row',
+    backgroundColor: COLOR.YELLOW,
     height: 50,
     borderRadius: 5,
     paddingHorizontal: 20,

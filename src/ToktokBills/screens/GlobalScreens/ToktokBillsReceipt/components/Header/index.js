@@ -11,15 +11,22 @@ import {bills_logo} from 'toktokbills/assets/images';
 export const Header = ({route}) => {
   const {receipt} = route.params;
   const {billerDetails} = receipt;
+  const [imageError, setImageError] = useState(false);
 
   return (
     <View style={{alignItems: 'center'}}>
-      {billerDetails?.logo && (
-       <Image source={{uri: billerDetails.logo}} style={styles.logo} />
+      {billerDetails?.logo && !imageError && (
+        <Image
+          source={{uri: billerDetails.logo}}
+          style={styles.logo}
+          onError={err => {
+            setImageError(!!err);
+          }}
+        />
       )}
       <View style={styles.logoTextContainer}>
-        <Text>
-          <Text style={styles.headerText}>{billerDetails.descriptions}</Text>
+        <Text style={billerDetails?.logo && !imageError ? styles.headerText : styles.billerNologo}>
+          {billerDetails.descriptions}
         </Text>
       </View>
     </View>
@@ -48,5 +55,9 @@ const styles = StyleSheet.create({
     color: COLOR.YELLOW,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
+  },
+  billerNologo: {
+    marginVertical: moderateScale(10),
+    fontSize: FONT_SIZE.M,
   },
 });

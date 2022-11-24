@@ -17,25 +17,34 @@ import {banner_bg} from 'toktokbills/assets';
 export const Header = ({billType, billItemSettings = {}, tokwaBalance = 0}) => {
   const navigation = useNavigation();
   const [imageLoading, setImageLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
 
   return (
     <ImageBackground source={banner_bg} resizeMode="cover">
       <View style={styles.headerContainer}>
         <View style={{justifyContent: 'center'}}>
-          {(imageLoading && billItemSettings?.logo) && (
+          {imageLoading && billItemSettings?.logo && !imageError && (
             <View style={{position: 'absolute', right: 0, left: 0}}>
               <LoadingIndicator isLoading={true} size="small" />
             </View>
           )}
-          {billItemSettings?.logo && (
-          <Image
-            source={{uri: billItemSettings?.logo}}
-            style={styles.logo}
-            onLoadStart={() => setImageLoading(true)}
-            onLoadEnd={() => setImageLoading(false)}
-          /> )}
+          {billItemSettings?.logo && !imageError && (
+            <Image
+              source={{
+                uri: billItemSettings?.logo,
+              }}
+              style={styles.logo}
+              onLoadStart={() => setImageLoading(true)}
+              onLoadEnd={() => setImageLoading(false)}
+              onError={err => {
+                setImageError(!!err);
+              }}
+            />
+          )}
         </View>
-        <Text style={billItemSettings?.logo ? styles.billerName : styles.billerNologo}>{billItemSettings?.descriptions}</Text>
+        <Text style={billItemSettings?.logo && !imageError ? styles.billerName : styles.billerNologo}>
+          {billItemSettings?.descriptions}
+        </Text>
       </View>
     </ImageBackground>
   );
