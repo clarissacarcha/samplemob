@@ -20,4 +20,9 @@ export type PropsType = {
   caretHidden?: Boolean,
   editable?: Boolean,
   label?: string,
+  onPressFavorite?: any,
+  isFavorite?: Boolean,
+  name?: string,
+  hasContacts?: Boolean,
+  hasFavorite?: Boolean,
 };

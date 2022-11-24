@@ -6,6 +6,7 @@ export const GET_ACCOUNT = gql`
       id
       mobileNumber
       person
+      selfieImage
     }
   }
 `;
@@ -34,6 +35,7 @@ export const GET_MY_ACCOUNT = gql`
         birthdate
         emailAddress
         gender
+        selfieImage
         accountType {
           title
           level

@@ -61,7 +61,11 @@ export const ScanQr = ({navigation, route}) => {
             return alertHook({message: 'You cannot send money to yourself'});
           }
           setErrMessage('');
-          return navigation.navigate('ToktokWalletScanQRConfirm', {recipientInfo: account, QRInfo});
+          return navigation.navigate('ToktokWalletScanQRTransaction', {
+            recipientInfo: account,
+            QRInfo,
+            headerTitle: 'Send Money via QR',
+          });
         }
       } else {
         return navigation.navigate('ToktokWalletMerchantPaymentConfirm', {

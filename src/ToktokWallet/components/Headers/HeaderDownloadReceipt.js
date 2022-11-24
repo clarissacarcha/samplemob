@@ -20,6 +20,8 @@ export const HeaderDownloadReceipt = ({
   refNo,
   format,
   onPressDownloadReceipt,
+  promptTitle = 'Receipt Downloaded',
+  promptMessage = 'Your transaction receipt has been saved to your gallery.',
 }) => {
   const navigation = useNavigation();
   const prompt = usePrompt();
@@ -114,8 +116,8 @@ export const HeaderDownloadReceipt = ({
 
         prompt({
           type: 'success',
-          title: 'Receipt Downloaded',
-          message: 'Your transaction receipt has been saved to your gallery.',
+          title: promptTitle,
+          message: promptMessage,
           event: 'TOKTOKBILLSLOAD',
         });
         onPressDownloadReceipt(false);

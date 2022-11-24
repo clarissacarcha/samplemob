@@ -35,14 +35,14 @@ const MainComponent = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitleRevamp label={'QR Code'} />,
-    // headerRight: () => <HeaderRight isDownload onPress={handleDownloadQrCode} />,
     headerRight: () => (
       <HeaderDownloadReceipt
         viewshotRef={viewshotRef}
-        // refNo={route.params.receipt.referenceNumber}
         onPressDownloadReceipt={val => {
           setOnCapturingScreen(val);
         }}
+        promptTitle="QR Code Downloaded"
+        promptMessage="Your QR Code has been saved to your gallery."
       />
     ),
     headerShown: qrOptions !== 'scan',
@@ -62,7 +62,11 @@ const MainComponent = ({navigation, route}) => {
             // return setErrMessage("You cannot send money to yourself")
             return alertHook({message: 'You cannot send money to yourself'});
           }
-          return navigation.navigate('ToktokWalletScanQRConfirm', {recipientInfo: account, QRInfo});
+          return navigation.navigate('ToktokWalletScanQRTransaction', {
+            recipientInfo: account,
+            QRInfo,
+            headerTitle: 'Send Money via QR',
+          });
         }
       } else {
         return navigation.navigate('ToktokWalletMerchantPaymentConfirm', {

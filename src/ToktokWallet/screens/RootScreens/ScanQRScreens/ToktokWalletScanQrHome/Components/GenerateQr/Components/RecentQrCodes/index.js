@@ -48,7 +48,7 @@ export const RecentQrCodes = ({data}) => {
 
   return (
     <>
-      {(data.length !== 0 || getAccountQrCodesLoading) && <Text style={styles.title}>Recent Qr</Text>}
+      {(data.length !== 0 || getAccountQrCodesLoading) && <Text style={styles.title}>Recent QR</Text>}
       {getAccountQrCodesLoading ? (
         <LoadingIndicator isLoading={true} size="small" />
       ) : (
