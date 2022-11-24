@@ -30,6 +30,7 @@ export const POST_SEND_MONEY = gql`
     postSendMoney(input: $input) {
       id
       amount
+      refNo
       status
       sourceWalletId
       destinationWalletId
@@ -172,7 +173,6 @@ export const POST_VALIDATE_QR_CODE = gql`
         mobileNumber
         email
         qrCode
-      
       }
       merchant {
         ${MERCHANT}
