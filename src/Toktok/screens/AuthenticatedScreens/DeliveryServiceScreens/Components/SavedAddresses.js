@@ -1,32 +1,53 @@
 import React from 'react';
-import {View, StyleSheet, Text, FlatList} from 'react-native';
+import {View, StyleSheet, Text, FlatList, Image, ActivityIndicator} from 'react-native';
 import CONSTANTS from '../../../../../common/res/constants';
 import {DIRTY_WHITE} from '../../../../../res/constants';
-import LocationCard from './LocationCard';
 import EditIcon from '../../../../../assets/toktokgo/editIcon.png';
+import NavIcon from '../../../../../assets/icons/arrow-right-icon.png';
+import {ThrottledOpacity} from '../../../../../components_section';
+import LocationCard from './LocationCard';
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const SavedAddresses = ({data, setShowMap, stopData, setStopData, setSearchText, onPressAddAddress}) => {
-  const onSelect = item => {};
+const SavedAddresses = ({navigation, data, onSelectSavedAddress, callMe}) => {
+  const onPressAddAddress = item => {
+    navigation.push('ToktokAddEditLocation', {addressIdFromService: item.id});
+  };
+
+  const getAddressObj = item => {
+    onSelectSavedAddress(item);
+    // callMe(item);
+  };
 
   return (
     <>
       <View style={styles.container}>
-        <Text style={styles.title}>Saved Addresses</Text>
+        <View style={styles.wrapper}>
+          <Text style={styles.title}>Saved Addresses</Text>
+          <ThrottledOpacity
+            style={styles.innerWrapper}
+            onPress={() => {
+              navigation.push('ToktokSavedLocations', {getAddressObj});
+            }}>
+            <Text style={styles.textstyle}>See All</Text>
+            <Image source={NavIcon} resizeMode={'contain'} style={{width: 11, height: 11}} />
+          </ThrottledOpacity>
+        </View>
+
         <FlatList
           showsVerticalScrollIndicator={false}
           data={data}
           ItemSeparatorComponent={ItemSeparator}
           keyExtractor={item => item.id}
           renderItem={({item, index}) => {
-            const label = item.place.formattedAddress.split(',');
+            const label = item.isHome ? 'Home' : item.isOffice ? 'Office' : item.label;
+
             return (
               <LocationCard
                 item={item}
-                label={label[0]}
+                label={label}
                 formattedAddress={item.place.formattedAddress}
-                onSelect={onSelect}
+                onSelect={onSelectSavedAddress}
                 actionIcon={EditIcon}
                 onActionPress={onPressAddAddress}
               />
@@ -46,6 +67,18 @@ const styles = StyleSheet.create({
     height: 1,
     borderTopWidth: 1,
     borderColor: DIRTY_WHITE,
+  },
+  wrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  innerWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  textstyle: {
+    color: CONSTANTS.COLOR.ORANGE,
+    marginRight: 10,
   },
   container: {
     marginTop: 24,

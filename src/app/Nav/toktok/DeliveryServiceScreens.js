@@ -1,5 +1,11 @@
 import React from 'react';
-import {DeliveryInformation, DeliveryStops, StopInformation, ToktokVehicleInformation} from 'toktok/screens';
+import {
+  DeliveryInformation,
+  DeliveryStops,
+  StopInformation,
+  ToktokVehicleInformation,
+  DeliveryVouchers,
+} from 'toktok/screens';
 
 export default ({Navigator}) => (
   <>
@@ -7,5 +13,6 @@ export default ({Navigator}) => (
     <Navigator.Screen name="ToktokDelivery" component={DeliveryStops} options={{headerShown: false}} />
     <Navigator.Screen name="StopDetails" component={StopInformation} options={{headerShown: false}} />
     <Navigator.Screen name="ToktokVehicleInformation" component={ToktokVehicleInformation} />
+    <Navigator.Screen name="DeliveryVouchers" component={DeliveryVouchers} />
   </>
 );

@@ -25,6 +25,7 @@ import ExpressForm from './ExpressForm';
 import {ItemForm, ItemSheet} from './ItemForm';
 import NotesForm from './NotesForm';
 import PabiliForm from './PabiliForm';
+import Voucher from './Voucher';
 
 import PromoForm from './PromoForm';
 
@@ -48,6 +49,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
   const [walletBalance, setWalletBalance] = useState(0);
   const [balanceText, setBalanceText] = useState('');
   const [hasWallet, setHasWallet] = useState(null);
+  const [selectedVoucher, setSelectedVoucher] = useState(null);
 
   const [initialPrice, setInitialPrice] = useState(route.params.quotation.pricing.price);
 
@@ -374,38 +376,48 @@ const DeliveryDetails = ({navigation, route, session}) => {
           </View>
         </Modal>
         <View style={{flex: 1}}>
-          <InputScrollView showsVerticalScrollIndicator={false}>
-            <AlertOverlay visible={loading || recomputeLoading} />
-            <View style={{height: 10}} />
-            <PaymentMethodForm
-              value={paymentMethod === 'CASH' ? 'Cash' : 'toktokwallet'}
-              bottomSheetRef={paymentMethodSheetRef}
-            />
-            {paymentMethod === 'CASH' && (
-              <PaymentForm
-                value={collectPaymentFrom === 'SENDER' ? 'Sender' : 'Recipient'}
-                bottomSheetRef={paymentSheetRef}
+          <InputScrollView showsVerticalScrollIndicator={false} style={{marginHorizontal: -16}}>
+            <View style={{marginHorizontal: 16}}>
+              <AlertOverlay visible={loading || recomputeLoading} />
+              <View style={{height: 10}} />
+              <PaymentMethodForm
+                value={paymentMethod === 'CASH' ? 'Cash' : 'toktokwallet'}
+                bottomSheetRef={paymentMethodSheetRef}
               />
-            )}
+              {paymentMethod === 'CASH' && (
+                <PaymentForm
+                  value={collectPaymentFrom === 'SENDER' ? 'Sender' : 'Recipient'}
+                  bottomSheetRef={paymentSheetRef}
+                />
+              )}
 
-            <ItemForm
-              value={itemDescription}
-              bottomSheetRef={itemSheetRef}
-              onOtherItemChange={setOtherItem}
-              otherItem={otherItem}
+              <ItemForm
+                value={itemDescription}
+                bottomSheetRef={itemSheetRef}
+                onOtherItemChange={setOtherItem}
+                otherItem={otherItem}
+              />
+
+              <NotesForm value={notes} onChange={setNotes} />
+            </View>
+
+            {/* <PromoForm /> */}
+            <Voucher
+              navigation={navigation}
+              selectedVoucher={selectedVoucher}
+              setSelectedVoucher={setSelectedVoucher}
             />
+            <></>
 
-            <NotesForm value={notes} onChange={setNotes} />
-
-            <PromoForm />
-
-            <ExpressForm value={isExpress} onChange={onIsExpressChange} />
-            <PabiliForm
-              value={isCashOnDelivery}
-              amount={cashOnDelivery}
-              onChange={onIsCashOnDeliveryChange}
-              onAmountChange={setCashOnDelivery}
-            />
+            <View style={{marginHorizontal: 16}}>
+              <ExpressForm value={isExpress} onChange={onIsExpressChange} />
+              <PabiliForm
+                value={isCashOnDelivery}
+                amount={cashOnDelivery}
+                onChange={onIsCashOnDeliveryChange}
+                onAmountChange={setCashOnDelivery}
+              />
+            </View>
           </InputScrollView>
         </View>
         <View style={{backgroundColor: 'white', marginHorizontal: -16}}>

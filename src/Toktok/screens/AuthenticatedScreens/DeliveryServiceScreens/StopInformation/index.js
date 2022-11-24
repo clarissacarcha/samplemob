@@ -26,6 +26,7 @@ import {COLOR, FONT, FONT_SIZE, SIZE, MAP_DELTA} from '../../../../../res/variab
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 
 //SELF IMPORTS
+import SavedAddresses from '../Components/SavedAddresses';
 import RecentSearch from './RecentSearch';
 import AutocompleteResult from './AutocompleteResult';
 import SearchBar from './SearchBar';
@@ -51,7 +52,7 @@ const StopDetails = ({navigation, route}) => {
 
   const AlertHook = useAlert();
 
-  const {onStopConfirm} = route.params;
+  const {onStopConfirm, savedAddresses} = route.params;
 
   const [showMap, setShowMap] = useState(stopData.latitude ? true : false);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -289,6 +290,17 @@ const StopDetails = ({navigation, route}) => {
     navigation.push('ToktokAddEditLocation', {coordsFromService: item.location});
   };
 
+  const onSelectSavedAddress = item => {
+    setShowMap(true);
+    setStopData({
+      ...stopData,
+      latitude: item.place.location.latitude,
+      longitude: item.place.location.longitude,
+      formattedAddress: item.place.formattedAddress,
+    });
+    setSearchText(item.formattedAddress);
+  };
+
   return (
     <View style={styles.screenBox}>
       <View style={{height: StatusBar.currentHeight}} />
@@ -467,6 +479,7 @@ const StopDetails = ({navigation, route}) => {
           setSearchText={setSearchText}
         />
       )}
+      {/* todo: conditional rendering */}
       {!showMap && searchText == '' && (
         <RecentSearch
           recentSearchDataList={recentSearchDataList}
@@ -476,6 +489,9 @@ const StopDetails = ({navigation, route}) => {
           setSearchText={setSearchText}
           onPressAddAddress={onPressAddAddress}
         />
+      )}
+      {!showMap && searchText == '' && (
+        <SavedAddresses navigation={navigation} data={savedAddresses} onSelectSavedAddress={onSelectSavedAddress} />
       )}
       {!showMap && searchLoading && searchText !== '' && <SearchLoadingIndicator />}
     </View>
