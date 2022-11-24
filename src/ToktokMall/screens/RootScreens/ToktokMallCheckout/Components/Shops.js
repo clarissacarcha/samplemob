@@ -62,12 +62,12 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           total = total + parseFloat(item[i].product.compareAtPrice * item[i].qty)
         }else{
           // total = total + parseFloat(item[i].product.price)
-          let itemsrpprice = parseFloat(item[i].product.compareAtPrice * item[i].qty)
+          let itemsrpprice = parseFloat(item[i].product.price * item[i].qty)
           total = total + itemsrpprice
         }      
       }else{
         if(referral && referral?.franchiseeCode != null){
-          let itemsrpprice = parseFloat(item[i].product.compareAtPrice * item[i].qty)
+          let itemsrpprice = parseFloat(item[i].product.price * item[i].qty)
           total = total + itemsrpprice
         }else{
           total = total + parseFloat(item[i].amount)

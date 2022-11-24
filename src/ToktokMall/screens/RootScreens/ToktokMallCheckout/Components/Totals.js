@@ -149,7 +149,7 @@ export const Totals = ({raw, shipping, setGrandTotal, referral}) => {
       <>
         <View style={styles.textContainer}>
           <View style={styles.voucherContainer}>
-            <Text style={styles.voucherTitleText}>Vouchers</Text>
+            <Text style={styles.voucherTitleText}>Discount</Text>
             <TouchableOpacity onPress={() => setToggleVouchers(!toggleVouchers)} style={styles.toggleVoucherButton}>
               <Icons.AIcon name={toggleVouchers ? 'down' : 'up'} size={14} />
             </TouchableOpacity>
