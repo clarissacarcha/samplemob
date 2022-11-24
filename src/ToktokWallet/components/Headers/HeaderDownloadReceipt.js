@@ -102,7 +102,6 @@ export const HeaderDownloadReceipt = ({
     const result = await checkAndRequest();
 
     const pathCache = RNFS.CachesDirectoryPath;
-    console.log(pathCache);
     setTimeout(() => {
       viewshotRef.current.capture().then(async uri => {
         const timestamp = +moment();

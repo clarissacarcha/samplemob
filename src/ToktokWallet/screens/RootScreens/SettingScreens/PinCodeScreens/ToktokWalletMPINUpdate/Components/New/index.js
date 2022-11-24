@@ -42,7 +42,6 @@ export const New = ({pinCode, setPinCode, pageIndex, setPageIndex}) => {
           }`,
         );
       } else {
-        console.log('HAHA');
         setPageIndex(oldstate => oldstate + 1);
       }
     }

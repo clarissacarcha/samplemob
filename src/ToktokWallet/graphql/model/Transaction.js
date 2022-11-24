@@ -139,6 +139,65 @@ export const POST_VERIFY_TRANSACTION_QR_CODE = gql`
   }
 `;
 
+const MERCHANT = `
+  id
+  merchantCode
+  merchantName
+  logo
+  serviceFee
+  paymentType
+  wTax
+`;
+
+const BRANCH = `
+  id
+  merchantId
+  merchant {
+    ${MERCHANT}
+  }
+  branchCode
+  branchName
+  serviceFee
+  wTax
+`;
+
+export const POST_VALIDATE_QR_CODE = gql`
+  mutation postValidateQRCode($input: PostValidateQRCodeInput) {
+    postValidateQRCode(input: $input) {
+      terminal {
+        id
+        branchId
+        terminalCode
+        terminalName
+        mobileNumber
+        email
+        qrCode
+      
+      }
+      merchant {
+        ${MERCHANT}
+      }
+      branch {
+        ${BRANCH}
+      }
+      account {
+        id
+        mobileNumber
+        status
+        motherId
+        person {
+          id
+          firstName
+          middleName
+          lastName
+        }
+      }
+      QRInfo
+      action
+    }
+  }
+`;
+
 export const GET_ENTERPRISE_TRANSACTIONS = gql`
     query getEnterpriseTransactions($input: GetEnterpriseTransactionsInput) {
         getEnterpriseTransactions(input: $input) {
@@ -191,4 +250,4 @@ export const GET_SEND_MONEY_TRANSACTIONS_PAGINATE = gql`
       }
     }
   }
-`
+`;
