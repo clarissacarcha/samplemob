@@ -13,3 +13,4 @@ export * from './ToktokMallStore';
 export * from './ToktokMallStoreSearch';
 export * from './ToktokMallVouchersClaim';
 export * from './ToktokMallOTP';
+export * from './ToktokMallOnBoarding';
