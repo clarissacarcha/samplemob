@@ -125,10 +125,9 @@ export const VoucherCard = ({
           )}
         </View>
         <View style={styles.claimContainer}>
-          {data.collectable && !data.voucherWallet ? (
-            // loading ? (
-            //   <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
-            // ) :
+          {loading ? (
+            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+          ) : data.collectable && !data.voucherWallet ? (
             <ThrottledOpacity
               style={isApplicable ? [styles.claimButton, {backgroundColor: CONSTANTS.COLOR.GRAY}] : styles.claimButton}
               onPress={onPress}
