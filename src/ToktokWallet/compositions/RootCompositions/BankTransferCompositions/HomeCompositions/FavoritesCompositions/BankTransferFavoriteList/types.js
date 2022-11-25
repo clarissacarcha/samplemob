@@ -9,4 +9,5 @@ export type PropsType = {
   data: Array<Object>,
   onRefreshFavorite: any,
   screenLabel: string,
+  postCheckFavorite: any,
 };

@@ -13,7 +13,7 @@ import {numberFormat, currencyCode} from 'toktokwallet/helper';
 //GRAPHQL & HOOKS
 import {useMutation} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {POST_COMPUTE_CONVENIENCE_FEE} from 'toktokwallet/graphql';
+import {POST_COMPUTE_CONVENIENCE_FEE, PATCH_REMOVE_ACCOUNT} from 'toktokwallet/graphql';
 import {TransactionUtility} from 'toktokwallet/util';
 import {usePrompt} from 'src/hooks';
 import {useNavigation} from '@react-navigation/native';
@@ -23,7 +23,7 @@ const {Provider} = BtVerifyContext;
 
 export const BtVerifyContextProvider = (props: PropsType): React$Node => {
   const {tokwaAccount} = useAccount();
-  const {children, favoriteDetails} = props;
+  const {children, favoriteDetails, onRefreshFavorite, event} = props;
   const prompt = usePrompt();
   const navigation = useNavigation();
 
@@ -51,6 +51,9 @@ export const BtVerifyContextProvider = (props: PropsType): React$Node => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [isPromptModalError, setIsPromptModalError] = useState(false);
+  const [favoriteId, setFavoriteId] = useState(favoriteDetails ? favoriteDetails.id : 0);
+  const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
 
   const changeDataValue = (key, value) => {
     setData(oldstate => ({
@@ -87,14 +90,22 @@ export const BtVerifyContextProvider = (props: PropsType): React$Node => {
       client: TOKTOK_WALLET_GRAPHQL_CLIENT,
       onError: error => {
         const {graphQLErrors} = error;
-        if (graphQLErrors.length > 0 && graphQLErrors[0].code === 'BAD_USER_INPUT') {
-          setErrorMessages(oldstate => ({...oldstate, amount: graphQLErrors[0].message}));
-        } else {
+        if (isPromptModalError) {
+          if (graphQLErrors[0]?.payload?.errorCode === 'BANK_DEACTIVATED' && onRefreshFavorite) {
+            onRefreshFavorite();
+          }
           TransactionUtility.StandardErrorHandling({
             error,
             navigation,
             prompt,
             isPop: false,
+            message:
+              graphQLErrors[0]?.payload?.errorCode === 'BANK_DEACTIVATED' && favoriteId
+                ? 'Bank is no longer available. This will be removed from your favorites.'
+                : 'Bank is no longer available. You cannot proceed with your transaction.',
+            onPress: () => {
+              navigation.pop(event === 'see all' ? 2 : 1);
+            },
           });
         }
       },
@@ -119,6 +130,25 @@ export const BtVerifyContextProvider = (props: PropsType): React$Node => {
     },
   );
 
+  const [patchRemoveAccount, {loading: patchRemoveAccountLoading}] = useMutation(PATCH_REMOVE_ACCOUNT, {
+    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    onCompleted: details => {
+      setFavoriteId(0);
+      setFavoriteModal({show: true, message: 'Removed from your Favorites'});
+      if (onRefreshFavorite) {
+        onRefreshFavorite();
+      }
+    },
+    onError: error => {
+      TransactionUtility.StandardErrorHandling({
+        error,
+        navigation,
+        prompt,
+        isPop: false,
+      });
+    },
+  });
+
   return (
     <Provider
       value={{
@@ -134,6 +164,13 @@ export const BtVerifyContextProvider = (props: PropsType): React$Node => {
         changeAmount,
         loading,
         setLoading,
+        isPromptModalError,
+        setIsPromptModalError,
+        favoriteId,
+        setFavoriteId,
+        patchRemoveAccountLoading,
+        favoriteModal,
+        setFavoriteModal,
       }}>
       {children}
     </Provider>

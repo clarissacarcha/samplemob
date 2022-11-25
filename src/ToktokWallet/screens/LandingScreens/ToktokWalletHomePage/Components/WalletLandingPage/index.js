@@ -35,7 +35,7 @@ export const WalletLandingPage = connect(
         <WalletCardInfo />
         <View>
           <WalletRecentTransactions />
-          <Advertisements />
+          <Advertisements refreshing={refreshing} />
         </View>
       </ScrollView>
     </View>

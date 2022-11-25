@@ -22,22 +22,12 @@ import {
   Separator,
   TitleContainer,
 } from './Styled';
-import {Animated} from 'react-native';
 import {useAccount} from 'toktokwallet/hooks';
 import {currencyCode, numberFormat} from 'toktokwallet/helper';
 
 const TransferableAndNonTransferableBalance = (props: PropsType): React$Node => {
   const [showDetails, setShowDetails] = useState(false);
-  const fadeAnim = useRef(new Animated.Value(0));
   const {tokwaAccount} = useAccount();
-
-  useEffect(() => {
-    Animated.timing(fadeAnim.current, {
-      toValue: showDetails ? 1 : 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }, [showDetails]);
 
   return (
     <Container>
@@ -54,7 +44,7 @@ const TransferableAndNonTransferableBalance = (props: PropsType): React$Node => 
         {showDetails ? <ArrowDown /> : <ArrowRight />}
       </Button>
       {showDetails && (
-        <ContentContainer opacity={fadeAnim.current}>
+        <ContentContainer>
           <ContentSubContainer>
             <TitleContainer>
               <Label>Transferable Balance</Label>

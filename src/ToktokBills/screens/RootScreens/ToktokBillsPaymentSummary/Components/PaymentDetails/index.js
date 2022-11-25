@@ -3,7 +3,7 @@ import {View, Text, Dimensions, StyleSheet, TextInput, Image, ImageBackground} f
 import {useNavigation} from '@react-navigation/native';
 import {useThrottle} from 'src/hooks';
 import validator from 'validator';
-import {LoadingIndicator} from 'toktokbills/components';
+import {LoadingIndicator, PolicyNote} from 'toktokbills/components';
 
 //HELPER
 import {moderateScale, formatAmount, numberFormat, currencyCode} from 'toktokbills/helper';
@@ -20,11 +20,12 @@ export const PaymentDetails = ({paymentData}) => {
   const navigation = useNavigation();
   const {firstField, secondField, amount, email, billType, convenienceFee, billItemSettings} = paymentData;
   const totalAmount =
-    parseInt(amount) +
-    billItemSettings?.commissionRateDetails?.providerServiceFee +
-    billItemSettings?.commissionRateDetails?.systemServiceFee;
+    parseFloat(amount) +
+    parseFloat(billItemSettings?.commissionRateDetails?.providerServiceFee) +
+    parseFloat(billItemSettings?.commissionRateDetails?.systemServiceFee);
   const [logo, setLogo] = useState({height: 0, width: 0});
   const [imageLoading, setImageLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     Image.getSize(billItemSettings.logo, (width, height) => {
@@ -46,38 +47,32 @@ export const PaymentDetails = ({paymentData}) => {
       <ImageBackground source={banner_bg} resizeMode="cover">
         <View style={styles.headerContainer}>
           <View style={{justifyContent: 'center'}}>
-            {imageLoading && (
+            {imageLoading && billItemSettings?.logo && !imageError && (
               <View style={{position: 'absolute', right: 0, left: 0}}>
                 <LoadingIndicator isLoading={true} size="small" />
               </View>
             )}
-            <Image
-              source={{uri: billItemSettings?.logo}}
-              style={styles.headerLogo}
-              onLoadStart={() => setImageLoading(true)}
-              onLoadEnd={() => setImageLoading(false)}
-            />
+            {billItemSettings?.logo && !imageError && (
+              <Image
+                source={{uri: billItemSettings?.logo}}
+                style={styles.headerLogo}
+                onLoadStart={() => setImageLoading(true)}
+                onLoadEnd={() => setImageLoading(false)}
+                onError={err => {
+                  setImageError(!!err);
+                }}
+              />
+            )}
           </View>
-          <Text style={styles.billerName}>{billItemSettings?.descriptions}</Text>
+          <Text style={billItemSettings?.logo && !imageError ? styles.billerName : styles.billerNologo}>
+            {billItemSettings?.descriptions}
+          </Text>
         </View>
       </ImageBackground>
-      {(billItemSettings?.itemDocumentDetails?.paymentPolicy1 ||
-        billItemSettings?.itemDocumentDetails?.paymentPolicy2) && (
-        <View style={styles.note}>
-          <Image
-            source={InfoIcon}
-            style={[!billItemSettings?.itemDocumentDetails?.paymentPolicy2 ? styles.noteLogoPolicy1 : styles.noteLogo]}
-          />
-          {!billItemSettings?.itemDocumentDetails?.paymentPolicy2 ? (
-            <Text style={styles.noteText}>{billItemSettings?.itemDocumentDetails?.paymentPolicy1}</Text>
-          ) : (
-            <View>
-              <Text style={styles.noteText}>{billItemSettings?.itemDocumentDetails?.paymentPolicy1}</Text>
-              <Text style={styles.noteText}>{billItemSettings?.itemDocumentDetails?.paymentPolicy2}</Text>
-            </View>
-          )}
-        </View>
-      )}
+      <PolicyNote
+        note1={billItemSettings?.itemDocumentDetails?.paymentPolicy1}
+        note2={billItemSettings?.itemDocumentDetails?.paymentPolicy2}
+      />
       <View style={styles.detailsContainer}>
         <Text style={styles.label}>{billItemSettings.firstFieldName} </Text>
         <Text style={styles.description}>{firstField}</Text>
@@ -214,5 +209,9 @@ const styles = StyleSheet.create({
     height: moderateScale(40),
     resizeMode: 'contain',
     flexShrink: 1,
+  },
+  billerNologo: {
+    paddingVertical: moderateScale(20),
+    fontSize: FONT_SIZE.M,
   },
 });
