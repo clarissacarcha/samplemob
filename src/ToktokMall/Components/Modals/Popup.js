@@ -85,25 +85,15 @@ export const PopupModalComponent = ({isVisible, type, label = "Loading", useLott
               alignItems: 'center',
             }}>            
             {
-              Platform.OS == "ios" ? 
-                <LottieView
-                  autoPlay={true}
-                  loop={true}
-                  resizeMode="cover"  
-                  source={loadingLottie}
-                  style={{top: -10, width: 180, height: undefined, aspectRatio: 1.5}}
-                />
-                :
-                <LottieView
-                  autoPlay={true}
-                  loop={true}
-                  source={loadingLottie} 
-                  resizeMode="cover"                 
-                  style={{width: 180, height: undefined, aspectRatio: 1.5}}
-                />
-                // <ActivityIndicator size={80} color="#F6841F" style={{borderRadius: 15}} />
+              <LottieView
+                autoPlay={true}
+                loop={true}
+                source={loadingLottie} 
+                resizeMode="cover"                 
+                style={{width: 180, height: undefined, aspectRatio: 1.5}}
+              />
             }
-            <View style={{marginTop: Platform.OS == "ios" ? 80 : 0}}>
+            <View style={{}}>
               <Text style={{color: "#F6841F", fontFamily: FONT.BOLD, paddingBottom: 15}} >
                 {label}
               </Text>
