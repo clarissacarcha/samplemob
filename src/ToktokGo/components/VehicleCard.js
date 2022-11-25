@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, TouchableOpacity, Dimensions, Platform} from 'react-native';
+import {Text, StyleSheet, Image, View, TouchableOpacity, Dimensions, Platform, ScrollView} from 'react-native';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import CONSTANTS from '../../common/res/constants';
@@ -9,6 +9,7 @@ import SmallMpvIMG from '../../assets/images/vehicleTypes/SmallMPV.png';
 import LargeMpvIMG from '../../assets/images/vehicleTypes/LargeMPV.png';
 
 const ImageWidth = (Dimensions.get('window').width - 230) / 2;
+const windowWidth = Dimensions.get('window').width;
 
 export const VehicleCard = ({type, loading, data, selectVehicle, setDataVehicle, selectedVehicle, dataVehicle}) => {
   const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
@@ -75,31 +76,33 @@ export const VehicleCard = ({type, loading, data, selectVehicle, setDataVehicle,
 
   return (
     <View style={styles.card}>
-      <TouchableOpacity onPress={setVehicle} style={getSelectStyle()}>
-        <View style={styles.container}>
-          <View style={styles.elementWrapper}>
-            <Image
-              source={render_image(data?.vehicleType?.id)}
-              resizeMode={'contain'}
-              style={{width: ImageWidth, height: ImageWidth}}
-            />
-            <View style={{marginLeft: 15}}>
-              <Text style={styles.carTextStyle}>{data?.vehicleType?.name}</Text>
-              <Text style={styles.descTextStlye}>{data?.vehicleType?.phrase}</Text>
+      <ScrollView>
+        <TouchableOpacity onPress={setVehicle} style={getSelectStyle()}>
+          <View style={styles.container}>
+            <View style={styles.elementWrapper}>
+              <Image
+                source={render_image(data?.vehicleType?.id)}
+                resizeMode={'contain'}
+                style={{width: ImageWidth, height: ImageWidth}}
+              />
+              <View style={{marginLeft: 15, width: windowWidth * 0.45}}>
+                <Text style={styles.carTextStyle}>{data?.vehicleType?.name}</Text>
+                <Text style={styles.descTextStlye}>{data?.vehicleType?.phrase}</Text>
+              </View>
+            </View>
+            <View style={{flex: 1}}>
+              <View style={{alignSelf: 'flex-end'}}>
+                <ShimmerPlaceHolder
+                  style={{width: !loading ? (Platform.OS == 'ios' ? '100%' : 75) : 45}}
+                  visible={!loading}>
+                  <Text style={styles.priceTextStyle}>₱{numberFormat(data?.rate?.amount)}</Text>
+                </ShimmerPlaceHolder>
+              </View>
             </View>
           </View>
-          <View style={{flex: 1}}>
-            <View style={{alignSelf: 'flex-end'}}>
-              <ShimmerPlaceHolder
-                style={{width: !loading ? (Platform.OS == 'ios' ? '100%' : 75) : 45}}
-                visible={!loading}>
-                <Text style={styles.priceTextStyle}>₱{numberFormat(data?.rate?.amount)}</Text>
-              </ShimmerPlaceHolder>
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
-      {seeVehicleFees()}
+        </TouchableOpacity>
+        {seeVehicleFees()}
+      </ScrollView>
     </View>
   );
 };
