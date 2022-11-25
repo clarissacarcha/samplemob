@@ -4,9 +4,9 @@ import normalize from 'react-native-normalize';
 import CONSTANTS from '../../common/res/constants';
 import {ThrottledOpacity} from '../ThrottledOpacity';
 
-export const PrimaryButton = ({label, buttonStyle, textStyle}) => {
+export const PrimaryButton = ({label, buttonStyle, textStyle, onPress}) => {
   return (
-    <ThrottledOpacity style={[styles.button, {...buttonStyle}]}>
+    <ThrottledOpacity onPress={onPress} style={[styles.button, {...buttonStyle}]}>
       <Text style={[styles.text, {...textStyle}]}>{label}</Text>
     </ThrottledOpacity>
   );
@@ -15,6 +15,7 @@ export const PrimaryButton = ({label, buttonStyle, textStyle}) => {
 const styles = StyleSheet.create({
   button: {
     paddingVertical: 8,
+    paddingHorizontal: 8,
     alignItems: 'center',
     borderRadius: 5,
     backgroundColor: CONSTANTS.COLOR.ORANGE,
