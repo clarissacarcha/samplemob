@@ -52,8 +52,8 @@ export const RenderSummary = ({data}) => {
           <View style={{ flex: 1, justifyContent: 'center', marginVertical:16}}>
             <View style={{ flexDirection: 'row' }}>
               <View style={{ flex: 1 }}>
-                <Text style={styles.locationName} numberOfLines={2}>
-                  {data?.location?.destination?.name}
+                <Text style={styles.locationName} numberOfLines={2}>                  
+                  {data?.location?.origin?.name}
                 </Text>
               </View>
             </View>
@@ -61,7 +61,7 @@ export const RenderSummary = ({data}) => {
             <View style={{ flexDirection: 'row', paddingTop: 3 }}>
                 <View style={{ flex: 1.5 }}>
                   <Text style={styles.locationAddress}>
-                    {data?.location?.destination?.address}
+                    {data?.location?.origin?.address}
                   </Text>
                 </View>
                 <View style={{ flex: 0.2 }}></View>
@@ -71,7 +71,7 @@ export const RenderSummary = ({data}) => {
               <View style={{flexDirection: 'row'}}>
                 <View style={{flex: 1}}>
                   <Text style={styles.locationName} numberOfLines={2}>
-                    {data?.location?.origin?.name}
+                    {data?.location?.destination?.name}
                   </Text>
                 </View>
               </View>
@@ -79,7 +79,7 @@ export const RenderSummary = ({data}) => {
               <View style={{flexDirection: 'row', paddingTop: 3}}>
                 <View style={{flex: 1.5}}>
                   <Text style={styles.locationAddress}>
-                    {data?.location?.origin?.address}
+                    {data?.location?.destination?.address}
                   </Text>
                 </View>
                 <View style={{flex: 0.2}}></View>

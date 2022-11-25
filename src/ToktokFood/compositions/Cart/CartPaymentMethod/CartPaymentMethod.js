@@ -48,7 +48,9 @@ const CartPaymentMethod = (props: PropsType): React$Node => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [numberOfCompletedOrders, setNumberOfCompletedOrders] = useState(0);
   const {data, refetch, loading, customerWallet} = useGetUserWallet();
-  const {data: completedOrders} = useGetActivities('s', 50);
+  const orderStatus = 'p, po, rp, f, s';
+  const {data: completedOrders} = useGetActivities(orderStatus, 50);
+
   const theme = useTheme();
 
   useEffect(() => {
@@ -89,7 +91,7 @@ const CartPaymentMethod = (props: PropsType): React$Node => {
 
   const onToktokWalletRegisterNavigate = () => {
     setIsModalVisible(false);
-    navigation.navigate('ToktokWalletVerification');
+    navigation.navigate('ToktokWalletLoginPage');
   };
 
   const onPaymentMethodSelection = pm => {
@@ -101,34 +103,34 @@ const CartPaymentMethod = (props: PropsType): React$Node => {
   };
 
   const isButtonDisabled = () => {
-    if (customerWallet && amountText > MAX_AMOUNT_LIMIT_WITH_TOKWA) {
+    if (customerWallet?.status === 1 && amountText > MAX_AMOUNT_LIMIT_WITH_TOKWA) {
       return true;
     }
-    if (!customerWallet && amountText > MAX_AMOUNT_LIMIT_WITHOUT_TOKWA) {
+    if (customerWallet?.status !== 1 && amountText > MAX_AMOUNT_LIMIT_WITHOUT_TOKWA) {
       return true;
     }
-    if (!customerWallet && numberOfCompletedOrders >= 2) {
+    if (customerWallet?.status !== 1 && numberOfCompletedOrders >= 2) {
       return true;
     }
     return false;
   };
 
   const renderLimitComponent = () => {
-    if (customerWallet && amountText > MAX_AMOUNT_LIMIT_WITH_TOKWA) {
+    if (customerWallet?.status === 1 && amountText > MAX_AMOUNT_LIMIT_WITH_TOKWA) {
       return (
         <LimitContainer>
           <LimitText>Order exceeded the limit of ₱{MAX_AMOUNT_LIMIT_WITH_TOKWA} worth of items.</LimitText>
         </LimitContainer>
       );
     }
-    if (!customerWallet && amountText > MAX_AMOUNT_LIMIT_WITHOUT_TOKWA) {
+    if (customerWallet?.status !== 1 && amountText > MAX_AMOUNT_LIMIT_WITHOUT_TOKWA) {
       return (
         <LimitContainer>
           <LimitText>Order exceeded the limit of ₱{MAX_AMOUNT_LIMIT_WITHOUT_TOKWA} worth of items.</LimitText>
         </LimitContainer>
       );
     }
-    if (!customerWallet && numberOfCompletedOrders >= 2) {
+    if (customerWallet?.status !== 1 && numberOfCompletedOrders >= 2) {
       return (
         <LimitContainer>
           <LimitText>We’re sorry but you already ordered twice via cash.</LimitText>
@@ -165,18 +167,6 @@ const CartPaymentMethod = (props: PropsType): React$Node => {
       </StyledText>
     );
 
-    if (!customerWallet) {
-      return (
-        <Row>
-          <Row>
-            <Image source={toktokwallet_ic} selected="toktokwallet" />
-            <Column>{coloredText()}</Column>
-          </Row>
-          {renderCashInButton()}
-        </Row>
-      );
-    }
-
     if (customerWallet?.status === 1) {
       if (loading) {
         return <ContentLoader active title={false} pRows={1} pWidth={90} pHeight={22} />;
@@ -207,18 +197,28 @@ const CartPaymentMethod = (props: PropsType): React$Node => {
         </React.Fragment>
       );
     }
+
+    return (
+      <Row>
+        <Row>
+          <Image source={toktokwallet_ic} selected="toktokwallet" />
+          <Column>{coloredText()}</Column>
+        </Row>
+        {renderCashInButton()}
+      </Row>
+    );
   };
 
   const renderCashInButton = () => {
-    if (!customerWallet) {
-      return (
-        <TouchableOpacity activeOpacity={0.9} onPress={onToktokWalletRegisterNavigate}>
-          <CreateAccountText>Create your toktokwallet{'\n'}account now!</CreateAccountText>
-        </TouchableOpacity>
-      );
+    if (customerWallet?.status === 1) {
+      return <CashInButton onPress={onToktokWalletCashInNavigate} />;
     }
 
-    return <CashInButton onPress={onToktokWalletCashInNavigate} />;
+    return (
+      <TouchableOpacity activeOpacity={0.9} onPress={onToktokWalletRegisterNavigate}>
+        <CreateAccountText>Create your toktokwallet{'\n'}account now!</CreateAccountText>
+      </TouchableOpacity>
+    );
   };
 
   const renderSelectedPaymentMethod = () =>
