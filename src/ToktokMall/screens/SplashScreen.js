@@ -10,7 +10,7 @@ import {
   ToastAndroid
 } from 'react-native';
 import { connect, useDispatch } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../graphql';
@@ -40,6 +40,7 @@ const Splash = ({
   const [registerRetries, setRegisterRetries] = useState(0);
 	const [orderHistory, setOrderHistory] = useState([])
   const dispatch = useDispatch()
+  const route = useRoute()
 
   const [authUser, { error}] = useLazyQuery(GET_CUSTOMER_IF_EXIST, {
 		client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -304,7 +305,9 @@ const Splash = ({
 	}
 
 	useEffect(() => {
-		
+
+    console.log("Deep Link:", route?.params)
+    // return
     init()
     
 	}, [])

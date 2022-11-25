@@ -30,6 +30,11 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
   const onPressPlaceOrder = () => {
     let isInvalid = isDisabled()
 
+    if(!shipping || CheckoutContextData.shippingFeeRates.length == 0){
+      CheckoutContextData.setAnimateAddress(true)
+      return
+    }
+
     if(balance <= total){
       //INSUFFICIENT FUNDS
       CheckoutContextData.setAnimatePayments(true)
@@ -58,7 +63,8 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
             </View>
             <TouchableOpacity 
               disabled={btnDisabled || loading} 
-              style={btnDisabled ? styles.invalidButton : styles.activeButton} 
+              // style={btnDisabled ? styles.invalidButton : styles.activeButton} 
+              style={styles.activeButton}
               onPress={() => {
                 debouncePressPlaceOrder()
               }}

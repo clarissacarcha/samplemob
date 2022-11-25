@@ -1,19 +1,57 @@
-import React from 'react';
+import React, {useState, useRef, useContext, useEffect} from 'react';
 import {
   StyleSheet, 
   View, 
   Text, 
   Image, 
-  TouchableOpacity 
+  TouchableOpacity,
+  Animated
 } from 'react-native';
 import { destination} from './../../../../assets';
 import { FONT } from '../../../../../res/variables';
 import AIcons from 'react-native-vector-icons/dist/AntDesign';
+import { CheckoutContext } from '../ContextProvider';
+
 
 export const AddressForm = ({data, onEdit}) => {
+
+  const animationRef = useRef(new Animated.Value(0)).current;
+  const CheckoutContextData = useContext(CheckoutContext)
+
+  useEffect(() => {
+    console.log("ANIMATION REF", animationRef)
+    if(CheckoutContextData?.animateAddress){
+      Animated.sequence([
+        Animated.timing(animationRef, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: false
+        }),
+        Animated.timing(animationRef, {
+            toValue: 0,
+            duration: 1000,
+            useNativeDriver: false
+        })
+      ]).start();
+      setTimeout(() => {
+        CheckoutContextData.setAnimateAddress(false)
+      }, 1000)
+    }
+  }, [CheckoutContextData])
+
   console.log("address", data)
   return (
-    <View style={styles.container}>
+    <Animated.View
+      style={[
+        styles.container,
+        {
+          backgroundColor: animationRef.interpolate({
+            inputRange: [0, 1],
+            outputRange: ["#fff", "#FFFCF4"]
+          })
+        }
+      ]}
+    >
       <View style={styles.divider} />
       <TouchableOpacity onPress={onEdit}>
         <View style={styles.address}>
@@ -32,7 +70,7 @@ export const AddressForm = ({data, onEdit}) => {
           <AIcons name={'right'} size={15} color={'#F6841F'} />
         </View>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 }
 
