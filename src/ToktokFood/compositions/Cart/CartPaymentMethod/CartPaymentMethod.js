@@ -48,7 +48,9 @@ const CartPaymentMethod = (props: PropsType): React$Node => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [numberOfCompletedOrders, setNumberOfCompletedOrders] = useState(0);
   const {data, refetch, loading, customerWallet} = useGetUserWallet();
-  const {data: completedOrders} = useGetActivities('s', 50);
+  const orderStatus = 'p, po, rp, f, s';
+  const {data: completedOrders} = useGetActivities(orderStatus, 50);
+
   const theme = useTheme();
 
   useEffect(() => {
@@ -89,7 +91,7 @@ const CartPaymentMethod = (props: PropsType): React$Node => {
 
   const onToktokWalletRegisterNavigate = () => {
     setIsModalVisible(false);
-    navigation.navigate('ToktokWalletVerification');
+    navigation.navigate('ToktokWalletLoginPage');
   };
 
   const onPaymentMethodSelection = pm => {

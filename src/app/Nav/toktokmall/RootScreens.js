@@ -30,7 +30,11 @@ import {
   ToktokMallVouchersClaim,
 
   //Toktokwallet OTP Screen
-  ToktokMallOTP
+  ToktokMallOTP,
+
+  //OnBoarding
+  ToktokMallOnBoarding
+
 } from '../../../ToktokMall/screens';
 import { ToktokMallRateProductCamera } from '../../../ToktokMall/screens/RootScreens/ToktokMallRateProduct/Components';
 import { ToktokMallEmptyCheckout } from '../../../ToktokMall/screens/RootScreens/ToktokMallCheckout/empty';
@@ -52,5 +56,6 @@ export default ({Navigator}) => (
     <Navigator.Screen name="ToktokMallStoreSearch" component={ToktokMallStoreSearch} options={{headerShown: false}} />    
     <Navigator.Screen name="ToktokMallVouchersClaim" component={ToktokMallVouchersClaim} />
     <Navigator.Screen name="ToktokMallOTP" component={ToktokMallOTP} options={{headerShown: false, animationEnabled: false}} />    
+    <Navigator.Screen name="ToktokMallOnBoarding" component={ToktokMallOnBoarding} options={{headerShown: false, animationEnabled: true}} />
   </>
 );

@@ -19,6 +19,7 @@ export const featuredflash = require("../assets/images/Featured.png")
 export const flashsale = require("../assets/images/Flash-Sale.png")
 export const banner = require("../assets/images/banner.png")
 export const toktokmallH = require("../assets/images/toktokmall-h.png")
+export const toktokmallW = require("../assets/images/toktokmall-w.png")
 export const voucherbg = require("../assets/images/voucher-bg.png")
 export const reviewimage = require("../assets/images/review-image.png")
 export const otpbg = require("../assets/images/otp-bg.png")
@@ -31,6 +32,10 @@ export const walletIcon = require("../assets/images/tokwaicon.png");
 export const emptyPlaceOrder = require("../assets/images/empty_place_order.png");
 export const splashImage = require("../assets/images/toktokmall-splash-screen.png");
 export const newSplashImage = require("../assets/images/toktokmall-new-splash-screen.png");
+export const onBoarding1 = require("../assets/images/onboarding-1.png");
+export const onBoarding2 = require("../assets/images/onboarding-2.png");
+export const onBoarding3 = require("../assets/images/onboarding-3.png");
+export const gradientBG = require("../assets/images/gradient-bg.png");
 
 //ICONS
 export const successIcon = require("../assets/icons/success.png")
