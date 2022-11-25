@@ -4,7 +4,7 @@
 
 export type PropsType = {
   value: string, // required
-  onChangeText: () => void, // required
+  onChangeText: any, // required
   errorMessage: string, // required
   testID?: string,
   accessibilityLabel?: string,
@@ -25,4 +25,5 @@ export type PropsType = {
   name?: string,
   hasContacts?: Boolean,
   hasFavorite?: Boolean,
+  disableFavorite?: Boolean,
 };

@@ -1,11 +1,26 @@
 import React from 'react';
 
-import {ToktokWalletContacts, ToktokWalletSendMoney} from 'toktokwallet/screens';
+import {
+  ToktokWalletSendMoney,
+  ToktokWalletSendMoneyPaymentSummary,
+  ToktokWalletSendMoneyReceipt,
+  ToktokWalletSendMoneyTransaction,
+} from 'toktokwallet/screens';
 
 export default ({Navigator}) => (
   <>
-    <Navigator.Screen name="ToktokWalletContacts" component={ToktokWalletContacts} options={options} />
     <Navigator.Screen name="ToktokWalletSendMoney" component={ToktokWalletSendMoney} options={options} />
+    <Navigator.Screen
+      name="ToktokWalletSendMoneyPaymentSummary"
+      component={ToktokWalletSendMoneyPaymentSummary}
+      options={options}
+    />
+    <Navigator.Screen name="ToktokWalletSendMoneyReceipt" component={ToktokWalletSendMoneyReceipt} options={options} />
+    <Navigator.Screen
+      name="ToktokWalletSendMoneyTransaction"
+      component={ToktokWalletSendMoneyTransaction}
+      options={options}
+    />
   </>
 );
 

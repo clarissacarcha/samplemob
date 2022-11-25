@@ -1,28 +1,22 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {moderateScale, getStatusbarHeight} from 'toktokwallet/helper';
 import {useSelector} from 'react-redux';
 import InputScrollView from 'react-native-input-scroll-view';
 import {useHeaderHeight} from '@react-navigation/stack';
-//GRAPHQL
-import {useLazyQuery} from '@apollo/react-hooks';
-import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
-import {GET_ACCOUNT} from 'toktokwallet/graphql';
 //SELF  IMPORTS
 import {ProceedButton, Forms} from './Components';
 import {
   CheckIdleState,
-  SomethingWentWrong,
   HeaderBack,
   HeaderTitleRevamp,
   PolicyNote,
   TransferableAndNonTransferableModal,
-  LoadingIndicator,
 } from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants';
-const {COLOR, FONT_FAMILY: FONT, SIZE, FONT_SIZE, MARGIN} = CONSTANTS;
+const {FONT_FAMILY: FONT, SIZE, FONT_SIZE, MARGIN} = CONSTANTS;
 
-export const ToktokWalletScanQRTransaction = ({navigation, route}) => {
+export const ToktokWalletSendMoneyTransaction = ({navigation, route}) => {
   const headerHeight = useHeaderHeight();
   const recipientInfo = route.params?.recipientInfo ? route.params.recipientInfo : null;
   const QRInfo = route.params?.QRInfo ? route.params.QRInfo : null;
@@ -32,7 +26,7 @@ export const ToktokWalletScanQRTransaction = ({navigation, route}) => {
   const [formData, setFormData] = useState({
     recipientSelfieImage: '',
     recipientName: recipientInfo ? `${recipientInfo.person.firstName} ${recipientInfo.person.lastName[0]}.` : '',
-    recipientMobileNo: recipientInfo ? recipientInfo.mobileNumber : '',
+    recipientMobileNo: recipientInfo ? recipientInfo.mobileNumber.replace('+63', '') : '',
     amount: QRInfo && QRInfo.amount !== 0 ? QRInfo.amount.toString() : '',
     emailAddress: tokwaAccount.person.emailAddress,
     note: '',
@@ -49,43 +43,6 @@ export const ToktokWalletScanQRTransaction = ({navigation, route}) => {
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitleRevamp label={headerTitle} />,
   });
-
-  const [getAccount, {error: walletError, loading: walletLoading}] = useLazyQuery(GET_ACCOUNT, {
-    client: TOKTOK_WALLET_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    onCompleted: ({getAccount}) => {
-      setFormData(prev => ({...prev, recipientSelfieImage: getAccount.selfieImage}));
-    },
-  });
-
-  useEffect(() => {
-    // handleGetAccount();
-  }, []);
-
-  const handleGetAccount = () => {
-    getAccount({
-      variables: {
-        input: {
-          mobileNumber: formData.recipientMobileNo,
-        },
-      },
-    });
-  };
-
-  if (walletLoading) {
-    return (
-      <View style={styles.container}>
-        <LoadingIndicator isLoading={true} isFlex />
-      </View>
-    );
-  }
-  if (walletError) {
-    return (
-      <View style={styles.container}>
-        <SomethingWentWrong error={walletError} onRefetch={handleGetAccount} />
-      </View>
-    );
-  }
 
   return (
     <CheckIdleState>
@@ -116,6 +73,7 @@ export const ToktokWalletScanQRTransaction = ({navigation, route}) => {
             errorMessages={errorMessages}
             setErrorMessages={setErrorMessages}
             headerHeight={headerHeight}
+            tokwaAccount={tokwaAccount}
           />
         </InputScrollView>
       </View>

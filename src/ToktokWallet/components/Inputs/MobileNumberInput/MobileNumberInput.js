@@ -20,6 +20,7 @@ import {
   HeartButton,
   Recipient,
 } from './Styled';
+import {useNavigation} from '@react-navigation/native';
 import CONSTANTS from 'src/common/res/constants';
 const {COLOR} = CONSTANTS;
 
@@ -44,9 +45,26 @@ const MobileNumberInput = (props: PropsType): React$Node => {
     name,
     hasContacts = false,
     hasFavorite = false,
+    disableFavorite = true,
   } = props;
 
-  const onPressContact = () => {};
+  const navigation = useNavigation();
+
+  const onSelectContact = number => {
+    onChangeText(number.replace('0', ''));
+  };
+
+  const onPressContact = () => {
+    navigation.navigate('ToktokLoadContacts', {onSelectContact});
+  };
+
+  const onChangeTextProcess = val => {
+    let mobile = val.replace(/[^0-9]/g, '');
+    if (mobile.length > 10) {
+      return;
+    }
+    onChangeText(val[0] !== '9' && val !== '' ? '9' : mobile);
+  };
 
   return (
     <>
@@ -64,7 +82,7 @@ const MobileNumberInput = (props: PropsType): React$Node => {
           <Input
             style={style}
             value={value}
-            onChangeText={onChangeText}
+            onChangeText={val => onChangeTextProcess(val)}
             placeholder={placeholder}
             placeholderTextColor={placeholderTextColor}
             returnKeyType={returnKeyType}
@@ -77,8 +95,8 @@ const MobileNumberInput = (props: PropsType): React$Node => {
             caretHidden={caretHidden}
           />
           {hasFavorite && (
-            <HeartButton editable={editable} onPress={onPressFavorite}>
-              <HeartIcon isFavorite={isFavorite} />
+            <HeartButton editable={editable} onPress={onPressFavorite} disableFavorite={disableFavorite}>
+              <HeartIcon isFavorite={isFavorite} editable={editable} disableFavorite={disableFavorite} />
             </HeartButton>
           )}
         </Container>

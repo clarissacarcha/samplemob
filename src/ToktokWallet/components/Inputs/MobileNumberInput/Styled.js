@@ -41,7 +41,7 @@ export const Container: ComponentType<any> = styled(View).attrs(props => ({
     errorMessage !== '' &&
     `
       border-color: ${theme.color.red};
-      border-width: 1;
+      border-width: 1px;
     `}
 `;
 
@@ -109,7 +109,7 @@ export const ContentContainer: ComponentType<any> = styled(View).attrs(props => 
 
 export const HeartButton: ComponentType<any> = styled(TouchableOpacity).attrs(props => ({
   ...props,
-  disabled: !props.editable,
+  disabled: !props.editable || props.disableFavorite,
 }))`
   align-items: center;
   justify-content: center;
@@ -120,6 +120,6 @@ export const HeartButton: ComponentType<any> = styled(TouchableOpacity).attrs(pr
 export const HeartIcon: ComponentType<any> = styled(FIcon5).attrs(props => ({
   ...props,
   name: props.isFavorite ? 'heart' : 'heart-o',
-  color: props.editable ? COLOR.ORANGE : '#DADADA',
+  color: props.editable && !props.disableFavorite ? COLOR.ORANGE : '#DADADA',
   size: moderateScale(20),
 }))``;
