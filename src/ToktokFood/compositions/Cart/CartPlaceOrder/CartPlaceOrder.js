@@ -460,22 +460,22 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
   };
 
   const validatePaymentMethod = () => {
-    // if (isExceeded) {
-    //   setIsAlertVisible(true);
-    // } else {
-    if (
-      (!customerWallet && paymentMethod === 'toktokwallet') ||
-      (customerWallet && amountText > MAX_AMOUNT_LIMIT_WITH_TOKWA && paymentMethod === 'cash') ||
-      (!customerWallet && amountText > MAX_AMOUNT_LIMIT_WITHOUT_TOKWA && paymentMethod === 'cash')
-    ) {
-      playAnimation();
+    if (isExceeded) {
+      setIsAlertVisible(true);
     } else {
-      const text = paymentMethod === 'toktokwallet' ? 'Please Wait' : 'Placing Order';
-      const payload = {isVisible: true, text, type: null};
-      dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
-      fetchShopStatus();
+      if (
+        (customerWallet?.status !== 1 && paymentMethod === 'toktokwallet') ||
+        (customerWallet?.status === 1 && amountText > MAX_AMOUNT_LIMIT_WITH_TOKWA && paymentMethod === 'cash') ||
+        (customerWallet?.status !== 1 && amountText > MAX_AMOUNT_LIMIT_WITHOUT_TOKWA && paymentMethod === 'cash')
+      ) {
+        playAnimation();
+      } else {
+        const text = paymentMethod === 'toktokwallet' ? 'Please Wait' : 'Placing Order';
+        const payload = {isVisible: true, text, type: null};
+        dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
+        fetchShopStatus();
+      }
     }
-    // }
   };
 
   const onPlaceOrder = () => {
@@ -507,44 +507,45 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
     var onPress = () => {};
     var onPress2 = () => {};
 
-    // if (isExceeded) {
-    //   title = 'Ongoing Order Exceeded';
-    //   type = 'warning';
-    //   subtitle =
-    //     'You are allowed to have 4 ongoing orders only. Please wait for your other orders to be completed before placing an order.';
-    //   buttonText = 'OK';
-    //   onPress = () => setIsAlertVisible(false);
-    // } else {
-    if (referenceNumber) {
-      title = 'Order Placed';
-      type = 'success';
-      subtitle = 'Your order has been placed successfully! You can check your order status in activities.';
+    if (isExceeded) {
+      title = 'Ongoing Order Exceeded';
+      type = 'warning';
+      subtitle =
+        'You are allowed to have 4 ongoing orders only. Please wait for your other orders to be completed before placing an order.';
       buttonText = 'OK';
-      onPress = () => {
-        setIsAlertVisible(false);
-        navigation.replace('ToktokFoodOrder', {referenceNum: referenceNumber, orderStatus: 'p'});
-      };
+      onPress = () => setIsAlertVisible(false);
     } else {
-      if (shopStatus?.status !== 'open') {
-        title = 'Currently Closed';
-        type = 'warning';
+      if (referenceNumber) {
+        title = 'Order Placed';
+        type = 'success';
+        subtitle = 'Your order has been placed successfully! You can check your order status in activities.';
         buttonText = 'OK';
-        onPress = () => setIsAlertVisible(false);
+        onPress = () => {
+          setIsAlertVisible(false);
+          navigation.replace('ToktokFoodOrder', {referenceNum: referenceNumber, orderStatus: 'p'});
+        };
       } else {
-        if (hasDisabledItem) {
-          title = 'Currently Unavailable';
-          subtitle =
-            'Some items in your cart is currently unavailable.  Please remove for now and try again. Thank you!';
+        if (shopStatus?.status !== 'open') {
+          title = 'Currently Closed';
           type = 'warning';
           buttonText = 'OK';
           onPress = () => setIsAlertVisible(false);
+        } else {
+          if (hasDisabledItem) {
+            title = 'Currently Unavailable';
+            subtitle =
+              'Some items in your cart is currently unavailable.  Please remove for now and try again. Thank you!';
+            type = 'warning';
+            buttonText = 'OK';
+            onPress = () => setIsAlertVisible(false);
+          }
         }
       }
     }
-    // }
 
     const BodyComponent = () => {
-      if (shopStatus?.status !== 'open') {
+      console.log(":shopStatus", shopStatus)
+      if (shopStatus?.shopname && shopStatus?.status !== 'open') {
         return (
           <ClosedShopText>
             <StyledText mode="semibold">{shopStatus?.shopname} </StyledText>

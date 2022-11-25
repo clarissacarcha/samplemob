@@ -312,9 +312,9 @@ export const VariationBottomSheet = forwardRef(({
               <View style={{flex: 1.5}}></View>
               <View style={{flex: 6}}>
                 <View style={{flexDirection:'row'}}>
-                  <Text style={styles.itemPrice}><Price amount={itemprice * qty} /></Text>
+                  <Text style={styles.itemPrice}><Price amount={itemprice} /></Text>
                   <Text style={styles.itemOriginalPrice}>
-                    {originalPrice == 0 ? "" : <Price amount={originalPrice*qty} />}
+                    {originalPrice == 0 ? "" : <Price amount={originalPrice} />}
                   </Text>                
                 </View>
                 <Text style={styles.itemStocks}>
