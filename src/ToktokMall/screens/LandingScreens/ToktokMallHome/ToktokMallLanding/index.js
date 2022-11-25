@@ -204,6 +204,15 @@ const Component = ({ myCart, createMyCartSession,}) => {
     onError: (error)=> console.log(error) 
   })
 
+  const onBackArrowPress = () => {
+    AsyncStorage.getItem("ToktokMallUserOnboard").then((res) => {
+      if(res){
+        navigation.pop(3)
+      }else{
+        navigation.pop(2)
+      }
+    })
+  }
 
   // const getLocation = async () => {
   //   const currentLocation = await GeolocationUtility.getCurrentLocation();
@@ -228,7 +237,7 @@ const Component = ({ myCart, createMyCartSession,}) => {
           style={[styles.bannerImage, {height: animateHeaderHeight}]}
         />
         <View style={styles.subContainer}>
-          <TouchableOpacity style={styles.leftContainer} onPress = {() => {navigation.pop(2)}}>
+          <TouchableOpacity style={styles.leftContainer} onPress = {onBackArrowPress}>
             <FIcon5 name="chevron-left" color={COLOR.ORANGE} size={15}/>
           </TouchableOpacity>
           <View style={styles.margin1}></View>
