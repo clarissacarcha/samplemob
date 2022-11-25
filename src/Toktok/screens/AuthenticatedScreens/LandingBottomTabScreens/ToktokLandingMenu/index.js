@@ -30,6 +30,7 @@ import User from '../../../../../assets/images/user-icon.png';
 
 import {Header} from './Components';
 import {ToktokMallSession} from '../../../../../ToktokMall/util/session';
+import {isTest} from '../../../../../common/res/environments';
 
 const DrawerButton = ({isNew, label, onPress, restrict}) => {
   if (restrict && restrict != APP_FLAVOR) {
@@ -285,6 +286,15 @@ export const ToktokLandingMenu = ({navigation}) => {
                 navigation.push('TalkToUs');
               }}
             />
+
+            {isTest === 'TEST' && (
+              <DrawerButton
+                label="Developer"
+                onPress={() => {
+                  navigation.push('DeveloperScreen');
+                }}
+              />
+            )}
 
             {/*--------------- CHANGE PASSWORD ---------------*/}
             <View

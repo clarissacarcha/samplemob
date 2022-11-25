@@ -4,7 +4,7 @@ import React from 'react';
 import {MenuProvider as PopUpMenuProvider} from 'react-native-popup-menu';
 import {StatusBar, LogBox} from 'react-native';
 import Splash from './Splash';
-import { MenuProvider } from 'react-native-popup-menu';
+import {MenuProvider} from 'react-native-popup-menu';
 import {
   ApolloProvider,
   PromptProvider,
@@ -12,6 +12,7 @@ import {
   // KeyboardProvider,
   // OneSignalProvider,
   ReduxProvider,
+  ToktokAlertProvider,
   // SubscriptionProvider,
 } from '../provider';
 import AlertProvider from '../provider/AlertProvider';
@@ -29,7 +30,9 @@ const App = () => {
             <AlertProvider>
               <PromptProvider>
                 <PromptProviderGo>
-                  <Splash />
+                  <ToktokAlertProvider>
+                    <Splash />
+                  </ToktokAlertProvider>
                 </PromptProviderGo>
               </PromptProvider>
             </AlertProvider>
