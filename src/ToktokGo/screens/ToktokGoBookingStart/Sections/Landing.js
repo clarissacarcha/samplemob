@@ -15,14 +15,7 @@ export const Landing = ({navigation, voucherData, details}) => {
     <View>
       <ImageBackground source={BackgroundLanding} resizeMode={'cover'} style={{height: 112}}>
         <View style={{marginTop: 20, marginLeft: 20}}>
-          <Text
-            style={{
-              color: CONSTANTS.COLOR.WHITE,
-              fontSize: CONSTANTS.FONT_SIZE.XL,
-              fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
-            }}>
-            Hello, ka-toktok!
-          </Text>
+          <Text style={{color: CONSTANTS.COLOR.WHITE, fontSize: CONSTANTS.FONT_SIZE.XL}}>Hello ka-toktok!</Text>
           <Text style={{color: CONSTANTS.COLOR.WHITE, fontSize: CONSTANTS.FONT_SIZE.M}}>Saan tayo today?</Text>
         </View>
       </ImageBackground>

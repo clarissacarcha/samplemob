@@ -37,7 +37,7 @@ const ToktokGoBookingVehicle = ({navigation, route}) => {
         renderItem={({item, index}) => {
           const lastItem = index == data.vehicleTypeRates.length - 1 ? true : false;
           return (
-            <View style={{marginHorizontal: 16, marginBottom: 10}}>
+            <View style={{marginHorizontal: 16}}>
               <VehicleCard
                 type={'isFromSeeAll'}
                 data={item}

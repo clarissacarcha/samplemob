@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, StyleSheet, View, Image, Platform} from 'react-native';
+import {Text, StyleSheet, View, Image} from 'react-native';
 import InfoIcon from '../../../../assets/images/info.png';
 import CONSTANTS from '../../../../common/res/constants';
 
@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'row',
     backgroundColor: CONSTANTS.COLOR.LIGHT_YELLOW,
-    marginTop: Platform.OS === 'ios' ? 10 : 0,
   },
   imgDimensions: {
     width: 13,

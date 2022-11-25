@@ -1,17 +1,11 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {Text, View, FlatList, Dimensions, StyleSheet, ScrollView, Image, ActivityIndicator, Alert} from 'react-native';
+import {Text, View, FlatList, Dimensions, StyleSheet, ScrollView, Image, ActivityIndicator} from 'react-native';
 import Data from '../../components/BookingDummyData';
 import CONSTANTS from '../../../common/res/constants';
 import {Header} from '../../components';
 import {useLazyQuery, useMutation, useQuery} from '@apollo/react-hooks';
 import {useFocusEffect} from '@react-navigation/native';
-import {
-  GET_SEARCH_VOUCHER,
-  GET_VOUCHERS,
-  POST_COLLECT_VOUCHER,
-  TOKTOK_WALLET_VOUCHER_CLIENT,
-  GET_ENTERPRISE_VOUCHER,
-} from '../../../graphql';
+import {GET_SEARCH_VOUCHER, GET_VOUCHERS, POST_COLLECT_VOUCHER, TOKTOK_WALLET_VOUCHER_CLIENT} from '../../../graphql';
 import moment from 'moment';
 import {VoucherCard} from './Components/VoucherCard';
 import {TextInput} from 'react-native-gesture-handler';
@@ -29,9 +23,8 @@ import {ProcessingModal} from './Components/ProcessingModal';
 
 const decorWidth = Dimensions.get('window').width * 0.5;
 const FULL_HEIGHT = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
 
-const ToktokGoBookingVouchers = ({navigation, route}) => {
+const ToktokGoBookingVouchers = ({navigation}) => {
   const {details} = useSelector(state => state.toktokGo);
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
@@ -42,8 +35,6 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
   const [noResults, setNoResults] = useState(false);
   const [processingVisible, setProcessingVisible] = useState(false);
   const [fromVoucherDetails, setFromVoucherDetails] = useState(true);
-  const [errorBorder, setErrorBorder] = useState(false);
-  const [errorInputMessage, setErrorInputMessage] = useState('This is a required field');
 
   const [getVouchers, {loading, error: getVouchersError, refetch}] = useLazyQuery(GET_VOUCHERS, {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
@@ -100,41 +91,6 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
       }
     },
     onError: null,
-  });
-
-  const [getEnterpriseVoucher] = useLazyQuery(GET_ENTERPRISE_VOUCHER, {
-    fetchPolicy: 'network-only',
-    client: TOKTOK_WALLET_VOUCHER_CLIENT,
-    onCompleted: response => {
-      onApply(response.getEnterpriseVoucher);
-      setProcessingVisible(false);
-    },
-    onError: error => {
-      const {graphQLErrors, networkError} = error;
-
-      if (networkError) {
-        Alert.alert('', 'Network error occurred. Please check your internet connection.');
-      } else if (graphQLErrors.length > 0) {
-        graphQLErrors.map(({message, locations, path, code, errorFields}) => {
-          if (code === 'INTERNAL_SERVER_ERROR') {
-            Alert.alert('', 'Something went wrong.');
-          } else if (code === 'USER_INPUT_ERROR') {
-            Alert.alert('', message);
-          } else if (code === 'BAD_USER_INPUT') {
-            errorFields.map(({message}) => {
-              setErrorBorder(true);
-              setErrorInputMessage(message);
-              setProcessingVisible(false);
-            });
-          } else if (code === 'AUTHENTICATION_ERROR') {
-            // Do Nothing. Error handling should be done on the scren
-          } else {
-            console.log('ELSE ERROR:', error);
-            Alert.alert('', 'Something went wrong...');
-          }
-        });
-      }
-    },
   });
 
   const searchVoucher = () => {
@@ -197,37 +153,15 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
 
   const onChange = value => {
     setSearch(value);
-    setErrorBorder(false);
-    setErrorInputMessage('');
-    // debouncedRequest(value);
-    // if (!value) {
-    //   setNoResults(false);
-    // }
+    debouncedRequest(value);
+    if (!value) {
+      setNoResults(false);
+    }
   };
 
   const clearSearch = () => {
-    setErrorBorder(false);
-    setErrorInputMessage('');
     setSearch('');
     setNoResults(false);
-  };
-
-  const useFunction = () => {
-    if (search == '') {
-      setErrorBorder(true);
-      setErrorInputMessage('This is a required field');
-    } else {
-      setProcessingVisible(true);
-      getEnterpriseVoucher({
-        variables: {
-          input: {
-            service: 'GO',
-            code: search,
-            minSpend: route.params.details.rate.tripFare.amount,
-          },
-        },
-      });
-    }
   };
 
   if (loading) {
@@ -245,7 +179,7 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
         </TouchableOpacity>
       </View> */}
       <View style={styles.containerInput}>
-        {/* <Image source={SearchICN} resizeMode={'contain'} style={{width: 20, height: 20, marginLeft: 16}} /> */}
+        <Image source={SearchICN} resizeMode={'contain'} style={{width: 20, height: 20, marginLeft: 16}} />
         <TextInput
           //   ref={inputRef}
           onChangeText={value => setSearch(value)}
@@ -280,8 +214,8 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
           <Text style={styles.enterVoucherApply}>Apply</Text>
         </TouchableOpacity>
       </View> */}
-            <View style={errorBorder == true ? styles.containerInputError : styles.containerInput}>
-              {/* <Image source={SearchICN} resizeMode={'contain'} style={{width: 20, height: 20, marginLeft: 16}} /> */}
+            <View style={styles.containerInput}>
+              <Image source={SearchICN} resizeMode={'contain'} style={{width: 20, height: 20, marginLeft: 16}} />
               <TextInput
                 //   ref={inputRef}
                 onChangeText={value => onChange(value)}
@@ -297,16 +231,6 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
                 </ThrottledOpacity>
               ) : null}
             </View>
-            <View style={{position: 'absolute', right: 13, top: 40}}>
-              <ThrottledOpacity onPress={useFunction}>
-                <Text style={{color: CONSTANTS.COLOR.ORANGE}}>Use</Text>
-              </ThrottledOpacity>
-            </View>
-            {errorBorder == true ? (
-              <View style={{position: 'absolute', left: 15, top: 80}}>
-                <Text style={{color: CONSTANTS.COLOR.RED, fontSize: CONSTANTS.FONT_SIZE.S}}>{errorInputMessage}</Text>
-              </View>
-            ) : null}
 
             {noVouchers && (
               <View style={styles.noResultsContainer}>
@@ -381,28 +305,12 @@ const styles = StyleSheet.create({
   containerInput: {
     marginTop: 24,
     marginBottom: 12,
-    // marginHorizontal: 16,
+    marginHorizontal: 16,
     backgroundColor: '#F8F8F8',
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 5,
     overflow: 'hidden',
-    width: windowWidth * 0.85,
-    marginLeft: 16,
-  },
-  containerInputError: {
-    marginTop: 24,
-    marginBottom: 12,
-    // marginHorizontal: 16,
-    backgroundColor: '#F8F8F8',
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 5,
-    overflow: 'hidden',
-    width: windowWidth * 0.85,
-    marginLeft: 16,
-    borderColor: CONSTANTS.COLOR.RED,
-    borderWidth: 1.5,
   },
   input: {
     flex: 1,

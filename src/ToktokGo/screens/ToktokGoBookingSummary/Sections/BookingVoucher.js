@@ -7,16 +7,10 @@ import InfoIcon from '../../../../assets/images/info.png';
 
 import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
 
-export const BookingVoucher = ({
-  navigation,
-  selectedVouchers,
-  setSelectedVouchersNull,
-  isNotVoucherApplicable,
-  details,
-}) => {
+export const BookingVoucher = ({navigation, selectedVouchers, setSelectedVouchersNull, isNotVoucherApplicable}) => {
   return (
     <>
-      <TouchableOpacity onPress={() => navigation.push('ToktokGoBookingVouchers')} style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.elementWrapper}>
           <Image source={voucher_image} style={{width: 22, height: 16, marginRight: 8}} resizeMode={'contain'} />
           <Text style={styles.textStyle}>Vouchers</Text>
@@ -30,19 +24,17 @@ export const BookingVoucher = ({
                 <IOIcons name={'close'} style={styles.appliedVoucherClose} />
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.push('ToktokGoBookingVouchers', {details})}>
+            <TouchableOpacity onPress={() => navigation.push('ToktokGoBookingVouchers')}>
               <Image source={ArrowRightIcon} resizeMode={'contain'} style={styles.arrowIconStyle} />
             </TouchableOpacity>
           </View>
         ) : (
-          <TouchableOpacity
-            onPress={() => navigation.push('ToktokGoBookingVouchers', {details})}
-            style={styles.elementWrapper}>
+          <TouchableOpacity onPress={() => navigation.push('ToktokGoBookingVouchers')} style={styles.elementWrapper}>
             <Text style={styles.seeAlltextStyle}>Select or Enter Code</Text>
             <Image source={ArrowRightIcon} resizeMode={'contain'} style={styles.arrowIconStyle} />
           </TouchableOpacity>
         )}
-      </TouchableOpacity>
+      </View>
       {isNotVoucherApplicable && (
         <View style={styles.warningContainer}>
           <Image source={InfoIcon} resizeMode={'contain'} style={styles.imgDimensions} />

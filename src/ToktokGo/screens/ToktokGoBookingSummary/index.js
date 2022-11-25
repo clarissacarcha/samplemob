@@ -51,6 +51,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     state => state.toktokGo,
   );
   const alertGO = useAlertGO();
+
   const {tokwaAccount, getMyAccount, getMyAccountLoading, getMyAccountError} = useAccount();
   const {quotationDataResult, decodedPolyline} = route.params;
   const [viewSelectPaymentModal, setViewSelectPaymentModal] = useState(false);
@@ -464,7 +465,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         setSelectedVouchersNull={setSelectedVouchersNull}
         selectedPaymentMethod={selectedPaymentMethod}
         isNotVoucherApplicable={isNotVoucherApplicable}
-        details={details}
       />
       <BookingBreakdown
         selectedVehicle={selectedVehicle}
