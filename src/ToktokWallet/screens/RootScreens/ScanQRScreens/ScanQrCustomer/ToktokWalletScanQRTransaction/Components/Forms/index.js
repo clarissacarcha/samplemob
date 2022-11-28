@@ -59,6 +59,8 @@ export const Forms = ({
           name={formData.recipientName}
           value={formData.recipientMobileNo.replace('+63', '')}
           editable={false}
+          hasFavorite
+          hasContacts
         />
       </View>
       <View style={{marginBottom: moderateScale(15)}}>

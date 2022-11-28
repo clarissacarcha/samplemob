@@ -14,6 +14,7 @@ export const Forms = ({
   errorMessages,
   setErrorMessages,
   headerHeight,
+  navigation,
 }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -61,6 +62,7 @@ export const Forms = ({
           setErrorMessages={setErrorMessages}
           errorMessages={errorMessages}
           tokwaAccount={tokwaAccount}
+          navigation={navigation}
         />
       </View>
       <View style={{marginBottom: moderateScale(15)}}>

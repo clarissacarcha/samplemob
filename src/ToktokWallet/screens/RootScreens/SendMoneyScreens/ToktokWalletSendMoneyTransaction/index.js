@@ -1,28 +1,31 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {moderateScale, getStatusbarHeight} from 'toktokwallet/helper';
 import {useSelector} from 'react-redux';
 import InputScrollView from 'react-native-input-scroll-view';
 import {useHeaderHeight} from '@react-navigation/stack';
 //SELF  IMPORTS
-import {ProceedButton, Forms} from './Components';
+import {ProceedButton, Forms, ContextProvider, Favorites, FavoritesContext} from './Components';
 import {
   CheckIdleState,
   HeaderBack,
   HeaderTitleRevamp,
   PolicyNote,
   TransferableAndNonTransferableModal,
+  LoadingIndicator,
+  SomethingWentWrong,
 } from 'toktokwallet/components';
 import CONSTANTS from 'common/res/constants';
 const {FONT_FAMILY: FONT, SIZE, FONT_SIZE, MARGIN} = CONSTANTS;
 
-export const ToktokWalletSendMoneyTransaction = ({navigation, route}) => {
+const MainComponent = ({navigation, route}) => {
   const headerHeight = useHeaderHeight();
   const recipientInfo = route.params?.recipientInfo ? route.params.recipientInfo : null;
   const QRInfo = route.params?.QRInfo ? route.params.QRInfo : null;
   const headerTitle = route.params?.headerTitle ? route.params.headerTitle : 'Send Money';
   const tokwaAccount = useSelector(state => state.toktokWallet);
   const [transferableVisible, setTransferableVisible] = useState(false);
+  const {getFavorites, getFavoritesLoading, getFavoritesError, isFavorite} = useContext(FavoritesContext);
   const [formData, setFormData] = useState({
     recipientSelfieImage: '',
     recipientName: recipientInfo ? `${recipientInfo.person.firstName} ${recipientInfo.person.lastName[0]}.` : '',
@@ -44,6 +47,24 @@ export const ToktokWalletSendMoneyTransaction = ({navigation, route}) => {
     headerTitle: () => <HeaderTitleRevamp label={headerTitle} />,
   });
 
+  useEffect(() => {
+    getFavorites();
+  }, []);
+
+  if (getFavoritesLoading && !isFavorite) {
+    return (
+      <View style={styles.container}>
+        <LoadingIndicator isLoading={true} isFlex />
+      </View>
+    );
+  }
+  if (getFavoritesError) {
+    return (
+      <View style={styles.container}>
+        <SomethingWentWrong error={getFavoritesError} onRefetch={getFavorites} />
+      </View>
+    );
+  }
   return (
     <CheckIdleState>
       <TransferableAndNonTransferableModal visible={transferableVisible} setVisible={setTransferableVisible} />
@@ -66,6 +87,7 @@ export const ToktokWalletSendMoneyTransaction = ({navigation, route}) => {
             }}
             disabled={false}
           />
+          <Favorites formData={formData} setFormData={setFormData} navigation={navigation} />
           <Forms
             recipientInfo={recipientInfo}
             formData={formData}
@@ -74,6 +96,7 @@ export const ToktokWalletSendMoneyTransaction = ({navigation, route}) => {
             setErrorMessages={setErrorMessages}
             headerHeight={headerHeight}
             tokwaAccount={tokwaAccount}
+            navigation={navigation}
           />
         </InputScrollView>
       </View>
@@ -86,6 +109,14 @@ export const ToktokWalletSendMoneyTransaction = ({navigation, route}) => {
         recipientInfo={recipientInfo}
       />
     </CheckIdleState>
+  );
+};
+
+export const ToktokWalletSendMoneyTransaction = ({navigation, route}) => {
+  return (
+    <ContextProvider>
+      <MainComponent navigation={navigation} route={route} />
+    </ContextProvider>
   );
 };
 

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import {useLazyQuery} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_ACCOUNT} from 'toktokwallet/graphql';
@@ -8,24 +8,20 @@ import {MobileNumberInput} from 'toktokwallet/components';
 import {FavoritesContext} from '../ContextProvider';
 import {AlertOverlay} from 'src/components';
 import {TransactionUtility} from 'toktokwallet/util';
+import {ToastModal} from 'toktokbills/components';
 
-export const EnterMobileNo = ({
-  navigation,
-  setProceed,
-  proceed,
-  setRecipientDetails,
-  mobileNo,
-  setMobileNo,
-  recipientDetails,
-  tokwaAccount,
-  setGetAccountLoading,
-  favoritesRef,
-  formData,
-  setFormData,
-  setErrorMessages,
-  errorMessages,
-}) => {
+export const EnterMobileNo = ({navigation, tokwaAccount, formData, setFormData, setErrorMessages, errorMessages}) => {
   const prompt = usePrompt();
+  const {
+    addAccountFavorites,
+    favoriteId,
+    removeFromList,
+    setFavoriteId,
+    patchFavoriteLoading,
+    postFavoriteLoading,
+    favoriteModal,
+    setFavoriteModal,
+  } = useContext(FavoritesContext);
 
   const [getAccount, {loading: walletLoading}] = useLazyQuery(GET_ACCOUNT, {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
@@ -35,18 +31,20 @@ export const EnterMobileNo = ({
         ...prev,
         recipientName: data.getAccount.person,
         recipientSelfieImage: data.getAccount.selfieImage,
+        recipientId: data.getAccount.id,
       }));
     },
     onError: err => {
       if (err.graphQLErrors.length > 0) {
         console.log(err.graphQLErrors);
-        if (err.graphQLErrors[0] === "Person doesn't registered in toktokwallet") {
+        if (err.graphQLErrors[0].message === "Person doesn't registered in toktokwallet") {
           changeErrorMessages('The recipient has no toktokwallet account');
         } else {
           TransactionUtility.StandardErrorHandling({
             error: err,
             navigation,
             prompt,
+            onPress: () => {},
           });
         }
       }
@@ -82,6 +80,7 @@ export const EnterMobileNo = ({
   };
 
   const changeDataValue = value => {
+    setFavoriteId(0);
     setFormData(prev => ({...prev, recipientMobileNo: value}));
   };
 
@@ -113,9 +112,18 @@ export const EnterMobileNo = ({
     }
   }, [formData.recipientMobileNo]);
 
+  const onPressFavorite = () => {
+    if (favoriteId) {
+      removeFromList(favoriteId);
+    } else {
+      addAccountFavorites(formData.recipientId);
+    }
+  };
+
   return (
     <>
-      <AlertOverlay visible={walletLoading} />
+      <ToastModal visible={favoriteModal.show} setVisible={setFavoriteModal} title={favoriteModal.message} />
+      <AlertOverlay visible={walletLoading || patchFavoriteLoading || postFavoriteLoading} />
       <MobileNumberInput
         label="Send Money to "
         name={formData.recipientName}
@@ -130,6 +138,8 @@ export const EnterMobileNo = ({
           formData.recipientMobileNo === '' ||
           !!errorMessages.recipientMobileNo
         }
+        onPressFavorite={onPressFavorite}
+        isFavorite={favoriteId}
         hasFavorite
         hasContacts
       />

@@ -2,6 +2,7 @@ import React from 'react';
 
 import {
   ToktokWalletSendMoney,
+  ToktokWalletSendMoneyFavorites,
   ToktokWalletSendMoneyPaymentSummary,
   ToktokWalletSendMoneyReceipt,
   ToktokWalletSendMoneyTransaction,
@@ -10,6 +11,11 @@ import {
 export default ({Navigator}) => (
   <>
     <Navigator.Screen name="ToktokWalletSendMoney" component={ToktokWalletSendMoney} options={options} />
+    <Navigator.Screen
+      name="ToktokWalletSendMoneyFavorites"
+      component={ToktokWalletSendMoneyFavorites}
+      options={options}
+    />
     <Navigator.Screen
       name="ToktokWalletSendMoneyPaymentSummary"
       component={ToktokWalletSendMoneyPaymentSummary}
