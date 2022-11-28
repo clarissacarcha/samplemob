@@ -1,44 +1,20 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableHighlight,
-  Alert,
-  Platform,
-  Image,
-} from 'react-native';
-import Contacts from 'react-native-contacts';
-import _ from 'lodash';
-import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {View, Text, ActivityIndicator, FlatList, StyleSheet} from 'react-native';
 import {useContacts} from 'toktokload/hooks';
 
 //COMPONENTS
-import {
-  HeaderBack,
-  HeaderTitle,
-  OrangeButton,
-  SearchInput,
-  LoadingIndicator,
-  EmptyList,
-} from 'src/ToktokLoad/components';
+import {HeaderBack, HeaderTitleRevamp, SearchInput, LoadingIndicator, EmptyList} from 'toktokwallet/components';
 import {ContactInformation} from './components';
 import {empty_search} from 'toktokload/assets/images';
-import {search_icon} from 'toktokload/assets/icons';
 
 //UTIL / FONTS / COLOR
 import {moderateScale, groupByName, isItemEmpty} from 'toktokload/helper';
-import {DARK, LIGHT, MEDIUM} from 'src/res/constants';
-import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
+import {COLOR, FONT_SIZE} from 'src/res/variables';
 
 export const ToktokWalletContacts = ({navigation, route}) => {
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
-    headerTitle: () => <HeaderTitle label={'All Contacts'} />,
+    headerTitle: () => <HeaderTitleRevamp label={'All Contacts'} />,
   });
 
   const [data, setData] = useState([]);
