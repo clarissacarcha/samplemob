@@ -1,17 +1,25 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 //UTIL
 import {moderateScale} from 'toktokwallet/helper';
 
 //FONTS & COLORS & IMAGES
 import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
+import {no_profile_contact} from 'toktokwallet/assets';
 
 export const Header = ({route}) => {
   const {recipientSelfieImage, recipientName} = route.params.receipt;
+  const [imageError, setImageError] = useState(false);
+
   return (
     <View style={{alignItems: 'center'}}>
-      {recipientSelfieImage && <Image source={{uri: recipientSelfieImage}} style={styles.logo} />}
+      <FastImage
+        source={imageError ? no_profile_contact : {uri: recipientSelfieImage, priority: FastImage.priority.high}}
+        style={styles.headerLogo}
+        onError={() => setImageError(true)}
+      />
       <View style={recipientSelfieImage ? styles.withLogo : styles.withoutLogo}>
         <Text style={styles.headerText}>{recipientName}</Text>
       </View>
@@ -20,7 +28,7 @@ export const Header = ({route}) => {
 };
 
 const styles = StyleSheet.create({
-  logo: {
+  headerLogo: {
     width: moderateScale(60),
     height: moderateScale(60),
     marginBottom: moderateScale(10),
