@@ -1,33 +1,28 @@
-import React from 'react';
-import {View, Text, StyleSheet, Image, ImageBackground, Platform} from 'react-native';
-import moment from 'moment';
-import {PolicyNote} from 'toktokwallet/components';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, ImageBackground, Platform} from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 //HELPER
 import {moderateScale, currencyCode, numberFormat} from 'toktokwallet/helper';
 
 // COLORS AND FONTS AND IMAGES
-import {banner, info_icon} from 'toktokwallet/assets';
+import {banner, no_profile_contact} from 'toktokwallet/assets';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
 
 export const PaymentDetails = ({route, navigation}) => {
   const {recipientMobileNo, amount, emailAddress, note, recipientSelfieImage, recipientName} = route.params.formData;
+  const [imageError, setImageError] = useState(false);
 
   return (
     <>
       <ImageBackground source={banner.banner_logo} resizeMode="cover">
         <View style={styles.headerContainer}>
-          {recipientSelfieImage && (
-            <View style={{justifyContent: 'center'}}>
-              <Image
-                source={{
-                  uri: recipientSelfieImage,
-                }}
-                style={styles.headerLogo}
-              />
-            </View>
-          )}
+          <FastImage
+            source={imageError ? no_profile_contact : {uri: recipientSelfieImage, priority: FastImage.priority.high}}
+            style={styles.headerLogo}
+            onError={() => setImageError(true)}
+          />
           <Text style={recipientSelfieImage ? styles.otcDescription : styles.nologo}>{recipientName}</Text>
         </View>
       </ImageBackground>

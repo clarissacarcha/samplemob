@@ -50,7 +50,7 @@ export const ConfirmButton = ({route}) => {
   const [postSendMoney, {loading: sendMoneyLoading}] = useMutation(POST_SEND_MONEY, {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: data => {
-      return navigation.navigate('ToktokWalletScanQRReceipt', {
+      return navigation.navigate('ToktokWalletSendMoneyReceipt', {
         receipt: {...data.postSendMoney, ...formData},
       });
     },
