@@ -10,7 +10,7 @@ import {
   ToastAndroid
 } from 'react-native';
 import { connect, useDispatch } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { TOKTOK_MALL_GRAPHQL_CLIENT } from '../../graphql';
@@ -40,6 +40,7 @@ const Splash = ({
   const [registerRetries, setRegisterRetries] = useState(0);
 	const [orderHistory, setOrderHistory] = useState([])
   const dispatch = useDispatch()
+  const route = useRoute()
 
   const [authUser, { error}] = useLazyQuery(GET_CUSTOMER_IF_EXIST, {
 		client: TOKTOK_MALL_GRAPHQL_CLIENT,
@@ -83,7 +84,7 @@ const Splash = ({
             }
           })
 
-          await navigation.navigate("ToktokMallLanding")
+          next(response.getCustomerIfExist.userId)
 
         }else if(response.getCustomerIfExist.id == null){
 
@@ -178,6 +179,25 @@ const Splash = ({
     }
   }
 
+  const next = async (userId) => {
+    await AsyncStorage.getItem("ToktokMallUserOnboard").then((res) => {
+      console.log(res)
+      if(!res){
+        //WELCOME
+        navigation.navigate("ToktokMallOnBoarding", {userId})
+      }else if(res){
+        let data = JSON.parse(res)
+        if(data?.userId == userId){
+          //SAME USER
+          navigation.navigate("ToktokMallLanding")
+        }else{
+          //NEW USER ACCOUNT
+          navigation.navigate("ToktokMallOnBoarding", {userId})
+        }
+      }
+    })
+  }
+
   const [getCustomerRecords, {error2, loading2}] = useLazyQuery(GET_CUSTOMER_RECORDS, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,
 		fetchPolicy: "network-only",
@@ -264,6 +284,7 @@ const Splash = ({
       console.log(err)
     }
 	})
+
   useEffect(() => {
     //count notifications
     let count = 0
@@ -284,7 +305,9 @@ const Splash = ({
 	}
 
 	useEffect(() => {
-		
+
+    console.log("Deep Link:", route?.params)
+    // return
     init()
     
 	}, [])

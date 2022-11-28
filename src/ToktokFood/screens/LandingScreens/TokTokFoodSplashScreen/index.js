@@ -178,7 +178,8 @@ const TokTokFoodSplashScreen = () => {
     },
     onCompleted: () => {
       setNewInstall();
-      navigation.replace('ToktokFoodHomeScreen');
+      navigation.replace('ToktokFoodLanding');
+      // navigation.replace('ToktokFoodHomeScreen');
     },
     onError: () => {
       // Alert.alert('', 'Something went wrong.');

@@ -315,7 +315,7 @@ const Component = ({navigation, route, reduxActions: {updateUserAddress}}) => {
   };
 
   const DeleteAddress = async () => {
-    setConfirmDeleteModal(true);
+    // setConfirmDeleteModal(true);
     setIsLoading(true);
     AsyncStorage.getItem('ToktokMallUser').then(async (raw) => {
       let data = JSON.parse(raw) || {};

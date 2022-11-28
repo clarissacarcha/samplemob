@@ -38,7 +38,7 @@ export const ToktokMallCategoriesSearch = ({navigation})=> {
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
-        return true
+        // return true
       }
       BackHandler.addEventListener('hardwareBackPress', onBackPress)
       return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
