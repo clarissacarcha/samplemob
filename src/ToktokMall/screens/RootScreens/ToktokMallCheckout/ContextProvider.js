@@ -14,6 +14,7 @@ const {Provider} = CheckoutContext
 export const CheckoutContextProvider = ({children})=> {
 
 	//ANIMATIONS
+	const [animateAddress, setAnimateAddress] = useState(false)
 	const [animatePayments, setAnimatePayments] = useState(false)
 
 	const [shippingFeeRates, setShippingFeeRates] = useState([])
@@ -214,6 +215,8 @@ export const CheckoutContextProvider = ({children})=> {
 		<Provider 
 			value={{
 
+				animateAddress,
+				setAnimateAddress,
 				animatePayments,
 				setAnimatePayments,
 				

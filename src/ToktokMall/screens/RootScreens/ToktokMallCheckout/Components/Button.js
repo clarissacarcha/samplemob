@@ -1,5 +1,6 @@
-import React, {useState, useEffect, useRef, useContext} from 'react';
+import React, {useCallback, useState, useEffect, useRef, useContext} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image, TouchableOpacity, FlatList, ScrollView, TextInput, Picker, Dimensions, AsyncStorage, Animated} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { Price, FormatToText } from '../../../../helpers/formats';
 import Spinner from 'react-native-spinkit';
 import { FONT } from '../../../../../res/variables';
@@ -10,7 +11,8 @@ import { FONT } from '../../../../../res/variables';
 // import {watch, electronics, mensfashion, furniture, petcare} from '../../../../../assets'
 
 import {CheckoutContext} from '../ContextProvider';
-import { RoundOffValue } from '../../../../helpers';
+import { RoundOffValue, useDebounce } from '../../../../helpers';
+import { EventRegister } from 'react-native-event-listeners';
 
 const REAL_WIDTH = Dimensions.get('window').width;
 
@@ -18,6 +20,7 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
 
   const CheckoutContextData = useContext(CheckoutContext)
   const [btnDisabled, setBtnDisabled] = useState(false)
+  const [btnPressed, setBtnPressed] = useState(false)
 
   const isDisabled = () => {
     if(total > 0 && !loading && shipping && CheckoutContextData.shippingFeeRates.length > 0 && balance >= total && CheckoutContextData.voucherErrors.length === 0) return false
@@ -26,6 +29,11 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
     
   const onPressPlaceOrder = () => {
     let isInvalid = isDisabled()
+
+    if(!shipping || CheckoutContextData.shippingFeeRates.length == 0){
+      CheckoutContextData.setAnimateAddress(true)
+      return
+    }
 
     if(balance <= total){
       //INSUFFICIENT FUNDS
@@ -41,6 +49,8 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
     }
   }
 
+  const debouncePressPlaceOrder = useDebounce(value => onPressPlaceOrder(), 500)
+
   return (
     <>
         {/* <View style={styles.footer}> */}
@@ -52,10 +62,11 @@ export const Button = ({enabled, loading, shipping, balance, shippingRates, tota
               }</Text>
             </View>
             <TouchableOpacity 
-              disabled={btnDisabled} 
-              style={btnDisabled ? styles.invalidButton : styles.activeButton} 
+              disabled={btnDisabled || loading} 
+              // style={btnDisabled ? styles.invalidButton : styles.activeButton} 
+              style={styles.activeButton}
               onPress={() => {
-                onPressPlaceOrder()
+                debouncePressPlaceOrder()
               }}
             >
                 {!loading && <Text style={styles.buttonText}>Place Order</Text>}
