@@ -44,6 +44,7 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
   const [fromVoucherDetails, setFromVoucherDetails] = useState(true);
   const [errorBorder, setErrorBorder] = useState(false);
   const [errorInputMessage, setErrorInputMessage] = useState('This is a required field');
+  const [textValue, setTextValue] = useState(null);
 
   const [getVouchers, {loading, error: getVouchersError, refetch}] = useLazyQuery(GET_VOUCHERS, {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
@@ -115,6 +116,7 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
       if (networkError) {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
       } else if (graphQLErrors.length > 0) {
+        console.log(graphQLErrors);
         graphQLErrors.map(({message, locations, path, code, errorFields}) => {
           if (code === 'INTERNAL_SERVER_ERROR') {
             Alert.alert('', 'Something went wrong.');
@@ -195,14 +197,10 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
     }),
   );
 
-  const onChange = value => {
-    setSearch(value);
+  const onChange = () => {
+    setSearch(textValue);
     setErrorBorder(false);
     setErrorInputMessage('');
-    // debouncedRequest(value);
-    // if (!value) {
-    //   setNoResults(false);
-    // }
   };
 
   const clearSearch = () => {
@@ -213,17 +211,18 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
   };
 
   const useFunction = () => {
-    if (search == '') {
+    if (textValue == '') {
       setErrorBorder(true);
       setErrorInputMessage('This is a required field');
     } else {
+      onChange();
       setProcessingVisible(true);
       getEnterpriseVoucher({
         variables: {
           input: {
             service: 'GO',
-            code: search,
-            minSpend: route.params.details.rate.tripFare.amount,
+            code: textValue,
+            // minSpend: route.params.details.rate.tripFare.amount,
           },
         },
       });
@@ -284,10 +283,10 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
               {/* <Image source={SearchICN} resizeMode={'contain'} style={{width: 20, height: 20, marginLeft: 16}} /> */}
               <TextInput
                 //   ref={inputRef}
-                onChangeText={value => onChange(value)}
+                onChangeText={setTextValue}
                 style={styles.input}
                 placeholder={'Enter voucher code'}
-                value={search}
+                value={textValue}
                 onSubmitEditing={searchVoucher}
                 placeholderTextColor={'gray'}
               />
