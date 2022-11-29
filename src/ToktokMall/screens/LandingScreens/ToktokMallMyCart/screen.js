@@ -196,14 +196,14 @@ const Component = ({
         // alert(JSON.stringify(customModal.visible))
         if(customModal.visible || customConfirmModal.visible){
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          return true
+          // return true
         }
         else{
           // alert('not true')
           dispatch({type:'TOKTOK_MALL_CLOSE_MODAL'})
-          return false
+          // return false
         }
-        return true
+        // return true
       }
       BackHandler.addEventListener('hardwareBackPress', onBackPress)
       return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
