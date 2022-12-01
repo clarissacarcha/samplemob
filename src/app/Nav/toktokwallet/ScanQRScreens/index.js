@@ -8,10 +8,12 @@ import {
   ToktokWalletScanQrHome,
 } from 'toktokwallet/screens';
 import ScanQRCustomer from './ScanQRCustomer';
+import ScanQRMerchantPayment from './ScanQRMerchantPayment';
 
 export default ({Navigator}) => (
   <>
     {ScanQRCustomer({Navigator})}
+    {ScanQRMerchantPayment({Navigator})}
     <Navigator.Screen name="ToktokWalletMerchantPayment" component={ToktokWalletMerchantPayment} options={options} />
     <Navigator.Screen
       name="ToktokWalletMerchantPaymentConfirm"

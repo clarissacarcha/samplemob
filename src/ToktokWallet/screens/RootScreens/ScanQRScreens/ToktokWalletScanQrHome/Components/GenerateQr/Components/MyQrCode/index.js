@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {View, Text, StyleSheet, Image, ActivityIndicator, Platform} from 'react-native';
 import {useAccount} from 'toktokwallet/hooks';
 import QRCode from 'react-native-qrcode-svg';
@@ -8,7 +8,7 @@ import CONSTANTS from 'common/res/constants';
 import {ReceiptSeparator} from 'toktokwallet/components';
 import DashedLine from 'react-native-dashed-line';
 import {VerifyContext} from '../../../VerifyContextProvider';
-import {currencyCode, numberFormat, moderateScale} from 'toktokwallet/helper';
+import {currencyCode, numberFormat, moderateScale, maskedMobileNo} from 'toktokwallet/helper';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
@@ -16,6 +16,7 @@ export const MyQrCode = ({onCapturingScreen}) => {
   // const viewshotRef = useRef();
   const {tokwaAccount} = useAccount();
   const {amount, generatedQrCode, generateQrCodeLoading} = useContext(VerifyContext);
+  const mobileNumber = maskedMobileNo(tokwaAccount?.mobileNumber);
 
   return (
     <View style={styles.container}>
@@ -40,9 +41,9 @@ export const MyQrCode = ({onCapturingScreen}) => {
 
               <View style={styles.contentWrapper}>
                 <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>
-                  {tokwaAccount.person.firstName} {tokwaAccount.person.lastName}
+                  {tokwaAccount.person.firstName} {tokwaAccount.person.lastName[0]}.
                 </Text>
-                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{tokwaAccount.mobileNumber}</Text>
+                <Text style={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.M}}>{mobileNumber}</Text>
                 {amount !== '' && +amount > 0 && (
                   <Text style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M}}>
                     {currencyCode}

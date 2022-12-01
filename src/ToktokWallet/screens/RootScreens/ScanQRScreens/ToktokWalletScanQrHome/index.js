@@ -17,7 +17,8 @@ import {useMutation} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {POST_VALIDATE_QR_CODE} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
-
+import {usePrompt} from 'src/hooks';
+import {TransactionUtility} from 'toktokwallet/util';
 //SELF IMPORTS
 import {ScanQr, GenerateQr, ScanQrOption, VerifyContextProvider, VerifyContext} from './Components';
 import {AlertOverlay} from 'src/components';
@@ -26,11 +27,12 @@ import {backgrounds} from 'toktokwallet/assets';
 
 const MainComponent = ({navigation, route}) => {
   const {qrOptions, onShare} = useContext(VerifyContext);
-  const alertHook = useAlert();
+  const prompt = usePrompt();
   const tokwaAccount = useSelector(state => state.toktokWallet);
   const [qr, setQr] = useState(null);
   const viewshotRef = useRef();
   const [onCapturingScreen, setOnCapturingScreen] = useState(false);
+  const [loadingDecodeQr, setLoadingDecodeQr] = useState(false);
 
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
@@ -51,16 +53,31 @@ const MainComponent = ({navigation, route}) => {
   const [postValidateQRCode, {loading}] = useMutation(POST_VALIDATE_QR_CODE, {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onError: error => {
+      console.log(error);
+      setLoadingDecodeQr(false);
       // return setErrMessage("QR code must be valid")
-      return alertHook({message: 'Qr code must be valid'});
+      TransactionUtility.StandardErrorHandling({
+        error,
+        prompt,
+        navigation,
+        onPress: () => {},
+        isPop: false,
+        title: 'Invalid QR Code',
+        message: 'The QR Code is invalid. Try another QR.',
+      });
     },
     onCompleted: data => {
+      setLoadingDecodeQr(false);
       const {account, action, QRInfo} = data.postValidateQRCode;
       if (action === 'sendMoney') {
         if (account) {
           if (account.mobileNumber === tokwaAccount.mobileNumber) {
-            // return setErrMessage("You cannot send money to yourself")
-            return alertHook({message: 'You cannot send money to yourself'});
+            return prompt({
+              title: 'QR Code Not Allowed',
+              message: 'The QR detected is your QR Code. Try another QR.',
+              type: 'error',
+              event: 'TOKTOKBILLSLOAD',
+            });
           }
           return navigation.navigate('ToktokWalletScanQRTransaction', {
             recipientInfo: account,
@@ -69,10 +86,10 @@ const MainComponent = ({navigation, route}) => {
           });
         }
       } else {
-        return navigation.navigate('ToktokWalletMerchantPaymentConfirm', {
-          merchant: postValidateQRCode?.merchant,
-          branch: postValidateQRCode?.branch,
-          terminal: postValidateQRCode?.terminal,
+        return navigation.navigate('ToktokWalletMerchantPaymentTransaction', {
+          merchant: data.postValidateQRCode?.merchant,
+          branch: data.postValidateQRCode?.branch,
+          terminal: data.postValidateQRCode?.terminal,
           qrCode: qr,
         });
       }
@@ -90,11 +107,11 @@ const MainComponent = ({navigation, route}) => {
           console.log('User tapped custom button: ', response.customButton);
         } else {
           if (response.uri) {
+            setLoadingDecodeQr(true);
             var path = response.path;
             if (!path) {
               path = response.uri;
             }
-
             await DecodeQR(path);
           }
         }
@@ -111,14 +128,28 @@ const MainComponent = ({navigation, route}) => {
       .then(response => {
         const {values} = response; // Array of detected QR code values. Empty if nothing found.
         if (values.length === 0) {
-          return alertHook({message: 'No QR code detected!'});
+          setLoadingDecodeQr(false);
+          return prompt({
+            title: 'QR Code Undetected',
+            message: 'There’s no QR Code detected. Try again.',
+            type: 'error',
+            event: 'TOKTOKBILLSLOAD',
+          });
         }
         // if(values.length == 0 ) return setErrMessage("No QR code detected!")
         values.map(async qrcode => {
           await onUploadSuccess(qrcode);
         });
       })
-      .catch(error => console.log('Cannot detect QR code in image', error));
+      .catch(error => {
+        setLoadingDecodeQr(false);
+        return prompt({
+          title: 'QR Code Undetected',
+          message: 'There’s no QR Code detected. Try again.',
+          type: 'error',
+          event: 'TOKTOKBILLSLOAD',
+        });
+      });
   };
 
   const onUploadSuccess = qrCode => {
@@ -155,9 +186,15 @@ const MainComponent = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
-      <AlertOverlay visible={loading} />
+      <AlertOverlay visible={loadingDecodeQr} />
       {qrOptions === 'scan' ? <ScanQr navigation={navigation} route={route} /> : <DisplayQrCode />}
-      {!onCapturingScreen && <ScanQrOption handleUploadQr={handleUploadQr} />}
+      {!onCapturingScreen && (
+        <ScanQrOption
+          handleUploadQr={() => {
+            handleUploadQr();
+          }}
+        />
+      )}
     </View>
   );
 };

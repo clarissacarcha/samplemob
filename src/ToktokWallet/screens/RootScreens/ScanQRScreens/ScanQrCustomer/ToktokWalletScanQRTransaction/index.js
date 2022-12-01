@@ -30,7 +30,7 @@ export const ToktokWalletScanQRTransaction = ({navigation, route}) => {
   const tokwaAccount = useSelector(state => state.toktokWallet);
   const [transferableVisible, setTransferableVisible] = useState(false);
   const [formData, setFormData] = useState({
-    recipientSelfieImage: '',
+    recipientSelfieImage: recipientInfo ? recipientInfo.person.selfieImage : null,
     recipientName: recipientInfo ? `${recipientInfo.person.firstName} ${recipientInfo.person.lastName[0]}.` : '',
     recipientMobileNo: recipientInfo ? recipientInfo.mobileNumber : '',
     amount: QRInfo && QRInfo.amount !== 0 ? QRInfo.amount.toString() : '',

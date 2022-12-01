@@ -1,41 +1,49 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, Image, ImageBackground, Platform} from 'react-native';
 import moment from 'moment';
 import {PolicyNote} from 'toktokwallet/components';
-import FastImage from 'react-native-fast-image';
 
 //HELPER
 import {moderateScale, currencyCode, numberFormat} from 'toktokwallet/helper';
 
 // COLORS AND FONTS AND IMAGES
-import {banner, no_profile_contact} from 'toktokwallet/assets';
+import {banner, info_icon} from 'toktokwallet/assets';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
 
 export const PaymentDetails = ({route, navigation}) => {
-  const {recipientMobileNo, amount, emailAddress, note, recipientSelfieImage, recipientName} = route.params.formData;
-  const [imageError, setImageError] = useState(false);
+  const {formData, merchant, branch, terminal} = route.params;
+  const {amount, note, serviceFee, accountName, accountNumber} = formData;
 
   return (
     <>
       <ImageBackground source={banner.banner_logo} resizeMode="cover">
         <View style={styles.headerContainer}>
-          <FastImage
-            source={imageError ? no_profile_contact : {uri: recipientSelfieImage, priority: FastImage.priority.high}}
-            style={styles.headerLogo}
-            onError={() => setImageError(true)}
-          />
-          <Text style={styles.otcDescription}>{recipientName}</Text>
+          {merchant.logo && (
+            <View style={{justifyContent: 'center'}}>
+              <Image
+                source={{
+                  uri: merchant.logo,
+                }}
+                style={styles.headerLogo}
+              />
+            </View>
+          )}
+          <Text style={merchant.logo ? styles.otcDescription : styles.nologo}>{branch.branchName}</Text>
+          <Text
+            style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE, marginTop: moderateScale(5)}}>
+            {terminal.terminalName}
+          </Text>
         </View>
       </ImageBackground>
       <View style={{marginVertical: moderateScale(10)}}>
         <View style={styles.detailsContainer}>
-          <Text style={styles.label}>Send Money to</Text>
-          <Text style={styles.description}>{recipientMobileNo}</Text>
+          <Text style={styles.label}>Account Name</Text>
+          <Text style={styles.description}>{accountName}</Text>
         </View>
         <View style={styles.detailsContainer}>
-          <Text style={styles.label}>Email Address </Text>
-          <Text style={styles.description}>{emailAddress}</Text>
+          <Text style={styles.label}>Account Number </Text>
+          <Text style={styles.description}>{accountNumber}</Text>
         </View>
         {!!note && (
           <View style={styles.detailsContainer}>
@@ -53,13 +61,20 @@ export const PaymentDetails = ({route, navigation}) => {
             {numberFormat(amount)}
           </Text>
         </View>
+        <View style={[styles.detailsContainer]}>
+          <Text style={styles.label}>Service Fee </Text>
+          <Text style={styles.description}>
+            {currencyCode}
+            {numberFormat(serviceFee)}
+          </Text>
+        </View>
       </View>
       <View style={styles.totalSeparator} />
       <View style={styles.detailsContainer}>
         <Text style={styles.totalLabel}>Total </Text>
         <Text style={styles.totalLabel}>
           {currencyCode}
-          {numberFormat(parseFloat(amount))}
+          {numberFormat(parseFloat(amount) + parseFloat(serviceFee))}
         </Text>
       </View>
     </>

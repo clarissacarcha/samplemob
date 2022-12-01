@@ -74,7 +74,7 @@ const WalletMethods = () => {
       identifier: 'sendMoney',
     },
     {
-      label: 'Scan QR',
+      label: 'QR',
       icon: require('toktokwallet/assets/icons/services/qr-code-scan.png'),
       onPress: () => {
         SheetManager.hide('walletMenu_Services');

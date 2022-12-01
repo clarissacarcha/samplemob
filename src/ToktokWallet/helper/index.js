@@ -4,6 +4,7 @@ export * from './formatAmount';
 export * from './inputRegexFormat';
 export * from './locationPermission';
 export * from './logsHelper';
+export * from './masked';
 export * from './MaskLeftZero';
 export * from './numberFormat';
 export * from './scale';

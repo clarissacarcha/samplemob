@@ -114,12 +114,15 @@ export const HeaderDownloadReceipt = ({
 
         await CameraRoll.save(newFileUri, {type: 'photo', album: 'toktok'});
 
-        prompt({
-          type: 'success',
-          title: promptTitle,
-          message: promptMessage,
-          event: 'TOKTOKBILLSLOAD',
-        });
+        setTimeout(() => {
+          prompt({
+            type: 'success',
+            title: promptTitle,
+            message: promptMessage,
+            event: 'TOKTOKBILLSLOAD',
+          });
+        }, 100);
+
         onPressDownloadReceipt(false);
       });
     }, 1000);

@@ -190,6 +190,7 @@ export const POST_VALIDATE_QR_CODE = gql`
           firstName
           middleName
           lastName
+          selfieImage
         }
       }
       QRInfo

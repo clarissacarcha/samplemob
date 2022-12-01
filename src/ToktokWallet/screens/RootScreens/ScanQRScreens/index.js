@@ -1,4 +1,5 @@
 export * from './ScanQrCustomer';
+export * from './ScanQrMerchantPayment';
 export * from './ToktokWalletMerchantPayment';
 export * from './ToktokWalletMerchantPaymentConfirm';
 export * from './ToktokWalletScanQR';

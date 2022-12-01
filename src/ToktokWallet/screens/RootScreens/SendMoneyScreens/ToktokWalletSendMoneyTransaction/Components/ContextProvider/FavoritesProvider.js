@@ -2,16 +2,17 @@ import React, {createContext, useReducer, useState} from 'react';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_FAVORITES_PAGINATE, POST_FAVORITE_ACCOUNT, PATCH_REMOVE_FAVORITE} from 'toktokwallet/graphql';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {useAlert} from 'src/hooks/useAlert';
 import {onErrorAlert} from 'src/util/ErrorUtility';
+import {usePrompt} from 'src/hooks';
+import {TransactionUtility} from 'toktokwallet/util';
+import {useNavigation} from '@react-navigation/native';
 
 export const FavoritesContext = createContext();
 const {Provider} = FavoritesContext;
 
-const initialData = [];
-
 const FavoritesProvider = ({children}) => {
-  const alert = useAlert();
+  const prompt = usePrompt();
+  const navigation = useNavigation();
   const [favorites, setFavorites] = useState([]);
   const [favoriteId, setFavoriteId] = useState(0);
   const [favoriteModal, setFavoriteModal] = useState({show: false, message: ''});
@@ -25,20 +26,42 @@ const FavoritesProvider = ({children}) => {
       setFavoriteModal({show: true, message: 'Removed from your Favorites'});
       setIsFavorite(true);
     },
-    onError: error => onErrorAlert({alert, error}),
+    onError: error => {
+      TransactionUtility.StandardErrorHandling({
+        error,
+        prompt,
+        navigation,
+        onPress: () => {},
+      });
+    },
   });
 
   const [postFavoriteAccount, {loading: postFavoriteLoading}] = useMutation(POST_FAVORITE_ACCOUNT, {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: ({postFavoriteAccount}) => {
+      console.log(postFavoriteAccount);
       getFavorites();
       setFavoriteId(postFavoriteAccount.id);
       setFavoriteModal({show: true, message: 'Added to your Favorites'});
       setIsFavorite(true);
     },
     onError: error => {
+      let message = '';
+      if (error.graphQLErrors.length > 0) {
+        if (error.graphQLErrors[0].payload.code === 'duplicateFavorite') {
+          message = 'You already saved this contact in the favorites.';
+        }
+      }
       setIsFavorite(false);
-      onErrorAlert({alert, error});
+      TransactionUtility.StandardErrorHandling({
+        error,
+        prompt,
+        navigation,
+        onPress: () => {},
+        isPop: false,
+        title: message !== '' ? 'Duplicate Favorites' : '',
+        message,
+      });
     },
   });
 

@@ -1,27 +1,21 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
-import FastImage from 'react-native-fast-image';
 
 //UTIL
 import {moderateScale} from 'toktokwallet/helper';
 
 //FONTS & COLORS & IMAGES
 import {COLOR, FONT, FONT_SIZE} from 'src/res/variables';
-import {no_profile_contact} from 'toktokwallet/assets';
 
 export const Header = ({route}) => {
-  const {recipientSelfieImage, recipientName} = route.params.receipt;
-  const [imageError, setImageError] = useState(false);
+  const {merchant, terminal, branch} = route.params;
 
   return (
     <View style={{alignItems: 'center'}}>
-      <FastImage
-        source={imageError ? no_profile_contact : {uri: recipientSelfieImage, priority: FastImage.priority.high}}
-        style={styles.logo}
-        onError={() => setImageError(true)}
-      />
-      <View style={recipientSelfieImage ? styles.withLogo : styles.withoutLogo}>
-        <Text style={styles.headerText}>{recipientName}</Text>
+      {merchant.logo && <Image source={{uri: merchant.logo}} style={styles.logo} />}
+      <View style={merchant.logo ? styles.withLogo : styles.withoutLogo}>
+        <Text style={styles.headerText}>{branch.branchName}</Text>
+        <Text style={styles.terminal}>{terminal.terminalName}</Text>
       </View>
     </View>
   );
@@ -37,9 +31,11 @@ const styles = StyleSheet.create({
   },
   withLogo: {
     marginTop: moderateScale(5),
+    alignItems: 'center',
   },
   withoutLogo: {
     marginVertical: moderateScale(10),
+    alignItems: 'center',
   },
   headerText: {
     fontSize: FONT_SIZE.M,
@@ -54,5 +50,11 @@ const styles = StyleSheet.create({
     color: COLOR.YELLOW,
     fontSize: FONT_SIZE.L,
     fontFamily: FONT.BOLD,
+  },
+  terminal: {
+    fontFamily: FONT.BOLD,
+    fontSize: FONT_SIZE.M,
+    color: COLOR.ORANGE,
+    marginTop: moderateScale(5),
   },
 });
