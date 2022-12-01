@@ -22,6 +22,7 @@ export const VoucherCard = ({
   postCollectVoucher,
   setProcessingVisible,
   fromVoucherDetails,
+  setFromVoucherDetails,
 }) => {
   const [isApplicable, setIsApplicable] = useState(true);
 
@@ -37,7 +38,7 @@ export const VoucherCard = ({
     if (fromVoucherDetails == false) {
       setProcessingVisible(true);
       setTimeout(() => {
-        if (data.collectable && !data.voucherWallet) {
+        if (data?.collectable && !data?.voucherWallet) {
           postCollectVoucher({
             variables: {
               input: {
@@ -51,7 +52,7 @@ export const VoucherCard = ({
         }
       }, 3000);
     } else {
-      if (data.collectable && !data.voucherWallet) {
+      if (data?.collectable && !data?.voucherWallet) {
         postCollectVoucher({
           variables: {
             input: {
@@ -153,6 +154,8 @@ export const VoucherCard = ({
                 id: data.id,
                 onPress,
                 isApplicable,
+                setFromVoucherDetails,
+                onPressActionButton,
               })
             }>
             <Text style={styles.TandC}>T&C</Text>

@@ -44,7 +44,7 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
   const [fromVoucherDetails, setFromVoucherDetails] = useState(true);
   const [errorBorder, setErrorBorder] = useState(false);
   const [errorInputMessage, setErrorInputMessage] = useState('This is a required field');
-  const [textValue, setTextValue] = useState(null);
+  const [textValue, setTextValue] = useState('');
 
   const [getVouchers, {loading, error: getVouchersError, refetch}] = useLazyQuery(GET_VOUCHERS, {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
@@ -78,7 +78,7 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
 
   const [postCollectVoucher, {loading: PCVLoading}] = useMutation(POST_COLLECT_VOUCHER, {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
-    onCompleted: response => {
+    onCompleted: () => {
       setViewSuccesVoucherClaimedModal(true);
       setTimeout(() => {
         setViewSuccesVoucherClaimedModal(false);
@@ -115,13 +115,16 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
 
       if (networkError) {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
+        setProcessingVisible(false);
       } else if (graphQLErrors.length > 0) {
         console.log(graphQLErrors);
         graphQLErrors.map(({message, locations, path, code, errorFields}) => {
           if (code === 'INTERNAL_SERVER_ERROR') {
             Alert.alert('', 'Something went wrong.');
+            setProcessingVisible(false);
           } else if (code === 'USER_INPUT_ERROR') {
             Alert.alert('', message);
+            setProcessingVisible(false);
           } else if (code === 'BAD_USER_INPUT') {
             errorFields.map(({message}) => {
               setErrorBorder(true);
@@ -133,6 +136,7 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
           } else {
             console.log('ELSE ERROR:', error);
             Alert.alert('', 'Something went wrong...');
+            setProcessingVisible(false);
           }
         });
       }
@@ -207,6 +211,7 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
     setErrorBorder(false);
     setErrorInputMessage('');
     setSearch('');
+    setTextValue('');
     setNoResults(false);
   };
 
@@ -342,6 +347,7 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
                           loading={PCVLoading}
                           setProcessingVisible={setProcessingVisible}
                           fromVoucherDetails={fromVoucherDetails}
+                          setFromVoucherDetails={setFromVoucherDetails}
                         />
                       </View>
                     );

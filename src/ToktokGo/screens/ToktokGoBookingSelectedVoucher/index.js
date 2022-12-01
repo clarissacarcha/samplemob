@@ -16,7 +16,7 @@ const FULL_HEIGHT = Dimensions.get('window').height;
 const FULL_WIDTH = Dimensions.get('window').width;
 
 const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
-  const {id, onPress, isApplicable} = route.params;
+  const {id, onPress, isApplicable, setFromVoucherDetails, onPressActionButton} = route.params;
   const [data, setData] = useState({});
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
   const [processingVisible, setProcessingVisible] = useState(false);
@@ -25,6 +25,7 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
+      console.log(response.getVoucher);
       setData(response.getVoucher);
     },
     onError: onError,
@@ -69,8 +70,9 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
         },
       });
     } else {
+      setFromVoucherDetails(true);
       navigation.pop();
-      onPress();
+      onPressActionButton(data);
       setProcessingVisible(false);
     }
   };
