@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {connect, useDispatch} from 'react-redux';
-import {View, StyleSheet, SafeAreaView, StatusBar, ScrollView, RefreshControl, Platform} from 'react-native';
+import {View, StyleSheet, SafeAreaView, StatusBar, ScrollView, RefreshControl, Platform, Linking} from 'react-native';
 import OneSignal from 'react-native-onesignal';
 import FlagSecure from 'react-native-flag-secure-android';
 import {useNavigation, useFocusEffect, useRoute} from '@react-navigation/native';
@@ -104,6 +104,7 @@ const Screen = ({navigation, constants, session, createSession}) => {
   useEffect(() => {
     OneSignal.setNotificationOpenedHandler(onNotificationOpened);
     getUserHash();
+    handleOpenWallet();
     // const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
     //   return true;
     // });
@@ -121,6 +122,16 @@ const Screen = ({navigation, constants, session, createSession}) => {
       createSession(newSession);
     },
   });
+
+  const handleOpenWallet = async () => {
+    const openedFromLink = await Linking.getInitialURL();
+    if (openedFromLink) {
+      console.log(openedFromLink.slice(8));
+      if (openedFromLink.slice(9) === 'wallet') {
+        navigation.navigate('ToktokWalletLoginPage');
+      }
+    }
+  };
 
   return (
     <>
