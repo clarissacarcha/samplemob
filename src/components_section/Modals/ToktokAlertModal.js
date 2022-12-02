@@ -4,6 +4,7 @@ import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-nati
 import constants from '../../common/res/constants';
 import WarningPNG from '../../assets/images/warning.png';
 import FailedPNG from '../../assets/images/failed.png';
+import SuccessPNG from '../../assets/images/Success.png';
 
 export const ToktokAlertModal = ({
   close,
@@ -68,8 +69,22 @@ export const ToktokAlertModal = ({
   const showImage = () => {
     if (imageType === 'warning') {
       return WarningPNG;
+    } else if (imageType === 'success') {
+      return SuccessPNG;
     } else if (imageType === 'failed') {
       return FailedPNG;
+    } else {
+      return image;
+    }
+  };
+
+  const titleFontColor = () => {
+    if (imageType === 'warning') {
+      return constants.COLOR.YELLOW;
+    } else if (imageType === 'success') {
+      return constants.COLOR.ORANGE;
+    } else if (imageType === 'failed') {
+      return constants.COLOR.RED;
     } else {
       return image;
     }
@@ -87,7 +102,7 @@ export const ToktokAlertModal = ({
                   style={{
                     fontFamily: constants.FONT_FAMILY.BOLD,
                     fontSize: constants.FONT_SIZE.XL + 3,
-                    color: constants.COLOR.YELLOW,
+                    color: titleFontColor(),
                     marginBottom: 16,
                   }}>
                   {title}
