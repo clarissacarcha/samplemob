@@ -79,7 +79,9 @@ const WalletTransactions = `
   note
   status
   sourceWalletId
+  sourceAccountId
   destinationWalletId
+  destinationAccountId
   cashInId
   cashOutId
   createdAt
