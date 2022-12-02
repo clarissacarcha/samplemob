@@ -41,7 +41,8 @@ const Details = ({
     refDate,
     refTime,
     requestNo,
-    externalReferenceNo
+    externalReferenceNo,
+    sourceAccountId
   } = transaction
 
   return (
@@ -49,7 +50,7 @@ const Details = ({
       <Text style={{fontFamily: FONT.BOLD,fontSize: moderateScale(18)}}>Delivery</Text>
       <View style={{marginTop: 15}}>
         <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Status:</Text> Success</Text>
-        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Amount Paid:</Text> {amount}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Amount {sourceAccountId ? "Paid" : "Refunded" }:</Text> {amount}</Text>
         <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Service Reference Number:</Text> {externalReferenceNo}</Text>
         <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Toktokwallet Reference Number:</Text> {refNo}</Text>
         <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Transaction Date:</Text> {refDate} {refTime}</Text>
