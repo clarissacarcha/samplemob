@@ -4,7 +4,7 @@ import {Text, StyleSheet, Image, View, Modal, TouchableOpacity} from 'react-nati
 import constants from '../../common/res/constants';
 import WarningPNG from '../../assets/images/warning.png';
 import FailedPNG from '../../assets/images/failed.png';
-import SuccessPNG from '../../assets/images/Success.png';
+import SuccessPNG from '../../assets/images/Sucess.png';
 
 export const ToktokAlertModal = ({
   close,
