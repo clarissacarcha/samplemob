@@ -109,6 +109,18 @@ const DeveloperScreen = ({navigation}) => {
           }}
         />
       </View>
+      <View style={{flexDirection: 'row', marginVertical: 8, justifyContent: 'space-evenly'}}>
+        <PrimaryButton
+          label={`sample success modal`}
+          onPress={() => {
+            toktokAlert({
+              title: 'Booking confirmed',
+              message: 'Simple modal example without title and image',
+              imageType: 'success',
+            });
+          }}
+        />
+      </View>
     </ScrollView>
   );
 };
