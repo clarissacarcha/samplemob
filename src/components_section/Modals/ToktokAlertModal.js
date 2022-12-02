@@ -86,7 +86,7 @@ export const ToktokAlertModal = ({
     } else if (imageType === 'failed') {
       return constants.COLOR.RED;
     } else {
-      return image;
+      return constants.COLOR.YELLOW;
     }
   };
 
