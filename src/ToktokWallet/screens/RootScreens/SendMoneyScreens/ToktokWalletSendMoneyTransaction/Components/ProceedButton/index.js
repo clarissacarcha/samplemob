@@ -31,7 +31,7 @@ export const ProceedButton = ({
     if (+formData.amount >= 1 && +formData.amount <= tokwaAccount.wallet.transferableBalance) {
       errorM = '';
     } else if (+formData.amount < 1 && formData.amount !== '') {
-      errorM = `The minimum amount allowed to transfer is ${currencyCode}1`;
+      errorM = `The minimum amount allowed is ${currencyCode}1`;
     } else if (+formData.amount > tokwaAccount.wallet.transferableBalance) {
       errorM = `Transferable amount exceeded. The maximum amount allowed is ₱${numberFormat(
         tokwaAccount.wallet.transferableBalance,
