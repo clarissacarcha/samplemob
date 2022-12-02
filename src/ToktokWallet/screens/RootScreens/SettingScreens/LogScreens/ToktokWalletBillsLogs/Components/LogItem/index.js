@@ -42,7 +42,8 @@ export const LogItem = ({item, tokwaAccount, index, data}) => {
       amount: transactionAmount,
       details: item.details,
       requestNo,
-      externalReferenceNo: item.externalReferenceNumber
+      externalReferenceNo: item.externalReferenceNumber,
+      sourceAccountId: item.sourceAccountId
     });
     setOpenModal(true);
   };
