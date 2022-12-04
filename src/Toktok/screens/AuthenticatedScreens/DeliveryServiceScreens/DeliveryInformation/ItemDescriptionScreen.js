@@ -31,7 +31,7 @@ const ItemDescriptionScreen = ({route, navigation}) => {
     }
 
     const itemsToDeleteSet = new Set(topThree);
-    const newArr = data.filter(item => {
+    const newArr = arrCopy.filter(item => {
       return !itemsToDeleteSet.has(item);
     });
 
@@ -44,7 +44,7 @@ const ItemDescriptionScreen = ({route, navigation}) => {
 
   const handleSearch = input => {
     setSearchedValue(input);
-    const filteredData = data.filter(el => el.toLowerCase().includes(input.toLowerCase()));
+    const filteredData = arrCopy.filter(el => el.toLowerCase().includes(input.toLowerCase()));
     setData(filteredData);
   };
 
@@ -86,7 +86,13 @@ const ItemDescriptionScreen = ({route, navigation}) => {
             paddingHorizontal: 16,
           }}>
           <Image source={SearchIcon} resizeMode={'contain'} style={{width: 15, height: 15}} />
-          <TextInput value={searchedValue} onChangeText={input => handleSearch(input)} style={{flex: 0.9}}></TextInput>
+          <TextInput
+            value={searchedValue}
+            onChangeText={input => handleSearch(input)}
+            style={{flex: 0.9}}
+            placeholder="Search"
+            placeholderTextColor="gray"
+          />
           <ThrottledOpacity onPress={clearSearchField}>
             <Image source={ClearTextIcon} resizeMode={'contain'} style={{width: 15, height: 15}} />
           </ThrottledOpacity>
@@ -94,7 +100,7 @@ const ItemDescriptionScreen = ({route, navigation}) => {
       </View>
 
       {data.length == 0 && (
-        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: 'white'}}>
           <Image source={EmptyDataImg} resizeMode={'contain'} style={{width: graphicWidth, height: graphicWidth}} />
           <Text style={{fontSize: FONT_SIZE.XL + 1, color: COLOR.ORANGE, fontFamily: FONT_FAMILY.SEMI_BOLD}}>
             No results found
