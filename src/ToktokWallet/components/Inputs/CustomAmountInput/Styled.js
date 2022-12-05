@@ -31,7 +31,7 @@ export const Container: ComponentType<any> = styled(View).attrs(props => ({
     errorMessage !== '' &&
     `
        border-color: ${theme.color.red};
-       border-width: 1;
+       border-width: 1px;
      `}
 `;
 
@@ -66,7 +66,6 @@ export const Error: ComponentType<any> = styled(Text).attrs(props => ({
 }))`
   color: ${props => props.theme.color.red};
   font-size: ${FONT_SIZE.S}px;
-  margin-top: 5px;
 `;
 export const PlaceholderContainer: ComponentType<any> = styled(View).attrs(props => ({
   ...props,

@@ -49,7 +49,6 @@ export const ButtonImage: ComponentType<any> = styled(Image).attrs(props => ({
 export const ErrorText: ComponentType<any> = styled.Text`
   color: ${props => props.theme.color.red};
   font-size: ${FONT_SIZE.S}px;
-  margin-top: 5px;
 `;
 
 export const Label: ComponentType<any> = styled(Text).attrs(props => ({

@@ -58,6 +58,9 @@ export const ProceedButton = ({
     if (errorM === '') {
       errorM = formData.recipientMobileNo.length < 10 ? 'Invalid mobile number' : '';
     }
+    if (errorMessages.recipientMobileNo !== '') {
+      errorM = errorMessages.recipientMobileNo;
+    }
     changeErrorMessages('recipientMobileNo', errorM);
     return !errorM;
   };

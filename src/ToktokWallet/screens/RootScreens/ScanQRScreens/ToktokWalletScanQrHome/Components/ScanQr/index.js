@@ -2,13 +2,14 @@ import React, {useState, useCallback, useEffect} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Dimensions, Platform} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
-import {useFocusEffect} from '@react-navigation/native';
 //GRAPHQL
 import {useMutation} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {POST_VALIDATE_QR_CODE} from 'toktokwallet/graphql';
 import {useSelector} from 'react-redux';
-import {useAlert} from 'src/hooks/useAlert';
+import {usePrompt} from 'src/hooks';
+import {TransactionUtility} from 'toktokwallet/util';
+import {useFocusEffect} from '@react-navigation/native';
 //COMPONENTS
 import {CheckIdleState} from 'toktokwallet/components';
 import {AlertOverlay} from 'src/components';
@@ -20,7 +21,7 @@ const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 const {height, width} = Dimensions.get('screen');
 
 export const ScanQr = ({navigation, route}) => {
-  const alertHook = useAlert();
+  const prompt = usePrompt();
   const [errMessage, setErrMessage] = useState('');
   const [torch, setTorch] = useState(false);
   const [focusCamera, setFocusCamera] = useState(false);
@@ -33,23 +34,31 @@ export const ScanQr = ({navigation, route}) => {
     y: 0,
   });
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     setFocusCamera(true);
-  //     return () => setFocusCamera(false);
-  //   }, []),
-  // );
+  useFocusEffect(
+    useCallback(() => {
+      setFocusCamera(true);
+      return () => setFocusCamera(false);
+    }, []),
+  );
 
-  useEffect(() => {
-    setFocusCamera(true);
-    return () => setFocusCamera(false);
-  }, []);
+  // useEffect(() => {
+  //   setFocusCamera(true);
+  //   return () => setFocusCamera(false);
+  // }, []);
 
   const [postValidateQRCode, {loading}] = useMutation(POST_VALIDATE_QR_CODE, {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onError: error => {
       // return setErrMessage("QR code must be valid")
-      return alertHook({message: 'Qr code must be valid'});
+      TransactionUtility.StandardErrorHandling({
+        error,
+        prompt,
+        navigation,
+        onPress: () => {},
+        isPop: false,
+        title: 'Invalid QR Code',
+        message: 'The QR Code is invalid. Try another QR.',
+      });
     },
     onCompleted: data => {
       // setTorch(false);
@@ -57,10 +66,13 @@ export const ScanQr = ({navigation, route}) => {
       if (action === 'sendMoney') {
         if (account) {
           if (account.mobileNumber === tokwaAccount.mobileNumber) {
-            // return setErrMessage("You cannot send money to yourself")
-            return alertHook({message: 'You cannot send money to yourself'});
+            return prompt({
+              title: 'QR Code Not Allowed',
+              message: 'The QR detected is your QR Code. Try another QR.',
+              type: 'error',
+              event: 'TOKTOKBILLSLOAD',
+            });
           }
-          setErrMessage('');
           return navigation.navigate('ToktokWalletScanQRTransaction', {
             recipientInfo: account,
             QRInfo,
@@ -68,10 +80,10 @@ export const ScanQr = ({navigation, route}) => {
           });
         }
       } else {
-        return navigation.navigate('ToktokWalletMerchantPaymentConfirm', {
-          merchant: postValidateQRCode?.merchant,
-          branch: postValidateQRCode?.branch,
-          terminal: postValidateQRCode?.terminal,
+        return navigation.navigate('ToktokWalletMerchantPaymentTransaction', {
+          merchant: data.postValidateQRCode?.merchant,
+          branch: data.postValidateQRCode?.branch,
+          terminal: data.postValidateQRCode?.terminal,
           qrCode: qr,
         });
       }

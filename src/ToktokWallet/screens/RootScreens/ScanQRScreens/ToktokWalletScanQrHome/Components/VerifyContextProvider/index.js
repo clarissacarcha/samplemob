@@ -19,6 +19,7 @@ export const VerifyContextProvider = ({children}) => {
     onCompleted: data => {
       const {encryptedQRToken} = data.postGenerateQRCode;
       setGeneratedQrCode(encryptedQRToken);
+      getAccountQrCodes();
     },
   });
 

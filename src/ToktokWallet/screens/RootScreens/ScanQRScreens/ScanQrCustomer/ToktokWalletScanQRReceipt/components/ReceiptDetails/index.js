@@ -18,7 +18,7 @@ export const ReceiptDetails = ({route}) => {
   const {emailAddress, requestDate, note, recipientMobileNo, amount, toktokwalletAccountNo, refNo} =
     route.params.receipt;
   const transactionDate = moment(requestDate).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
-  console.log(route.params.receipt);
+
   return (
     <>
       <View style={styles.line} />

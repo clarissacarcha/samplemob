@@ -1,4 +1,4 @@
-import React, {useContext, useState, useRef} from 'react';
+import React, {useContext, useState, useRef, useMemo} from 'react';
 import {View, StyleSheet, ScrollView, ImageBackground} from 'react-native';
 import {
   CheckIdleState,
@@ -12,7 +12,6 @@ import ViewShot from 'react-native-view-shot';
 import {launchImageLibrary} from 'react-native-image-picker';
 import RNQRGenerator from 'rn-qr-generator';
 //GRAPHQL
-import {useAlert} from 'src/hooks/useAlert';
 import {useMutation} from '@apollo/react-hooks';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {POST_VALIDATE_QR_CODE} from 'toktokwallet/graphql';
@@ -163,7 +162,7 @@ const MainComponent = ({navigation, route}) => {
     });
   };
 
-  const DisplayQrCode = () => {
+  const DisplayQrCode = useMemo(() => {
     return (
       <ViewShot
         ref={viewshotRef}
@@ -182,12 +181,12 @@ const MainComponent = ({navigation, route}) => {
         </ImageBackground>
       </ViewShot>
     );
-  };
+  }, [onCapturingScreen, viewshotRef, onShare]);
 
   return (
     <View style={styles.container}>
       <AlertOverlay visible={loadingDecodeQr} />
-      {qrOptions === 'scan' ? <ScanQr navigation={navigation} route={route} /> : <DisplayQrCode />}
+      {qrOptions === 'scan' ? <ScanQr navigation={navigation} route={route} /> : DisplayQrCode}
       {!onCapturingScreen && (
         <ScanQrOption
           handleUploadQr={() => {

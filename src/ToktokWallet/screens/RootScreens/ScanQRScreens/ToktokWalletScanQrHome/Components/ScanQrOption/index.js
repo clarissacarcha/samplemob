@@ -91,6 +91,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     zIndex: 1,
     position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 5,
+    backgroundColor: '#fff',
   },
   uploadContainer: {
     backgroundColor: 'white',
@@ -118,7 +127,7 @@ const styles = StyleSheet.create({
     height: moderateScale(80),
     width: moderateScale(80),
     borderRadius: moderateScale(80),
-    borderColor: 'orange',
+    borderColor: '#F6841F',
     borderWidth: 1,
   },
   scanImageContainer: {
@@ -132,7 +141,6 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   generateQrContainer: {
-    backgroundColor: '#F6841F',
     flex: 1,
     height: moderateScale(70),
     justifyContent: 'center',

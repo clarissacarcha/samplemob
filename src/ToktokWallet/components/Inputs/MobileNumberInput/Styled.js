@@ -74,7 +74,6 @@ export const Error: ComponentType<any> = styled(Text).attrs(props => ({
 }))`
   color: ${props => props.theme.color.red};
   font-size: ${FONT_SIZE.S}px;
-  margin-top: 5px;
 `;
 
 export const ContactsButton: ComponentType<any> = styled(TouchableOpacity).attrs(props => ({

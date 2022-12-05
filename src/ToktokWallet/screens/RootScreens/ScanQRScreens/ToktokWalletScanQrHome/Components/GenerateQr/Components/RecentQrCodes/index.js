@@ -21,11 +21,7 @@ export const RecentQrCodes = ({data}) => {
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity style={styles.shadowContainer} onPress={() => onPressRecentQr(item)}>
-        <View
-          style={{
-            paddingHorizontal: moderateScale(20),
-            paddingVertical: moderateScale(8),
-          }}>
+        <View style={styles.qrContainer}>
           <QRCode
             value={item.qrCode} //Give value when there's no session as it will throw an error if value is empty.
             logo={tokwaLogo}
@@ -38,7 +34,7 @@ export const RecentQrCodes = ({data}) => {
           {!!item?.amount && (
             <Text style={styles.amount}>
               {currencyCode}
-              {numberFormat(item.amount)}
+              {numberFormat(item.amount, 2, true)}
             </Text>
           )}
         </View>
@@ -49,7 +45,7 @@ export const RecentQrCodes = ({data}) => {
   return (
     <>
       {(data.length !== 0 || getAccountQrCodesLoading) && <Text style={styles.title}>Recent QR</Text>}
-      {getAccountQrCodesLoading ? (
+      {getAccountQrCodesLoading && data.length === 0 ? (
         <LoadingIndicator isLoading={true} size="small" />
       ) : (
         <FlatList
@@ -58,6 +54,8 @@ export const RecentQrCodes = ({data}) => {
           renderItem={renderItem}
           contentContainerStyle={{paddingHorizontal: moderateScale(7)}}
           showsHorizontalScrollIndicator={false}
+          extraData={data}
+          keyExtractor={(item, index) => index}
         />
       )}
     </>
@@ -86,6 +84,13 @@ const styles = StyleSheet.create({
   amount: {
     fontFamily: FONT.BOLD,
     fontSize: FONT_SIZE.M,
-    marginTop: moderateScale(3),
+    marginTop: moderateScale(10),
+  },
+  qrContainer: {
+    padding: moderateScale(10),
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: moderateScale(100),
+    height: moderateScale(100),
   },
 });

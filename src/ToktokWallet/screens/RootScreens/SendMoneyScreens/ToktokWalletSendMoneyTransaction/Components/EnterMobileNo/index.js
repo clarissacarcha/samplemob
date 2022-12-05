@@ -61,27 +61,19 @@ export const EnterMobileNo = ({navigation, tokwaAccount, formData, setFormData, 
     if (number.length > 11) {
       return;
     }
-
+    changeErrorMessages('');
     if (checkMobileFormat(number)) {
       checkIFSameNumber(number);
     }
     changeDataValue(number);
-    changeErrorMessages('');
-  };
-
-  const fetchRecipientInfo = () => {
-    getAccount({
-      variables: {
-        input: {
-          mobileNumber: `+63${formData.recipientMobileNo}`,
-        },
-      },
-    });
   };
 
   const changeDataValue = value => {
     setFavoriteId(0);
     setFormData(prev => ({...prev, recipientMobileNo: value}));
+    if (value.length === 10) {
+      checkMobileNumber(value);
+    }
   };
 
   const changeErrorMessages = value => {
@@ -98,19 +90,18 @@ export const EnterMobileNo = ({navigation, tokwaAccount, formData, setFormData, 
     return true;
   };
 
-  const checkMobileNumber = () => {
-    const isSameMobNum = checkIFSameNumber(`+63${formData.recipientMobileNo}`);
-
+  const checkMobileNumber = value => {
+    const isSameMobNum = checkIFSameNumber(`+63${value}`);
     if (!isSameMobNum) {
-      fetchRecipientInfo();
+      getAccount({
+        variables: {
+          input: {
+            mobileNumber: `+63${value}`,
+          },
+        },
+      });
     }
   };
-
-  useEffect(() => {
-    if (formData.recipientMobileNo !== '' && formData.recipientMobileNo.length === 10) {
-      checkMobileNumber();
-    }
-  }, [formData.recipientMobileNo]);
 
   const onPressFavorite = () => {
     if (favoriteId) {
@@ -129,8 +120,8 @@ export const EnterMobileNo = ({navigation, tokwaAccount, formData, setFormData, 
         name={formData.recipientName}
         value={formData.recipientMobileNo}
         onChangeText={value => {
-          changeMobileNo(value);
           setFormData(prev => ({...prev, recipientName: ''}));
+          changeMobileNo(value);
         }}
         errorMessage={errorMessages.recipientMobileNo}
         disableFavorite={

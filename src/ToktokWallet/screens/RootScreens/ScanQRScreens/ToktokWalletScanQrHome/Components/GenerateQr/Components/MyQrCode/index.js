@@ -22,12 +22,12 @@ export const MyQrCode = ({onCapturingScreen}) => {
     <View style={styles.container}>
       <View style={[styles.contentContainer, Platform.OS === 'android' && styles.qrBorder]}>
         <View style={styles.qrContainer}>
-          {generateQrCodeLoading && (
+          {/* {generateQrCodeLoading && (
             <View style={styles.loadingContainer}>
               <ActivityIndicator color={COLOR.ORANGE} size={50} />
             </View>
-          )}
-          {generatedQrCode && !generateQrCodeLoading && (
+          )} */}
+          {generatedQrCode && (
             <>
               <QRCode
                 value={generatedQrCode} //Give value when there's no session as it will throw an error if value is empty.

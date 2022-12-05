@@ -16,7 +16,8 @@ import moment from 'moment';
 import {useAccount} from 'toktokwallet/hooks';
 
 export const GenerateQr = ({navigation, route, viewshotRef, onCapturingScreen}) => {
-  const {postGenerateQRCode, recentQrCodes, getAccountQrCodesLoading, setOnShare, onShare} = useContext(VerifyContext);
+  const {postGenerateQRCode, recentQrCodes, getAccountQrCodesLoading, setOnShare, onShare, generateQrCodeLoading} =
+    useContext(VerifyContext);
   const [showAmountModal, setShowAmountModal] = useState(false);
   const {tokwaAccount} = useAccount();
 
@@ -29,7 +30,6 @@ export const GenerateQr = ({navigation, route, viewshotRef, onCapturingScreen}) 
       },
     });
   };
-
   const DisplayRecentQr = useMemo(() => {
     if (recentQrCodes.length === 0) {
       return null;
@@ -62,12 +62,12 @@ export const GenerateQr = ({navigation, route, viewshotRef, onCapturingScreen}) 
             setOnShare(false);
           });
       });
-    }, 500);
+    }, 800);
   };
 
   return (
     <View style={[styles.container, (onCapturingScreen || onShare) && styles.center]}>
-      <AlertOverlay visible={onCapturingScreen} />
+      <AlertOverlay visible={onCapturingScreen || generateQrCodeLoading || onShare} />
       <EnterAmountModal
         visible={showAmountModal}
         setVisible={setShowAmountModal}
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   options: {
-    paddingHorizontal: 16,
+    paddingHorizontal: moderateScale(16),
   },
   center: {
     justifyContent: 'center',

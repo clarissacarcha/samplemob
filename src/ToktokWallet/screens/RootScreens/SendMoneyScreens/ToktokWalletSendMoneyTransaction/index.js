@@ -77,11 +77,8 @@ const MainComponent = ({navigation, route}) => {
           <PolicyNote
             title="Transferable and Non-transferable amount"
             titleStyles={{marginBottom: 0}}
-            note1="Click "
-            subTextNote1="here"
-            subTextNote1Styles={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}
+            note1="Click here to read more about transferable and non-transferable amount."
             noteText1Styles={{fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}
-            endOfNote1=" here to read more about transferable and non-transferable amount."
             onPress={() => {
               setTransferableVisible(true);
             }}

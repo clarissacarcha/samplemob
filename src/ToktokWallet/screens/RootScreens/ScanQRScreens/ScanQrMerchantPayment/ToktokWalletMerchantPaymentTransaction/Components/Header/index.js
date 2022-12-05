@@ -14,8 +14,8 @@ export const Header = ({route}) => {
   return (
     <ImageBackground source={banner.banner_logo} resizeMode="cover">
       <View style={styles.headerContainer}>
-        {merchant.logo && <Image source={{uri: merchant.logo}} style={styles.logo} />}
-        <View style={merchant.logo ? styles.withLogo : styles.withoutLogo}>
+        {merchant?.logo && <Image source={{uri: merchant.logo}} style={styles.logo} />}
+        <View style={merchant?.logo ? styles.withLogo : styles.withoutLogo}>
           <Text>{branch.branchName}</Text>
           <Text
             style={{fontFamily: FONT.BOLD, fontSize: FONT_SIZE.M, color: COLOR.ORANGE, marginTop: moderateScale(5)}}>

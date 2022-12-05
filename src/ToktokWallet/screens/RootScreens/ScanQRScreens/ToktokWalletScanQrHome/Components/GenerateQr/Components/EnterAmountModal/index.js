@@ -16,13 +16,12 @@ export const EnterAmountModal = ({
   title = 'Add to Favorites',
   message = 'Would you like to add this Biller to your Favorites?',
 }) => {
-  const {setAmount, amount, getAccountQrCodes} = useContext(VerifyContext);
+  const {setAmount, amount} = useContext(VerifyContext);
   const [tempAmount, setTempAmount] = useState(amount);
 
   const handleGenerateQR = () => {
     onPressGenerateQr(tempAmount);
     setAmount(tempAmount);
-    getAccountQrCodes();
   };
 
   return (

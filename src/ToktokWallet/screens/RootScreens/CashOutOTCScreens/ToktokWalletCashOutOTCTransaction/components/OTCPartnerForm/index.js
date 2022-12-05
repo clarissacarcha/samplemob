@@ -73,19 +73,7 @@ export const OTCPartnerForm = ({route, tokwaAccount}) => {
     await checkProviderServiceFee(value);
     setIsInsufficientBalance(false);
     setAmountError('');
-    const num = value.replace(/[^0-9.]/g, '');
-    const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
-    if (!checkFormat) {
-      return;
-    }
-    let decimalValueArray = num.split('.');
-    if (decimalValueArray[0].length > 7) {
-      return;
-    }
-    if (num[0] === '.') {
-      return setAmount('0.');
-    }
-    setAmount(num);
+    setAmount(value);
   };
 
   return (

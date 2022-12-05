@@ -41,16 +41,7 @@ export const Forms = ({
   };
 
   const changeAmount = value => {
-    const num = value.replace(/[^0-9.]/g, '');
-    const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
-    if (!checkFormat) {
-      return;
-    }
-    let decimalValueArray = num.split('.');
-    if (decimalValueArray[0].length > 7) {
-      return;
-    }
-    changeDataValue('amount', num[0] === '.' ? '0.' : num);
+    changeDataValue('amount', value);
   };
 
   return (
