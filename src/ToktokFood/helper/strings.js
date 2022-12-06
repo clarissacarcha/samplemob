@@ -497,13 +497,13 @@ export const orderTypeData = [
   },
 ];
 
-export const SamplePolicy = `These Terms and Conditions govern your use of our platform tokokfood (the “Platform”), an food delivery platform operated by Cloud Panda PH Inc. (Cloud Panda). Please read these Terms and Conditions carefully before using the platform so that you are aware of your rights and obligations with respect to Cloud Panda, including its affiliates and subsidiaries.
+export const SamplePolicy = `These Terms and Conditions govern your use of our platform "tokokfood" (the “Platform”), an food delivery platform operated by Cloud Panda PH Inc. (Cloud Panda). Please read these Terms and Conditions carefully before using the platform so that you are aware of your rights and obligations with respect to Cloud Panda, including its affiliates and subsidiaries.
 
 By accessing or using the Platform, you agree to be bound by these Terms. These Terms govern your use and access of toktokfood. These Terms apply to all visitors, users, and others who access or use the Platform.
 
 The actual contract of sale is directly between the user and our partner merchants. Cloud Panda is not a party to that or any other contract between the aforementioned parties. As such, it has no obligations in connection with any such contract. Parties to the transaction will be entirely responsible for the sales contract between them, the listing of goods, returns, refund, warranty of purchase and the like.
 
-Cloud Panda PH Inc., reserves the right to modify these Terms and Conditions without prior notice. Any changes hereto will be effective immediately upon posting. Continuous access or use of this Platform after any modifications have been made, signifies your consent to the changes.
+Cloud Panda PH Inc., reserves the right to modify these Terms and Conditions without prior notice. Any changes "here" will be effective immediately upon posting. Continuous access or use of this Platform after any modifications have been made, signifies your consent to the changes.
 
 You agree that you will have no claim against Cloud Panda PH Inc, for any statement which is not explicitly set out in these Terms. In the event that any of the provisions of these Terms are deemed invalid or invalidated subsequently by any rules or regulations, the remaining provisions will not be affected, and the validity or enforceability of any other provision (or the remaining parts of that provision) will remain. If a court holds that we cannot enforce any part of these Terms as drafted, we may replace those terms with similar terms to the extent enforceable under applicable laws and regulations, without changing the remaining terms of these Terms. No delay in enforcing any provision of these Terms will be construed to be a waiver of any rights under that provision.
 

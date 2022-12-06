@@ -125,6 +125,19 @@ const CartVoucher = (props: PropsType): React$Node => {
     const orders = await parseAmountComputation(cartItems);
     const payload = {isVisible: true, text: 'Applying Voucher', type: null};
     dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
+    console.log({
+      input: {
+        userId: Number(customerInfo.userId),
+        brandId: cartItems[0].companyId,
+        shopid: cartItems[0]?.shopid,
+        code: voucherCode,
+        region: cartItems[0]?.shopRegion,
+        subtotal: totalAmount,
+        paymentMethod: paymentMethod === 'cash' ? 'COD' : paymentMethod.toUpperCase(),
+        promoCount,
+        orders,
+      },
+    })
     validateVoucherCode({
       variables: {
         input: {
