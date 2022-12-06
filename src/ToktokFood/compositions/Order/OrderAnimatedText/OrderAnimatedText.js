@@ -26,7 +26,7 @@ const OrderAnimatedText = (props: PropsType): React$Node => {
       const remainingMinutes = moment(dateOrdered).diff(moment(), 'minutes');
       if (remainingMinutes <= 0) {
         title = 'No Driver Found';
-        subtitle = "We're sorry ka-toktok, but we couldn't\nfind a driver near your area.";
+        subtitle = 'You can wait for a rider to accept the booking or\nselect the cancel button below.';
       } else {
         title = 'Finding Driver';
         subtitle = "We're finding you a nearby driver.";

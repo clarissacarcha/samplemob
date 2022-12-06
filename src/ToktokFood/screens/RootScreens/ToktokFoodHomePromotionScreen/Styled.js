@@ -18,7 +18,7 @@ export const PromotionHeader: ComponentType<any> = styled(Header).attrs(props =>
     fontSize: 17,
   },
   centerContainerStyle: {
-    top: Platform.OS === 'ios' ? 5 : 8,
+    top: Platform.OS === 'ios' ? 5 : 5,
   },
   hasBack: true,
 }))``;

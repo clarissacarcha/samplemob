@@ -184,6 +184,7 @@ const HeaderTitle = ({
                   paddingHorizontal: 5,
                   zIndex: 1,
                   borderRadius: 10,
+                  marginTop: -10
                 }}>
                 <Text style={{padding: 1, color: 'white', fontFamily: FONT.REGULAR, fontSize: FONT_SIZE.S}}>
                   {allTemporaryCart.cartItemsLength}
