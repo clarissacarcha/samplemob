@@ -50,7 +50,8 @@ export const LogItem = ({
       details: item.details,
       externalReferenceNo: item.externalReferenceNumber,
       requestNo,
-      sourceAccountId: item.sourceAccountId
+      sourceAccountId: item.sourceAccountId,
+      transactionType: item.transactionType
     })
     setOpenModal(true);
   }
