@@ -53,6 +53,22 @@ const DeliveryDetails = ({navigation, route, session}) => {
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  // todo: data will be provided from API
+  const [topThree, setTopThree] = useState(['Documents', 'Food', 'Medical']);
+  const [arrCopy, setArrCopy] = useState([
+    'Documents',
+    'Food',
+    'Medical',
+    'Animal Accessories',
+    'Automotive Parts',
+    'Beauty Products',
+    'Clothings',
+    'Electronics',
+    'Fragile',
+    'Furniture',
+    'Others',
+  ]);
+
   const quotationHash = route.params.quotation.hash;
   const quotationDirections = route.params.quotation.directions;
 
@@ -393,6 +409,12 @@ const DeliveryDetails = ({navigation, route, session}) => {
               bottomSheetRef={itemSheetRef}
               onOtherItemChange={setOtherItem}
               otherItem={otherItem}
+              setItemDescription={setItemDescription}
+              topThree={topThree}
+              setTopThree={setTopThree}
+              arrCopy={arrCopy}
+              setArrCopy={setArrCopy}
+              navigation={navigation}
             />
 
             <NotesForm value={notes} onChange={setNotes} />
