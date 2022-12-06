@@ -53,6 +53,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  // todo: data will be provided from API
   const [topThree, setTopThree] = useState(['Documents', 'Food', 'Medical']);
   const [arrCopy, setArrCopy] = useState([
     'Documents',

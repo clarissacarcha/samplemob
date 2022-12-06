@@ -53,8 +53,6 @@ const ItemDescriptionScreen = ({route, navigation}) => {
     setData(arrCopy);
   };
 
-  console.log('zion', arrCopy);
-
   return (
     <View style={{flex: 1}}>
       <View style={styles.container}>
