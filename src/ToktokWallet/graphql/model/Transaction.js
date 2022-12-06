@@ -73,6 +73,9 @@ const WalletTransactions = `
     name
     key
     type
+    isIncome
+    isRefund
+    isPayment
   }
   displayInfo
   amount
