@@ -53,39 +53,16 @@ const ItemDescriptionScreen = ({route, navigation}) => {
     setData(arrCopy);
   };
 
+  console.log('zion', arrCopy);
+
   return (
     <View style={{flex: 1}}>
-      <View
-        style={{
-          paddingHorizontal: 16,
-          paddingBottom: 16,
-          alignItems: 'center',
-          flexDirection: 'row',
-          backgroundColor: 'white',
-          paddingTop: StatusBar.currentHeight + 16,
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-
-          elevation: 5,
-        }}>
+      <View style={styles.container}>
         <ThrottledOpacity onPress={() => navigation.pop()}>
-          <Image source={BackIcon} resizeMode={'contain'} style={{width: 15, height: 15, marginRight: 16}} />
+          <Image source={BackIcon} resizeMode={'contain'} style={styles.backIcon} />
         </ThrottledOpacity>
-        <View
-          style={{
-            backgroundColor: COLOR.MEDIUM_DARK,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            borderRadius: 5,
-            paddingHorizontal: 16,
-          }}>
-          <Image source={SearchIcon} resizeMode={'contain'} style={{width: 15, height: 15}} />
+        <View style={styles.headerContainer}>
+          <Image source={SearchIcon} resizeMode={'contain'} style={styles.searchIcon} />
           <TextInput
             value={searchedValue}
             onChangeText={input => handleSearch(input)}
@@ -94,17 +71,15 @@ const ItemDescriptionScreen = ({route, navigation}) => {
             placeholderTextColor="gray"
           />
           <ThrottledOpacity onPress={clearSearchField}>
-            <Image source={ClearTextIcon} resizeMode={'contain'} style={{width: 15, height: 15}} />
+            <Image source={ClearTextIcon} resizeMode={'contain'} style={styles.searchIcon} />
           </ThrottledOpacity>
         </View>
       </View>
 
-      {data.length == 0 && (
-        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: 'white'}}>
-          <Image source={EmptyDataImg} resizeMode={'contain'} style={{width: graphicWidth, height: graphicWidth}} />
-          <Text style={{fontSize: FONT_SIZE.XL + 1, color: COLOR.ORANGE, fontFamily: FONT_FAMILY.SEMI_BOLD}}>
-            No results found
-          </Text>
+      {arrCopy.length == 0 && (
+        <View style={styles.noFoundContainer}>
+          <Image source={EmptyDataImg} resizeMode={'contain'} style={styles.noFoundImage} />
+          <Text style={styles.noFoundText}>No results found</Text>
           <Text>Try to search something similar.</Text>
         </View>
       )}
@@ -136,4 +111,54 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, null)(ItemDescriptionScreen);
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    alignItems: 'center',
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    paddingTop: StatusBar.currentHeight + 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  backIcon: {
+    width: 15,
+    height: 15,
+    marginRight: 16,
+  },
+  headerContainer: {
+    backgroundColor: COLOR.MEDIUM_DARK,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderRadius: 5,
+    paddingHorizontal: 16,
+  },
+  searchIcon: {
+    width: 15,
+    height: 15,
+  },
+  noFoundContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  noFoundImage: {
+    width: graphicWidth,
+    height: graphicWidth,
+  },
+  noFoundText: {
+    fontSize: FONT_SIZE.XL + 1,
+    color: COLOR.ORANGE,
+    fontFamily: FONT_FAMILY.SEMI_BOLD,
+  },
+});
