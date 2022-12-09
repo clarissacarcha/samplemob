@@ -15,6 +15,7 @@ export const BookingVoucher = ({
   isNotVoucherApplicable,
   details,
 }) => {
+  const characterCode = selectedVouchers?.code
   return (
     <>
       <TouchableOpacity onPress={() => navigation.push('ToktokGoBookingVouchers')} style={styles.container}>
@@ -27,7 +28,7 @@ export const BookingVoucher = ({
           <View style={styles.elementWrapper}>
             <TouchableOpacity onPress={setSelectedVouchersNull}>
               <View style={styles.appliedVoucher}>
-                <View style={{width: windowWidth * 0.23}}>
+                <View style={{width: characterCode?.length <= 30 ? null : windowWidth * 0.4}}>
                   <Text numberOfLines={1} style={styles.appliedVoucherText}>
                     {selectedVouchers.code}
                   </Text>
