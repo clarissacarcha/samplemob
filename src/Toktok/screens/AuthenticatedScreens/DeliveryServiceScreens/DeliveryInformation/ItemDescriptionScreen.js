@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, Text, TextInput, Image, StatusBar, FlatList, Dimensions} from 'react-native';
 
 // helper
@@ -18,11 +18,7 @@ const {COLOR, FONT_SIZE, FONT_FAMILY} = CONSTANTS;
 const ItemDescriptionScreen = ({route, navigation}) => {
   const {setItemDescription, topThree, setTopThree, arrCopy, setArrCopy} = route.params;
   const [searchedValue, setSearchedValue] = useState('');
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    setData(arrCopy);
-  }, []);
+  const [data, setData] = useState(arrCopy);
 
   const onItemPress = item => {
     if (!topThree.includes(item)) {
@@ -74,7 +70,7 @@ const ItemDescriptionScreen = ({route, navigation}) => {
         </View>
       </View>
 
-      {arrCopy.length == 0 && (
+      {data.length == 0 && (
         <View style={styles.noFoundContainer}>
           <Image source={EmptyDataImg} resizeMode={'contain'} style={styles.noFoundImage} />
           <Text style={styles.noFoundText}>No results found</Text>
