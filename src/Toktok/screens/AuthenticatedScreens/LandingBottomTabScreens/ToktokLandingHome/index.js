@@ -126,7 +126,6 @@ const Screen = ({navigation, constants, session, createSession}) => {
   const handleOpenWallet = async () => {
     const openedFromLink = await Linking.getInitialURL();
     if (openedFromLink) {
-      console.log(openedFromLink.slice(8));
       if (openedFromLink.slice(9) === 'wallet') {
         navigation.navigate('ToktokWalletLoginPage');
       }
