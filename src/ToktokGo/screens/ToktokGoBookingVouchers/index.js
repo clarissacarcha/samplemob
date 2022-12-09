@@ -26,12 +26,14 @@ import XICN from '../../../assets/icons/EraseTextInput.png';
 import {ThrottledOpacity} from '../../../components_section';
 import {useDebounce} from '../../helpers';
 import {ProcessingModal} from './Components/ProcessingModal';
+import {useToktokAlert} from '../../../hooks';
 
 const decorWidth = Dimensions.get('window').width * 0.5;
 const FULL_HEIGHT = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
 const ToktokGoBookingVouchers = ({navigation, route}) => {
+  const toktokAlert = useToktokAlert();
   const {details} = useSelector(state => state.toktokGo);
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
@@ -86,7 +88,56 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
       refetch();
       handleGetData();
     },
-    onError: onError,
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+        setProcessingVisible(false);
+      } else if (graphQLErrors.length > 0) {
+        console.log(graphQLErrors);
+        graphQLErrors.map(({message, locations, path, code, errorFields, errorType}) => {
+          if (code === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', 'Something went wrong.');
+            setProcessingVisible(false);
+          } else if (code === 'USER_INPUT_ERROR') {
+            Alert.alert('', message);
+            setProcessingVisible(false);
+          } else if (code === 'BAD_USER_INPUT') {
+            if (errorType == 'VOUCHER_LIFETIME_MAX_COUNT_HIT') {
+              toktokAlert({
+                title: 'Voucher Reached Limit',
+                message: 'Sorry but this voucher reached the maximum redemption limit. You may try another voucher.',
+                imageType: 'failed',
+                onPressSingleButton: () => {
+                  handleGetData();
+                },
+              });
+            }else if(errorType == 'VOUCHER_DAILY_MAX_COUNT_HIT'){
+              toktokAlert({
+                title: 'Voucher Reached Limit',
+                message: 'Sorry but this voucher reached the maximum redemption limit today. You may try another voucher.',
+                imageType: 'failed',
+                onPressSingleButton: () => {
+                  handleGetData();
+                },
+              });
+            }
+            // errorFields.map(({message}) => {
+            //   setErrorBorder(true);
+            //   setErrorInputMessage(message);
+            //   setProcessingVisible(false);
+            // });
+          } else if (code === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+            setProcessingVisible(false);
+          }
+        });
+      }
+    },
   });
 
   const [getSearchVoucher, {loading: GSVLoading}] = useLazyQuery(GET_SEARCH_VOUCHER, {
@@ -179,11 +230,46 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
 
   const onApply = throttle(
     item => {
-      dispatch({
-        type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-        payload: {...details, voucher: item},
-      });
-      navigation.pop();
+      const currentTime = moment().format('YYYY-M-DD HH:mm:ss');
+      if (item.endAt == null) {
+        dispatch({
+          type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+          payload: {...details, voucher: item},
+        });
+        navigation.pop();
+      } else if (moment(item.endAt).isBefore(currentTime)) {
+        toktokAlert({
+          title: 'Voucher Expired',
+          message: 'Sorry but this voucher has expired. You may try another voucher.',
+          imageType: 'failed',
+          onPressSingleButton: () => {
+            handleGetData();
+          },
+        });
+      } else {
+        if (item.remainingVoucher.lifetimeLimit == 0) {
+          toktokAlert({
+            title: 'Voucher Reached Limit',
+            message: 'Sorry but this voucher reached the maximum redemption limit. You may try another voucher.',
+            imageType: 'failed',
+            onPressSingleButton: () => {
+              handleGetData();
+            },
+          });
+        } else {
+          dispatch({
+            type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+            payload: {...details, voucher: item},
+          });
+        }
+        navigation.pop();
+      }
+
+      // dispatch({
+      //   type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+      //   payload: {...details, voucher: item},
+      // });
+      // navigation.pop();
     },
     1000,
     {trailing: false},

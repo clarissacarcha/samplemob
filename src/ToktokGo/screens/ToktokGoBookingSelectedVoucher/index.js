@@ -11,15 +11,17 @@ import {AlertOverlay} from '../../../SuperApp/screens/Components';
 import {TOKTOK_WALLET_VOUCHER_CLIENT, GET_VOUCHER, POST_COLLECT_VOUCHER} from '../../../graphql';
 import GraphicsIMG from '../../../assets/images/Promos/toktokgo_voucher.png';
 import {ProcessingModal} from './Components/ProcessingModal';
+import {useToktokAlert} from '../../../hooks';
 
 const FULL_HEIGHT = Dimensions.get('window').height;
 const FULL_WIDTH = Dimensions.get('window').width;
 
 const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
-  const {id, onPress, isApplicable, setFromVoucherDetails, onPressActionButton} = route.params;
+  const {id, onPress, isApplicable, isApplicableDailyLimit, setFromVoucherDetails, onPressActionButton} = route.params;
   const [data, setData] = useState({});
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
   const [processingVisible, setProcessingVisible] = useState(false);
+  const toktokAlert = useToktokAlert();
 
   const [getVoucher, {loading: GVLoading}] = useLazyQuery(GET_VOUCHER, {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
@@ -56,7 +58,51 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
       }, 1000);
       getDataVoucher();
     },
-    onError: onError,
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+        setProcessingVisible(false);
+      } else if (graphQLErrors.length > 0) {
+        console.log(graphQLErrors);
+        graphQLErrors.map(({message, locations, path, code, errorFields, errorType}) => {
+          if (code === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', 'Something went wrong.');
+            setProcessingVisible(false);
+          } else if (code === 'USER_INPUT_ERROR') {
+            Alert.alert('', message);
+            setProcessingVisible(false);
+          } else if (code === 'BAD_USER_INPUT') {
+            if (errorType == 'VOUCHER_LIFETIME_MAX_COUNT_HIT') {
+              toktokAlert({
+                title: 'Voucher Reached Limit',
+                message: 'Sorry but this voucher reached the maximum redemption limit. You may try another voucher.',
+                imageType: 'failed',
+              });
+            } else if (errorType == 'VOUCHER_DAILY_MAX_COUNT_HIT') {
+              toktokAlert({
+                title: 'Voucher Reached Limit',
+                message:
+                  'Sorry but this voucher reached the maximum redemption limit today. You may try another voucher.',
+                imageType: 'failed',
+              });
+            }
+            // errorFields.map(({message}) => {
+            //   setErrorBorder(true);
+            //   setErrorInputMessage(message);
+            //   setProcessingVisible(false);
+            // });
+          } else if (code === 'AUTHENTICATION_ERROR') {
+            // Do Nothing. Error handling should be done on the scren
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+            setProcessingVisible(false);
+          }
+        });
+      }
+    },
   });
 
   const onPressSelected = () => {
@@ -96,19 +142,22 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
           <Text style={{marginVertical: 16}}>{data.policies}</Text>
         </View>
       </ScrollView>
-
-      {!isApplicable && (
-        <View style={styles.buttonContainer}>
-          {GVLoading ? (
-            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{paddingVertical: 16}} />
-          ) : data?.collectable && !data?.voucherWallet ? (
-            <ThrottledOpacity style={styles.claimButtonWrapper} onPress={onPressSelected}>
-              <Text style={styles.claimText}>Claim</Text>
-            </ThrottledOpacity>
-          ) : (
-            <ThrottledOpacity style={styles.useButtonWrapper} onPress={onPressSelected}>
-              <Text style={styles.useText}>Use</Text>
-            </ThrottledOpacity>
+      {isApplicable == true || isApplicableDailyLimit == true ? null : (
+        <View>
+          {!isApplicable && (
+            <View style={styles.buttonContainer}>
+              {GVLoading ? (
+                <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{paddingVertical: 16}} />
+              ) : data?.collectable && !data?.voucherWallet ? (
+                <ThrottledOpacity style={styles.claimButtonWrapper} onPress={onPressSelected}>
+                  <Text style={styles.claimText}>Claim</Text>
+                </ThrottledOpacity>
+              ) : (
+                <ThrottledOpacity style={styles.useButtonWrapper} onPress={onPressSelected}>
+                  <Text style={styles.useText}>Use</Text>
+                </ThrottledOpacity>
+              )}
+            </View>
           )}
         </View>
       )}

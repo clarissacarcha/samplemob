@@ -24,17 +24,22 @@ export const PaymentMethodModal = ({
   tokwaAccount,
   getMyAccountLoading,
   checkPaymentMethod,
+  selectedPaymentMethod,
 }) => {
   const dispatch = useDispatch();
   const {wallet, id} = tokwaAccount;
   const setSelected = paymentMethod => {
-    dispatch({
-      type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-      payload: {...details, paymentMethod: paymentMethod},
-    });
-    setSelectedPaymentMethod(paymentMethod);
-    setViewSelectPaymentModal(false);
-    checkPaymentMethod();
+    if (selectedPaymentMethod != paymentMethod) {
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+        payload: {...details, paymentMethod: paymentMethod},
+      });
+      checkPaymentMethod();
+      setSelectedPaymentMethod(paymentMethod);
+      setViewSelectPaymentModal(false);
+    } else {
+      setViewSelectPaymentModal(false);
+    }
   };
 
   const isDisabled = () => {

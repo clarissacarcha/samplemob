@@ -68,6 +68,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [outstandingFee, setOutstandingFee] = useState();
   const [voucherRemovedVisible, setvoucherRemovedVisible] = useState(false);
   const [voucherTextMessage, setvoucherTextMessage] = useState('');
+  const [voucherTitleMessage, setVoucherTitleMessage] = useState('');
   const [recentDestinationList, setrecentDestinationList] = useState([]);
   const [isNotVoucherApplicable, setIsNotVoucherApplicable] = useState(false);
   const [proceedBooking, setProceedBooking] = useState(false);
@@ -129,18 +130,30 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
       } else if (graphQLErrors.length > 0) {
         graphQLErrors.map(({message, locations, path, errorType}) => {
+          console.log(graphQLErrors);
           console.log('ERROR TYPE:', errorType, 'MESSAGE:', message);
           if (errorType === 'INTERNAL_SERVER_ERROR') {
             setTripBookError(message);
             alertGO({message});
           } else if (errorType === 'BAD_USER_INPUT') {
+            console.log(message);
             setTripBookError(message);
-            navigation.pop();
+            // navigation.pop();
             if (message == 'Promo Voucher Expired.') {
               setvoucherTextMessage('Promo Voucher Expired.');
+              setVoucherTitleMessage('Voucher Expired');
               setvoucherRemovedVisible(true);
             } else if (message == 'Daily limit is reached.') {
               setvoucherTextMessage('Daily limit is reached.');
+              setVoucherTitleMessage('Voucher Reached Limit');
+              setvoucherRemovedVisible(true);
+            }else if (message == 'Daily Max Count is reached.') {
+              setvoucherTextMessage('Daily Max Count is reached.');
+              setVoucherTitleMessage('Voucher Reached Limit');
+              setvoucherRemovedVisible(true);
+            }else if (message == 'Lifetime Max Count is reached.') {
+              setvoucherTextMessage('Lifetime Max Count is reached.');
+              setVoucherTitleMessage('Voucher Reached Limit');
               setvoucherRemovedVisible(true);
             } else {
               alertGO({message});
@@ -320,6 +333,9 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   };
 
   const confirmBooking = num => {
+    // console.log(selectedPaymentMethod)
+    console.log(details.voucher)
+
     if (details.voucher == null) {
       setSelectedSeatNum(num);
       SheetManager.hide('passenger_capacity');
@@ -338,10 +354,12 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         }
       }, 500);
     } else if (selectedPaymentMethod == 'CASH' && details.voucher.isCash == 0) {
+      console.log('CASH')
       SheetManager.hide('passenger_capacity');
       setvoucherTextMessage('WrongPaymentMethod');
       setvoucherRemovedVisible(true);
     } else if (selectedPaymentMethod == 'TOKTOKWALLET' && details.voucher.isTokwa == 0) {
+      console.log('TOKWA')
       SheetManager.hide('passenger_capacity');
       setvoucherTextMessage('WrongPaymentMethod');
       setvoucherRemovedVisible(true);
@@ -571,6 +589,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         tokwaAccount={tokwaAccount}
         getMyAccountLoading={getMyAccountLoading}
         checkPaymentMethod={checkPaymentMethod}
+        selectedPaymentMethod={selectedPaymentMethod}
       />
 
       <PaymentSuccesModal
@@ -585,6 +604,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         handleVoucherRemoved={handleVoucherRemoved}
         voucherTextMessage={voucherTextMessage}
         onProceedToBooking={onProceedToBooking}
+        voucherTitleMessage={voucherTitleMessage}
       />
       <VoucherUsedModal isVissible={voucherUsed} />
       <VoucherUsedModalRemoved isVissible={voucherRemoved} />

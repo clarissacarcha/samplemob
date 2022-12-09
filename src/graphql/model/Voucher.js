@@ -37,6 +37,12 @@ voucherWallet {
   toktokUserId
   voucherTransactionId
 } 
+remainingVoucher {
+    dailyLimit
+    lifetimeLimit
+    dailyMaxCount
+    lifetimeMaxCount
+}
 `;
 
 export const GET_VOUCHERS = gql`

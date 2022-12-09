@@ -1,11 +1,12 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, Image, View, TouchableOpacity, Dimensions} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import voucher_image from '../../../../assets/toktokgo/voucher.png';
 import IOIcons from 'react-native-vector-icons/Ionicons';
 import InfoIcon from '../../../../assets/images/info.png';
 
 import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
+const windowWidth = Dimensions.get('window').width;
 
 export const BookingVoucher = ({
   navigation,
@@ -26,7 +27,11 @@ export const BookingVoucher = ({
           <View style={styles.elementWrapper}>
             <TouchableOpacity onPress={setSelectedVouchersNull}>
               <View style={styles.appliedVoucher}>
-                <Text style={styles.appliedVoucherText}>{selectedVouchers.code}</Text>
+                <View style={{width: windowWidth * 0.23}}>
+                  <Text numberOfLines={1} style={styles.appliedVoucherText}>
+                    {selectedVouchers.code}
+                  </Text>
+                </View>
                 <IOIcons name={'close'} style={styles.appliedVoucherClose} />
               </View>
             </TouchableOpacity>
