@@ -147,8 +147,8 @@ const CartPlaceOrder = (props: PropsType): React$Node => {
     const replaceLandMark = receiverLandmark.replace(/[^a-z0-9 ]/gi, '');
 
     const ORDER_DATA = {
-      total_amount: totalDiscount > 0 ? computedTotal : cartData?.totalAmount,
-      srp_totalamount: cartData?.srpTotalAmount,
+      total_amount: totalDiscount > 0 ? computedTotal : Number(cartData?.totalAmount.toFixed(2)),
+      srp_totalamount: Number(cartData?.srpTotalAmount.toFixed(2)),
       notes: cartDriverNote.replace(/[^a-z0-9 ]/gi, ''),
       order_isfor: cartServiceType === 'Delivery' ? 1 : 2, // 1 Delivery | 2 Pick Up Status
       order_type: await getOrderType(customerFranchisee),
