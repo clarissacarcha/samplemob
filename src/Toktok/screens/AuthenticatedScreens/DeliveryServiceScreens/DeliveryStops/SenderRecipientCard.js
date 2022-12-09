@@ -159,7 +159,7 @@ const SenderRecipientCard = ({
                   style={{
                     fontFamily: FONT.BOLD,
                   }}>
-                  {`May ipapadala? Ipa-toktok mo na yan!`}
+                  {`May ipapadala? I-toktok mo na yan!`}
                 </Text>
               )}
             </View>
