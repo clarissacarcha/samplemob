@@ -1,5 +1,5 @@
-import React, {useState, useCallback, useEffect} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Dimensions, Platform} from 'react-native';
+import React, {useState, useCallback} from 'react';
+import {StyleSheet, View, Text, TouchableOpacity, Dimensions, Platform, Linking} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 //GRAPHQL
@@ -11,7 +11,7 @@ import {usePrompt} from 'src/hooks';
 import {TransactionUtility} from 'toktokwallet/util';
 import {useFocusEffect} from '@react-navigation/native';
 //COMPONENTS
-import {CheckIdleState} from 'toktokwallet/components';
+import {CheckIdleState, OrangeButton} from 'toktokwallet/components';
 import {AlertOverlay} from 'src/components';
 //HELPER, CONSTANTS
 import {moderateScale} from 'toktokwallet/helper';
@@ -143,34 +143,50 @@ export const ScanQr = ({navigation, route}) => {
             buttonPositive: 'Ok',
             buttonNegative: 'Cancel',
           }}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-            <FIcon5 name="chevron-left" size={moderateScale(16)} color={'#F6841F'} />
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontFamily: FONT.REGULAR,
-              fontSize: FONT_SIZE.XL,
-              color: COLOR.WHITE,
-              marginBottom: moderateScale(30),
-            }}>
-            Scan QR Code
-          </Text>
-          <View
-            style={styles.centerBox}
-            onLayout={e => {
-              setBoundaryArea(e.nativeEvent.layout);
-            }}>
-            <View style={[styles.borderEdges, styles.topLeft]} />
-            <View style={[styles.borderEdges, styles.topRight]} />
-            <View style={[styles.borderEdges, styles.bottomLeft]} />
-            <View style={[styles.borderEdges, styles.bottomRight]} />
-          </View>
-          <View style={{marginTop: moderateScale(40)}}>
-            <View style={styles.bottomContainer}>
-              <Text style={styles.bottomText}>Position the QR code within the frame.</Text>
-            </View>
-            {errMessage !== '' && <Text style={styles.errorMessage}>{errMessage}</Text>}
-          </View>
+          {({camera, status, recordAudioPermissionStatus}) => {
+            return (
+              <>
+                <TouchableOpacity
+                  onPress={() => navigation.goBack()}
+                  style={status !== 'READY' ? styles.notBackReady : styles.backBtn}>
+                  <FIcon5 name="chevron-left" size={moderateScale(16)} color={'#F6841F'} />
+                </TouchableOpacity>
+                {status !== 'READY' ? (
+                  <View style={styles.permissionContainer}>
+                    <Text>Camera Not Authorized</Text>
+                  </View>
+                ) : (
+                  <>
+                    <Text
+                      style={{
+                        fontFamily: FONT.REGULAR,
+                        fontSize: FONT_SIZE.XL,
+                        color: COLOR.WHITE,
+                        marginBottom: moderateScale(30),
+                      }}>
+                      Scan QR Code
+                    </Text>
+                    <View
+                      style={styles.centerBox}
+                      onLayout={e => {
+                        setBoundaryArea(e.nativeEvent.layout);
+                      }}>
+                      <View style={[styles.borderEdges, styles.topLeft]} />
+                      <View style={[styles.borderEdges, styles.topRight]} />
+                      <View style={[styles.borderEdges, styles.bottomLeft]} />
+                      <View style={[styles.borderEdges, styles.bottomRight]} />
+                    </View>
+                    <View style={{marginTop: moderateScale(40)}}>
+                      <View style={styles.bottomContainer}>
+                        <Text style={styles.bottomText}>Position the QR code within the frame.</Text>
+                      </View>
+                      {errMessage !== '' && <Text style={styles.errorMessage}>{errMessage}</Text>}
+                    </View>
+                  </>
+                )}
+              </>
+            );
+          }}
         </RNCamera>
       </View>
     </CheckIdleState>
@@ -226,6 +242,14 @@ const styles = StyleSheet.create({
     height: moderateScale(30),
     width: moderateScale(30),
   },
+  notBackReady: {
+    top: Platform.OS === 'android' ? moderateScale(45) : moderateScale(16),
+    left: moderateScale(16),
+    position: 'absolute',
+    zIndex: 1,
+    height: moderateScale(30),
+    width: moderateScale(30),
+  },
   rnCamera: {
     flex: 1,
     justifyContent: 'center',
@@ -273,5 +297,13 @@ const styles = StyleSheet.create({
     borderRightWidth: 5,
     bottom: 0,
     right: 0,
+  },
+  permissionContainer: {
+    backgroundColor: 'white',
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: moderateScale(20),
   },
 });

@@ -36,7 +36,6 @@ export const EnterMobileNo = ({navigation, tokwaAccount, formData, setFormData, 
     },
     onError: err => {
       if (err.graphQLErrors.length > 0) {
-        console.log(err.graphQLErrors);
         if (err.graphQLErrors[0].message === "Person doesn't registered in toktokwallet") {
           changeErrorMessages('The recipient has no toktokwallet account');
         } else {

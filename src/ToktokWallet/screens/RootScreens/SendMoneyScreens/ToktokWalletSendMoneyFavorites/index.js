@@ -59,9 +59,9 @@ export const ToktokWalletSendMoneyFavorites = ({navigation, route}) => {
       setRefreshing(false);
       setFavorites([]);
     },
-    onCompleted: ({getFavoritesPaginate}) => {
-      setFavorites(getFavoritesPaginate.edges);
-      setPageInfo(getFavoritesPaginate.pageInfo);
+    onCompleted: data => {
+      setFavorites(data.getFavoritesPaginate.edges);
+      setPageInfo(data.getFavoritesPaginate.pageInfo);
       setRefreshing(false);
     },
   });
@@ -91,6 +91,7 @@ export const ToktokWalletSendMoneyFavorites = ({navigation, route}) => {
         navigation,
         prompt,
         onPress: () => {},
+        isPop: false,
       });
     },
     onCompleted: ({patchRemoveFavorite}) => {

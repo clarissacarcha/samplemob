@@ -4,10 +4,15 @@ import React, {createContext, useState, useEffect} from 'react';
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {POST_GENERATE_QR_CODE, GET_ACCOUNT_QR_CODES} from 'toktokwallet/graphql';
 import {useMutation, useLazyQuery} from '@apollo/react-hooks';
+import {TransactionUtility} from 'toktokwallet/util';
+import {usePrompt} from 'src/hooks';
+import {useNavigation} from '@react-navigation/native';
 export const VerifyContext = createContext();
 const {Provider} = VerifyContext;
 
 export const VerifyContextProvider = ({children}) => {
+  const prompt = usePrompt();
+  const navigation = useNavigation();
   const [qrOptions, setQrOptions] = useState('scan');
   const [amount, setAmount] = useState('');
   const [generatedQrCode, setGeneratedQrCode] = useState(null);
@@ -16,6 +21,15 @@ export const VerifyContextProvider = ({children}) => {
 
   const [postGenerateQRCode, {loading: generateQrCodeLoading}] = useMutation(POST_GENERATE_QR_CODE, {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
+    onError: error => {
+      TransactionUtility.StandardErrorHandling({
+        error,
+        prompt,
+        navigation,
+        onPress: () => {},
+        isPop: false,
+      });
+    },
     onCompleted: data => {
       const {encryptedQRToken} = data.postGenerateQRCode;
       setGeneratedQrCode(encryptedQRToken);

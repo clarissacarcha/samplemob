@@ -21,6 +21,7 @@ export const FavoriteDetails = ({item, setFormData}) => {
       ...prev,
       recipientMobileNo: favoriteAccount.mobileNumber.replace('+63', ''),
       recipientName: `${firstName} ${lastName[0]}.`,
+      recipientId: favoriteAccount.id,
     }));
   };
 
@@ -32,7 +33,7 @@ export const FavoriteDetails = ({item, setFormData}) => {
           style={styles.itemLogo}
           onError={() => setImageError(true)}
         />
-        <Text style={styles.name}>
+        <Text style={styles.name} numberOfLines={2}>
           {firstName} {lastName[0]}.
         </Text>
       </View>
@@ -42,7 +43,7 @@ export const FavoriteDetails = ({item, setFormData}) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: width / 5.55,
+    width: width / 5.45,
     alignItems: 'center',
     padding: moderateScale(10),
     marginVertical: moderateScale(10),

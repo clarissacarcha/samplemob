@@ -32,6 +32,7 @@ const FavoritesProvider = ({children}) => {
         prompt,
         navigation,
         onPress: () => {},
+        isPop: false,
       });
     },
   });
@@ -39,7 +40,6 @@ const FavoritesProvider = ({children}) => {
   const [postFavoriteAccount, {loading: postFavoriteLoading}] = useMutation(POST_FAVORITE_ACCOUNT, {
     client: TOKTOK_WALLET_GRAPHQL_CLIENT,
     onCompleted: ({postFavoriteAccount}) => {
-      console.log(postFavoriteAccount);
       getFavorites();
       setFavoriteId(postFavoriteAccount.id);
       setFavoriteModal({show: true, message: 'Added to your Favorites'});
@@ -48,7 +48,7 @@ const FavoritesProvider = ({children}) => {
     onError: error => {
       let message = '';
       if (error.graphQLErrors.length > 0) {
-        if (error.graphQLErrors[0].payload.code === 'duplicateFavorite') {
+        if (error.graphQLErrors[0]?.payload.code === 'duplicateFavorite') {
           message = 'You already saved this contact in the favorites.';
         }
       }

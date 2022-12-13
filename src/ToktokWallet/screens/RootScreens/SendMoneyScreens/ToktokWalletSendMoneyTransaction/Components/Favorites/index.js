@@ -16,6 +16,7 @@ export const Favorites = ({navigation, setFormData}) => {
 
   const onRefreshHomeFavorite = () => {
     getFavorites();
+    setFavoriteId(0);
   };
 
   const onSelectItem = item => {
@@ -26,6 +27,7 @@ export const Favorites = ({navigation, setFormData}) => {
       ...prev,
       recipientMobileNo: mobileNumber.replace('+63', ''),
       recipientName: `${person.firstName} ${person.lastName[0]}.`,
+      recipientId: favoriteAccount.id,
     }));
   };
 
