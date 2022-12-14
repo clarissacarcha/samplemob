@@ -526,6 +526,17 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
         let shippingVouchers = CheckoutContextData.shippingVouchers.filter((a) => a.voucherCodeType == "shipping")
         let promotionVouchers = CheckoutContextData.shippingVouchers.filter((a) => a.voucherCodeType == "promotion")
+
+        const getReferral = () => {
+          if(toktokSession.user.consumer.referralCode && franchisee?.franchiseeCode) {
+            return {}
+          } else {
+            return {
+              referralCode: toktokSession.user.consumer.referralCode,
+              referralName: null
+            }
+          }
+        }
         
         const checkoutBody = await BuildPostCheckoutBody({
           walletRequest: req.responseData.data,
@@ -541,7 +552,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           paymentMethod: "TOKTOKWALLET",
           hashAmount: req.responseData.hash_amount,
           referenceNum: req.responseData.orderRefNum,
-          referral: {},
+          referral: getReferral(),
           franchisee: franchisee    
         })
 
