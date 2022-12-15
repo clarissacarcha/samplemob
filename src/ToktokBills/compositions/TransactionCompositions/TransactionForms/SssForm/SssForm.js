@@ -7,8 +7,8 @@ import React, {useContext, useEffect, useState} from 'react';
 
 import type {PropsType} from './types';
 import {Container, FeeInformation, InputContainer} from './Styled';
-import {CustomAmountInput, PolicyNote} from 'toktokwallet/components';
-import {CustomTextInput, CustomSelectionList} from 'toktokbills/components';
+import {CustomAmountInput} from 'toktokwallet/components';
+import {CustomTextInput, CustomSelectionList, PolicyNote} from 'toktokbills/components';
 import {TransactionVerifyContext} from '../../TransactionVerifyContextProvider';
 //HELPER
 import {

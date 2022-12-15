@@ -24,7 +24,7 @@ import {
   TncText,
   TermsText,
 } from './Styled';
-import {LoadingIndicator, PolicyNote, Separator} from 'toktokwallet/components';
+import {LoadingIndicator, PolicyNote, Separator} from 'toktokbills/components';
 //HELPER
 import {pesonetPolicy, currencyCode, numberFormat, moderateScale} from 'toktokwallet/helper';
 import moment from 'moment/moment';
@@ -82,7 +82,7 @@ const PaymentSummaryDetails = (props: PropsType): React$Node => {
       }
     });
   }, []);
-  console.log(paymentType);
+
   return (
     <>
       <BackgroundContainer>

@@ -18,17 +18,22 @@ export const PolicyNote = ({
   subTextNote1,
   onPressNote1,
   title,
+  titleStyles,
+  endOfNote1,
+  subTextNote1Styles,
+  noteText1Styles,
 }) => {
   return (
     <TouchableOpacity style={[styles.note, containerStyle]} onPress={onPress} disabled={disabled}>
       <Image source={info_icon} style={styles.noteLogo} />
       <View>
-        {!!title && <Text style={styles.title}>{title}</Text>}
-        <Text style={styles.noteText}>
+        {!!title && <Text style={[styles.title, titleStyles]}>{title}</Text>}
+        <Text style={[styles.noteText, noteText1Styles]}>
           {note1}
-          <Text style={styles.subTextNote1} onPress={onPressNote1}>
+          <Text style={[styles.subTextNote1, subTextNote1Styles]} onPress={onPressNote1}>
             {subTextNote1}
           </Text>
+          {endOfNote1}
         </Text>
         {!!note2 && <Text style={styles.noteText}>{note2}</Text>}
       </View>
@@ -51,7 +56,7 @@ const styles = StyleSheet.create({
   noteLogo: {
     height: moderateScale(12),
     width: moderateScale(12),
-    marginTop: moderateScale(3),
+    marginTop: Platform.OS === 'android' ? moderateScale(4) : moderateScale(2),
   },
   subTextNote1: {
     fontFamily: FONT.BOLD,
