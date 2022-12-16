@@ -10,6 +10,7 @@ import {Container, FeeInformation, InputContainer} from './Styled';
 import {CustomAmountInput} from 'toktokwallet/components';
 import {CustomTextInput, CustomSelectionList, PolicyNote} from 'toktokbills/components';
 import {TransactionVerifyContext} from '../../TransactionVerifyContextProvider';
+import {Keyboard} from 'react-native';
 //HELPER
 import {
   moderateScale,
@@ -21,8 +22,9 @@ import {
   minLengthRegex,
   currencyCode,
 } from 'toktokbills/helper';
-
-import {Keyboard} from 'react-native';
+//ASSETS
+import CONSTANTS from 'src/common/res/constants';
+const {FONT_SIZE} = CONSTANTS;
 
 const processFieldValue = (fieldValue, fieldWidth, fieldType) => {
   // 0 = min | 1 = exact | 2 = max
@@ -85,7 +87,10 @@ const SssForm = (props: PropsType): React$Node => {
 
   return (
     <>
-      <PolicyNote note1="Member loans and Real-state loan is currently not available on ECPAY service. Only individual contributions are accepted until further notice." />
+      <PolicyNote
+        note1="Member loans and Real-state loan is currently not available on ECPAY service. Only individual contributions are accepted until further notice."
+        note1Style={{fontSize: FONT_SIZE.M}}
+      />
       <Container>
         <InputContainer>
           <CustomTextInput
