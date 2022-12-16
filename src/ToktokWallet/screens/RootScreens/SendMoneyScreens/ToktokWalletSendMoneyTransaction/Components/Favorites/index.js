@@ -11,7 +11,7 @@ import {VectorIcon, ICON_SET} from 'src/revamp';
 import CONSTANTS from 'common/res/constants';
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
-export const Favorites = ({navigation, setFormData}) => {
+export const Favorites = ({navigation, setFormData, setErrorMessages}) => {
   const {favorites, getFavoritesLoading, setFavoriteId, getFavorites} = useContext(FavoritesContext);
 
   const onRefreshHomeFavorite = () => {
@@ -60,7 +60,9 @@ export const Favorites = ({navigation, setFormData}) => {
         ) : (
           <FlatList
             data={favorites.slice(0, 5)}
-            renderItem={({item}) => <FavoriteDetails item={item} setFormData={setFormData} />}
+            renderItem={({item}) => (
+              <FavoriteDetails item={item} setFormData={setFormData} setErrorMessages={setErrorMessages} />
+            )}
             keyExtractor={(item, index) => index}
             scrollEnabled={false}
             horizontal

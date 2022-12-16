@@ -84,7 +84,12 @@ const MainComponent = ({navigation, route}) => {
             }}
             disabled={false}
           />
-          <Favorites formData={formData} setFormData={setFormData} navigation={navigation} />
+          <Favorites
+            formData={formData}
+            setFormData={setFormData}
+            setErrorMessages={setErrorMessages}
+            navigation={navigation}
+          />
           <Forms
             recipientInfo={recipientInfo}
             formData={formData}

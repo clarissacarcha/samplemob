@@ -9,7 +9,7 @@ import {moderateScale} from 'toktokwallet/helper';
 import {no_profile_contact} from 'toktokwallet/assets';
 const {width} = Dimensions.get('screen');
 
-export const FavoriteDetails = ({item, setFormData}) => {
+export const FavoriteDetails = ({item, setFormData, setErrorMessages}) => {
   const {setFavoriteId} = useContext(FavoritesContext);
   const [imageError, setImageError] = useState(false);
   const {id, favoriteAccount} = item.node;
@@ -23,6 +23,7 @@ export const FavoriteDetails = ({item, setFormData}) => {
       recipientName: `${firstName} ${lastName[0]}.`,
       recipientId: favoriteAccount.id,
     }));
+    setErrorMessages(prev => ({...prev, recipientMobileNo: ''}));
   };
 
   return (
