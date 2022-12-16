@@ -13,7 +13,7 @@ const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
 export const PaymentDetails = ({route, navigation}) => {
   const {recipientMobileNo, amount, emailAddress, note, recipientSelfieImage, recipientName} = route.params.formData;
   const [imageError, setImageError] = useState(false);
-
+  console.log(recipientSelfieImage);
   return (
     <>
       <ImageBackground source={banner.banner_logo} resizeMode="cover">
@@ -23,7 +23,7 @@ export const PaymentDetails = ({route, navigation}) => {
             style={styles.headerLogo}
             onError={() => setImageError(true)}
           />
-          <Text style={recipientSelfieImage ? styles.otcDescription : styles.nologo}>{recipientName}</Text>
+          <Text style={styles.otcDescription}>{recipientName}</Text>
         </View>
       </ImageBackground>
       <View style={{marginVertical: moderateScale(10)}}>

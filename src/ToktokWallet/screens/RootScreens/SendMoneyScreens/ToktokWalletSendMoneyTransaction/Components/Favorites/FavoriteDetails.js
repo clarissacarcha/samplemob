@@ -22,6 +22,7 @@ export const FavoriteDetails = ({item, setFormData, setErrorMessages}) => {
       recipientMobileNo: favoriteAccount.mobileNumber.replace('+63', ''),
       recipientName: `${firstName} ${lastName[0]}.`,
       recipientId: favoriteAccount.id,
+      recipientSelfieImage: selfieImage,
     }));
     setErrorMessages(prev => ({...prev, recipientMobileNo: ''}));
   };

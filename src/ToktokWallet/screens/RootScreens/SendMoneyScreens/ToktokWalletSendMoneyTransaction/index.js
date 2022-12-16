@@ -27,7 +27,7 @@ const MainComponent = ({navigation, route}) => {
   const [transferableVisible, setTransferableVisible] = useState(false);
   const {getFavorites, getFavoritesLoading, getFavoritesError, isFavorite} = useContext(FavoritesContext);
   const [formData, setFormData] = useState({
-    recipientSelfieImage: '',
+    recipientSelfieImage: null,
     recipientName: recipientInfo ? `${recipientInfo.person.firstName} ${recipientInfo.person.lastName[0]}.` : '',
     recipientMobileNo: recipientInfo ? recipientInfo.mobileNumber.replace('+63', '') : '',
     amount: QRInfo && QRInfo.amount !== 0 ? QRInfo.amount.toString() : '',
