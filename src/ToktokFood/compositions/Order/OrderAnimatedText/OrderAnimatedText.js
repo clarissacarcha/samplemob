@@ -25,7 +25,7 @@ const OrderAnimatedText = (props: PropsType): React$Node => {
       const dateOrdered = moment(state?.dateOrdered).add(10, 'minutes').format('YYYY-MM-DD HH:mm:ss');
       const remainingMinutes = moment(dateOrdered).diff(moment(), 'minutes');
       if (remainingMinutes <= 0) {
-        title = 'No Driver Found';
+        title = 'Drivers are Busy at the Moment';
         subtitle = 'You can wait for a rider to accept the booking or\nselect the cancel button below.';
       } else {
         title = 'Finding Driver';
