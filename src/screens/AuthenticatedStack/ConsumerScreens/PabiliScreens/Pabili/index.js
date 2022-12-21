@@ -158,7 +158,7 @@ const Pabili = ({navigation, session, route}) => {
           longitude: rebookDeliveryData.senderStop.longitude,
           formattedAddress: rebookDeliveryData.senderStop.formattedAddress,
           name: rebookDeliveryData.senderStop?.name,
-          mobile: rebookDeliveryData.senderStop?.mobile,
+          mobile: rebookDeliveryData.senderStop?.mobile.replace('+63', ''),
           landmark: rebookDeliveryData.senderStop.landmark,
           orderType: rebookDeliveryData.senderStop?.orderType === 1 ? 'ASAP' : 'SCHEDULED',
           scheduledFrom:
@@ -188,7 +188,7 @@ const Pabili = ({navigation, session, route}) => {
             longitude: rebookDeliveryData.recipientStop.longitude,
             formattedAddress: rebookDeliveryData.recipientStop.formattedAddress,
             name: rebookDeliveryData.recipientStop?.name,
-            mobile: rebookDeliveryData.recipientStop?.mobile,
+            mobile: rebookDeliveryData.recipientStop?.mobile.replace('+63', ''),
             landmark: rebookDeliveryData.recipientStop.landmark,
             orderType: rebookDeliveryData.recipientStop?.orderType === 1 ? 'ASAP' : 'SCHEDULED',
             scheduledFrom:
