@@ -313,7 +313,7 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
           input: {
             service: 'GO',
             code: textValue,
-            // minSpend: route.params.details.rate.tripFare.amount,
+            minSpend: route?.params?.details?.rate?.tripFare?.amount,
           },
         },
       });

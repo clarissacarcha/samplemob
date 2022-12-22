@@ -24,9 +24,13 @@ export const VoucherCard = ({
   fromVoucherDetails,
   setFromVoucherDetails,
 }) => {
+  console.log(data)
+  console.log(details)
   const [isApplicable, setIsApplicable] = useState(true);
   const [isApplicableDailyLimit, setIsApplicableDailyLimit] = useState(false);
   const [isApplicableMaxLimit, setIsApplicableMaxLimit] = useState('');
+  const [isApplicableMinSpent, setIsApplicableMinSpent] = useState(false);
+  const [isApplicableMinSpentText, setIsApplicableMinSpentText] = useState('');
   const getComputed = () => {
     return data.discountValue * data.voucherWallet.remaining;
   };
@@ -92,21 +96,29 @@ export const VoucherCard = ({
     }
   };
 
+  const minimumSpent = () => {
+    if(data?.details?.minAmount > details?.rate?.tripFare?.total){
+      setIsApplicableMinSpent(true)
+      setIsApplicableMinSpentText('This voucher can only be used if you meet' + ' ' + '₱' + data?.details?.minAmount + '.00' + ' total')
+    }
+  }
+
   useEffect(() => {
     checkPaymentMethod();
     dailyLimit();
+    minimumSpent();
   }, []);
   return (
     <>
       <View style={styles.card}>
         <Image
-          source={isApplicable || isApplicableDailyLimit? voucherPaperDesignDisabled : voucherPaperDesign}
+          source={isApplicable || isApplicableDailyLimit || isApplicableMinSpent ? voucherPaperDesignDisabled : voucherPaperDesign}
           resizeMode={'contain'}
           style={styles.floatingImage}
         />
         <Image source={voucherPaperDesign2} resizeMode={'contain'} style={styles.floatingImage2} />
         <Image
-          source={isApplicable || isApplicableDailyLimit ? VoucherImageDisabled : VoucherImage}
+          source={isApplicable || isApplicableDailyLimit || isApplicableMinSpent ? VoucherImageDisabled : VoucherImage}
           resizeMode={'contain'}
           style={styles.voucherImage}
         />
@@ -138,7 +150,7 @@ export const VoucherCard = ({
                   animationType={'timing'}
                 />
               </View>
-              <Text style={isApplicable || isApplicableDailyLimit ? {color: CONSTANTS.COLOR.GRAY} : styles.computed}>
+              <Text style={isApplicable || isApplicableDailyLimit || isApplicableMinSpent ? {color: CONSTANTS.COLOR.GRAY} : styles.computed}>
                 ₱{getComputed()} remaining
               </Text>
             </>
@@ -150,19 +162,19 @@ export const VoucherCard = ({
             //   <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
             // ) :
             <ThrottledOpacity
-              style={isApplicable || isApplicableDailyLimit ? [styles.claimButton, {backgroundColor: CONSTANTS.COLOR.GRAY}] : styles.claimButton}
+              style={isApplicable || isApplicableDailyLimit || isApplicableMinSpent ? [styles.claimButton, {backgroundColor: CONSTANTS.COLOR.GRAY}] : styles.claimButton}
               onPress={onPress}
               delay={500}
-              disabled={isApplicable || isApplicableDailyLimit}>
+              disabled={isApplicable || isApplicableDailyLimit || isApplicableMinSpent}>
               <Text style={styles.claimButtonText}>Claim</Text>
             </ThrottledOpacity>
           ) : (
             <ThrottledOpacity
-              style={isApplicable || isApplicableDailyLimit ? [styles.useButton, {borderColor: CONSTANTS.COLOR.GRAY}] : styles.useButton}
+              style={isApplicable || isApplicableDailyLimit || isApplicableMinSpent ? [styles.useButton, {borderColor: CONSTANTS.COLOR.GRAY}] : styles.useButton}
               onPress={onPress}
               delay={500}
-              disabled={isApplicable|| isApplicableDailyLimit}>
-              <Text style={isApplicable || isApplicableDailyLimit ? [styles.useButtonText, {color: CONSTANTS.COLOR.GRAY}] : styles.useButtonText}>
+              disabled={isApplicable|| isApplicableDailyLimit || isApplicableMinSpent}>
+              <Text style={isApplicable || isApplicableDailyLimit || isApplicableMinSpent ? [styles.useButtonText, {color: CONSTANTS.COLOR.GRAY}] : styles.useButtonText}>
                 Use
               </Text>
             </ThrottledOpacity>
@@ -207,6 +219,20 @@ export const VoucherCard = ({
           }}>
           <Text style={{color: CONSTANTS.COLOR.RED, margin: 8, fontSize: CONSTANTS.FONT_SIZE.S}}>
            {isApplicableMaxLimit}
+          </Text>
+        </View>
+      )}
+      {isApplicableMinSpent &&  (
+        <View
+          style={{
+            backgroundColor: '#fff3e8',
+            flex: 1,
+            marginHorizontal: 16,
+            borderBottomLeftRadius: 5,
+            borderBottomRightRadius: 5,
+          }}>
+          <Text style={{color: CONSTANTS.COLOR.RED, margin: 8, fontSize: CONSTANTS.FONT_SIZE.S}}>
+           {isApplicableMinSpentText}
           </Text>
         </View>
       )}

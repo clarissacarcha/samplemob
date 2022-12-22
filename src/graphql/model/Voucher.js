@@ -36,6 +36,9 @@ voucherWallet {
   voucherId
   toktokUserId
   voucherTransactionId
+}
+details {
+  minAmount
 } 
 remainingVoucher {
     dailyLimit
