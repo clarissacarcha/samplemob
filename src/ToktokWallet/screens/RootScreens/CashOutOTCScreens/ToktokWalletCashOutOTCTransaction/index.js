@@ -116,10 +116,7 @@ const MainComponent = ({navigation, route}) => {
         purpose: purpose.trim(),
         providerServiceFee,
         toktokServiceFee,
-        otcPartnerDetails: {
-          logo,
-          description,
-        },
+        otcPartnerDetails: route.params?.otcPartnerDetails,
         amount: parseFloat(amount),
         cashOutProviderPartnerId: +id,
         totalServiceFee: parseFloat(providerServiceFee) + parseFloat(toktokServiceFee),

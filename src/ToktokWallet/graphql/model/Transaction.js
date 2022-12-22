@@ -73,6 +73,7 @@ const WalletTransactions = `
     key
     type
   }
+  details
   displayInfo
   amount
   note
@@ -87,6 +88,12 @@ const WalletTransactions = `
   externalReferenceNumber
   externalPayload
   externalDetails
+  cashOut {
+    provider {
+      name
+      key
+    }
+  }
 `;
 
 export const GET_TRANSACTIONS = gql`
@@ -191,4 +198,4 @@ export const GET_SEND_MONEY_TRANSACTIONS_PAGINATE = gql`
       }
     }
   }
-`
+`;
