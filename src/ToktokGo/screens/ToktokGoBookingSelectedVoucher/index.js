@@ -17,7 +17,15 @@ const FULL_HEIGHT = Dimensions.get('window').height;
 const FULL_WIDTH = Dimensions.get('window').width;
 
 const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
-  const {id, onPress, isApplicable, isApplicableDailyLimit, setFromVoucherDetails, onPressActionButton} = route.params;
+  const {
+    id,
+    onPress,
+    isApplicable,
+    isApplicableDailyLimit,
+    isApplicableMinSpent,
+    setFromVoucherDetails,
+    onPressActionButton,
+  } = route.params;
   const [data, setData] = useState({});
   const [viewSuccesVoucherClaimedModal, setViewSuccesVoucherClaimedModal] = useState(false);
   const [processingVisible, setProcessingVisible] = useState(false);
@@ -142,7 +150,7 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
           <Text style={{marginVertical: 16}}>{data.policies}</Text>
         </View>
       </ScrollView>
-      {isApplicable == true || isApplicableDailyLimit == true ? null : (
+      {isApplicable == true || isApplicableDailyLimit == true || isApplicableMinSpent == true ? null : (
         <View>
           {!isApplicable && (
             <View style={styles.buttonContainer}>
