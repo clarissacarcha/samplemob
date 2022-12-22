@@ -267,12 +267,12 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   const onPressSavedAddress = loc => {
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-      payload: {...route.params.details, noteToDriver: ''},
+      payload: {...route?.params?.details, noteToDriver: ''},
     });
     if (route?.params?.voucherData) {
       dispatch({
         type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-        payload: {...route.params.details, voucher: route.params.voucherData, paymentMethod: 'TOKTOKWALLET'},
+        payload: {...route?.params?.details, voucher: route?.params?.voucherData, paymentMethod: 'TOKTOKWALLET'},
       });
     }
     const addressObject = {
