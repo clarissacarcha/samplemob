@@ -57,6 +57,10 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
     }, []),
   );
 
+  const handleGetData = () => {
+    navigation.pop()
+  }
+
   const [postCollectVoucher, {loading: PCVLoading}] = useMutation(POST_COLLECT_VOUCHER, {
     client: TOKTOK_WALLET_VOUCHER_CLIENT,
     onCompleted: () => {
@@ -94,6 +98,15 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
                 message:
                   'Sorry but this voucher reached the maximum redemption limit today. You may try another voucher.',
                 imageType: 'failed',
+              });
+            }else if(errorType === 'VOUCHER_EXPIRED'){
+              toktokAlert({
+                title: 'Voucher Expired',
+                message: 'Sorry but this voucher has expired. You may try another voucher.',
+                imageType: 'failed',
+                onPressSingleButton: () => {
+                  handleGetData();
+                },
               });
             }
             // errorFields.map(({message}) => {

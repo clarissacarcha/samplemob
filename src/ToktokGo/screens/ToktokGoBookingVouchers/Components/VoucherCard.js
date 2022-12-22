@@ -186,7 +186,7 @@ export const VoucherCard = ({
                 isApplicableDailyLimit,
                 setFromVoucherDetails,
                 onPressActionButton,
-                isApplicableMinSpent
+                isApplicableMinSpent,
               })
             }>
             <Text style={styles.TandC}>T&C</Text>
