@@ -24,8 +24,6 @@ export const VoucherCard = ({
   fromVoucherDetails,
   setFromVoucherDetails,
 }) => {
-  console.log(data)
-  console.log(details)
   const [isApplicable, setIsApplicable] = useState(true);
   const [isApplicableDailyLimit, setIsApplicableDailyLimit] = useState(false);
   const [isApplicableMaxLimit, setIsApplicableMaxLimit] = useState('');
