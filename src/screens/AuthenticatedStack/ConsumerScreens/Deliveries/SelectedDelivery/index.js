@@ -35,6 +35,7 @@ import {
   SenderRecipientSection,
   StatusSection,
   SenderRecipientRow,
+  ShareLink,
 } from './Sections';
 
 const SelectedDelivery = ({navigation, route}) => {
@@ -199,6 +200,9 @@ const SelectedDelivery = ({navigation, route}) => {
 
         {/*-------------------- RECIPIENT DETAILS --------------------*/}
         <DeliveryStopCard stop={getDelivery.recipientStop} index={1} delivery={getDelivery} />
+
+        {/*-------------------- RECIPIENT DETAILS --------------------*/}
+        <ShareLink delivery={getDelivery} />
 
         {/*-------------------- DRIVER INFO --------------------*/}
         {getDelivery.driver && <DriverCard driver={getDelivery.driver} />}
