@@ -90,7 +90,7 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
     },
     onError: error => {
       const {graphQLErrors, networkError} = error;
-
+      console.log(graphQLErrors)
       if (networkError) {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
         setProcessingVisible(false);
@@ -117,6 +117,15 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
               toktokAlert({
                 title: 'Voucher Reached Limit',
                 message: 'Sorry but this voucher reached the maximum redemption limit today. You may try another voucher.',
+                imageType: 'failed',
+                onPressSingleButton: () => {
+                  handleGetData();
+                },
+              });
+            }else if(errorType === 'VOUCHER_EXPIRED'){
+              toktokAlert({
+                title: 'Voucher Expired',
+                message: 'Sorry but this voucher has expired. You may try another voucher.',
                 imageType: 'failed',
                 onPressSingleButton: () => {
                   handleGetData();
