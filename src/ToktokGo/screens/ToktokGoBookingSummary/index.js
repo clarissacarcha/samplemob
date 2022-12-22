@@ -147,11 +147,11 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
               setvoucherTextMessage('Daily limit is reached.');
               setVoucherTitleMessage('Voucher Reached Limit');
               setvoucherRemovedVisible(true);
-            }else if (message == 'Daily Max Count is reached.') {
+            } else if (message == 'Daily Max Count is reached.') {
               setvoucherTextMessage('Daily Max Count is reached.');
               setVoucherTitleMessage('Voucher Reached Limit');
               setvoucherRemovedVisible(true);
-            }else if (message == 'Lifetime Max Count is reached.') {
+            } else if (message == 'Lifetime Max Count is reached.') {
               setvoucherTextMessage('Lifetime Max Count is reached.');
               setVoucherTitleMessage('Voucher Reached Limit');
               setvoucherRemovedVisible(true);
@@ -334,11 +334,9 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
 
   const confirmBooking = num => {
     // console.log(selectedPaymentMethod)
-    console.log(details.voucher)
-
+    SheetManager.hide('passenger_capacity');
     if (details.voucher == null) {
       setSelectedSeatNum(num);
-      SheetManager.hide('passenger_capacity');
       // setvoucherRemovedVisible(true);
       setTimeout(() => {
         if (selectedPaymentMethod == 'CASH') {
@@ -354,18 +352,17 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         }
       }, 500);
     } else if (selectedPaymentMethod == 'CASH' && details.voucher.isCash == 0) {
-      console.log('CASH')
-      SheetManager.hide('passenger_capacity');
       setvoucherTextMessage('WrongPaymentMethod');
-      setvoucherRemovedVisible(true);
+      setTimeout(() => {
+        setvoucherRemovedVisible(true);
+      }, 500);
     } else if (selectedPaymentMethod == 'TOKTOKWALLET' && details.voucher.isTokwa == 0) {
-      console.log('TOKWA')
-      SheetManager.hide('passenger_capacity');
       setvoucherTextMessage('WrongPaymentMethod');
-      setvoucherRemovedVisible(true);
+      setTimeout(() => {
+        setvoucherRemovedVisible(true);
+      }, 500);
     } else {
       setSelectedSeatNum(num);
-      SheetManager.hide('passenger_capacity');
       // setvoucherRemovedVisible(true);
       setTimeout(() => {
         if (selectedPaymentMethod == 'CASH') {
