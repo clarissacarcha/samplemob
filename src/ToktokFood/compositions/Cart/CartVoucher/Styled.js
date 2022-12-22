@@ -82,5 +82,5 @@ export const Input: ComponentType<any> = styled(StyledInputText).attrs(props => 
   ...props,
   placeholder: 'Enter voucher code (optional)',
 }))`
-  border-color: ${props => (props.error.length > 0 ? props.theme.color.red : props.theme.textInput.container)};
+  border-color: ${props => (props.error?.length > 0 ? props.theme.color.red : props.theme.textInput.container)};
 `;
