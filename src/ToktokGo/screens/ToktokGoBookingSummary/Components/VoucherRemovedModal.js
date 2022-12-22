@@ -40,14 +40,12 @@ export const VoucherRemovedModal = ({
                 Hello, ka-toktok! The voucher reached the maximum redemption limit today. You may try other voucher
                 naman lods! Would you like to proceed and remove the voucher?
               </Text>
-              
             ) : voucherTextMessage == 'Daily Max Count is reached.' ? (
               <Text style={styles.modalDescription}>
-                Hello, ka-toktok! The voucher reached the maximum redemption limit. You may try other voucher
-                naman lods! Would you like to proceed and remove the voucher?
+                Hello, ka-toktok! The voucher reached the maximum redemption limit. You may try other voucher naman
+                lods! Would you like to proceed and remove the voucher?
               </Text>
-              
-            )  : voucherTextMessage == 'Lifetime Max Count is reached.' ? (
+            ) : voucherTextMessage == 'Lifetime Max Count is reached.' ? (
               <Text style={styles.modalDescription}>
                 Hello, ka-toktok! The voucher reached the maximum redemption limit. You may try other voucher naman
                 lods! Would you like to proceed and remove the voucher?
@@ -59,10 +57,14 @@ export const VoucherRemovedModal = ({
               </Text>
             ) : null}
             <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity style={styles.buttonContainerNo} onPress={() => setvoucherRemovedVisible(false)}>
+              <TouchableOpacity
+                style={styles.buttonContainerNo}
+                onPress={() => {
+                  setvoucherRemovedVisible(false);
+                }}>
                 <Text style={styles.buttonTextNo}>No</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonContainerYes} onPress={() => onProceedToBooking()}>
+              <TouchableOpacity style={styles.buttonContainerYes} onPress={onProceedToBooking}>
                 <Text style={styles.buttonTextYes}>Yes</Text>
               </TouchableOpacity>
             </View>
