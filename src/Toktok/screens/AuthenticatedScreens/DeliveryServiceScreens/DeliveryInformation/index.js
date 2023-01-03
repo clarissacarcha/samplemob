@@ -401,13 +401,15 @@ const DeliveryDetails = ({navigation, route, session}) => {
               <NotesForm value={notes} onChange={setNotes} />
             </View>
 
+            {/* OLD VOUCHER/PROMO COMPONENT */}
             {/* <PromoForm /> */}
-            <Voucher
+
+            {/* NEW VOUCHER/PROMO COMPONENT. hidden for the mean time */}
+            {/* <Voucher
               navigation={navigation}
               selectedVoucher={selectedVoucher}
               setSelectedVoucher={setSelectedVoucher}
-            />
-            <></>
+            /> */}
 
             <View style={{marginHorizontal: 16}}>
               <ExpressForm value={isExpress} onChange={onIsExpressChange} />

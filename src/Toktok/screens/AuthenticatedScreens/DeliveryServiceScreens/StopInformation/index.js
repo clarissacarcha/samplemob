@@ -301,6 +301,13 @@ const StopDetails = ({navigation, route}) => {
     setSearchText(item.formattedAddress);
   };
 
+  const onClearSearchBar = () => {
+    setSearchResult({
+      ...searchResult,
+      predictions: [],
+    });
+  };
+
   return (
     <View style={styles.screenBox}>
       <View style={{height: StatusBar.currentHeight}} />
@@ -321,6 +328,7 @@ const StopDetails = ({navigation, route}) => {
           searchEnabled={!showMap}
           onSearchLoadingChange={setSearchLoading}
           navigation={navigation}
+          onClearSearchBar={onClearSearchBar}
         />
       </View>
 
@@ -479,19 +487,19 @@ const StopDetails = ({navigation, route}) => {
           setSearchText={setSearchText}
         />
       )}
-      {/* todo: conditional rendering */}
-      {!showMap && searchText == '' && (
-        <RecentSearch
-          recentSearchDataList={recentSearchDataList}
-          setShowMap={setShowMap}
-          stopData={stopData}
-          setStopData={setStopData}
-          setSearchText={setSearchText}
-          onPressAddAddress={onPressAddAddress}
-        />
-      )}
-      {!showMap && searchText == '' && (
-        <SavedAddresses navigation={navigation} data={savedAddresses} onSelectSavedAddress={onSelectSavedAddress} />
+      {!showMap && searchResult?.predictions.length == 0 && (
+        <>
+          <RecentSearch
+            recentSearchDataList={recentSearchDataList}
+            setShowMap={setShowMap}
+            stopData={stopData}
+            setStopData={setStopData}
+            setSearchText={setSearchText}
+            onPressAddAddress={onPressAddAddress}
+          />
+
+          <SavedAddresses navigation={navigation} data={savedAddresses} onSelectSavedAddress={onSelectSavedAddress} />
+        </>
       )}
       {!showMap && searchLoading && searchText !== '' && <SearchLoadingIndicator />}
     </View>

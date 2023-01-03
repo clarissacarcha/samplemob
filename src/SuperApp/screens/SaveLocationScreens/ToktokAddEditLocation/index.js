@@ -293,6 +293,7 @@ const AddEditLocation = ({navigation, route, session}) => {
   const onSearchMap = () => {
     navigation.navigate('ToktokPinLocation', {
       locCoordinates,
+      confirmedLocation,
       setConfirmedLocation,
       addressObj,
       setIsEdited,
