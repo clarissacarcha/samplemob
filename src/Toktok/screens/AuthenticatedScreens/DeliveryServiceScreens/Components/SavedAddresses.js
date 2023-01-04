@@ -9,9 +9,9 @@ import LocationCard from './LocationCard';
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const SavedAddresses = ({navigation, data, onSelectSavedAddress, callMe}) => {
+const SavedAddresses = ({navigation, data, isOfficeTaken, isHomeTaken, onSelectSavedAddress}) => {
   const onPressAddAddress = item => {
-    navigation.push('ToktokAddEditLocation', {addressIdFromService: item.id});
+    navigation.push('ToktokAddEditLocation', {addressIdFromService: item.id, isOfficeTaken, isHomeTaken});
   };
 
   const getAddressObj = item => {

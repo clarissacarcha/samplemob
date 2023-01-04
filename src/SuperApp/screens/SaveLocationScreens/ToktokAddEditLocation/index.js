@@ -32,6 +32,7 @@ const AddEditLocation = ({navigation, route, session}) => {
 
   const {
     addressIdFromService,
+    formattedAddress = null,
     coordsFromService = null,
     isFromLocationAccess = false,
     addressObj = null,
@@ -293,7 +294,7 @@ const AddEditLocation = ({navigation, route, session}) => {
   const onSearchMap = () => {
     navigation.navigate('ToktokPinLocation', {
       locCoordinates,
-      confirmedLocation,
+      formattedAddress: confirmedLocation?.place?.formattedAddress,
       setConfirmedLocation,
       addressObj,
       setIsEdited,
@@ -445,6 +446,7 @@ const AddEditLocation = ({navigation, route, session}) => {
       navigation.navigate('ToktokPinLocation', {
         locCoordinates: coordinates,
         setConfirmedLocation,
+        formattedAddress,
         addressObj,
         setIsEdited,
         setErrorAddressField,

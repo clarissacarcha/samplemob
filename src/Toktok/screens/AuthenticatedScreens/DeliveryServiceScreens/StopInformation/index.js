@@ -9,6 +9,7 @@ import {
   StatusBar,
   Alert,
   Platform,
+  ScrollView,
 } from 'react-native';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {throttle, debounce, set} from 'lodash';
@@ -27,6 +28,7 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 
 //SELF IMPORTS
 import SavedAddresses from '../Components/SavedAddresses';
+import RecentDelivery from '../Components/RecentDelivery';
 import RecentSearch from './RecentSearch';
 import AutocompleteResult from './AutocompleteResult';
 import SearchBar from './SearchBar';
@@ -52,7 +54,7 @@ const StopDetails = ({navigation, route}) => {
 
   const AlertHook = useAlert();
 
-  const {onStopConfirm, savedAddresses} = route.params;
+  const {onStopConfirm, savedAddresses, recentDelivery} = route.params;
 
   const [showMap, setShowMap] = useState(stopData.latitude ? true : false);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -308,6 +310,17 @@ const StopDetails = ({navigation, route}) => {
     });
   };
 
+  const onSelectRecentDelivery = item => {
+    setShowMap(true);
+    setStopData({
+      ...stopData,
+      latitude: item.hashedPlace.place.location.latitude,
+      longitude: item.hashedPlace.place.location.longitude,
+      formattedAddress: item.hashedPlace.place.formattedAddress,
+    });
+    setSearchText(item.hashedPlace.place.formattedAddress);
+  };
+
   return (
     <View style={styles.screenBox}>
       <View style={{height: StatusBar.currentHeight}} />
@@ -488,18 +501,27 @@ const StopDetails = ({navigation, route}) => {
         />
       )}
       {!showMap && searchResult?.predictions.length == 0 && (
-        <>
-          <RecentSearch
-            recentSearchDataList={recentSearchDataList}
-            setShowMap={setShowMap}
-            stopData={stopData}
-            setStopData={setStopData}
-            setSearchText={setSearchText}
-            onPressAddAddress={onPressAddAddress}
-          />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {recentSearchDataList.length > 0 && (
+            <RecentSearch
+              recentSearchDataList={recentSearchDataList}
+              setShowMap={setShowMap}
+              stopData={stopData}
+              setStopData={setStopData}
+              setSearchText={setSearchText}
+              onPressAddAddress={onPressAddAddress}
+            />
+          )}
 
           <SavedAddresses navigation={navigation} data={savedAddresses} onSelectSavedAddress={onSelectSavedAddress} />
-        </>
+          {recentDelivery?.getDeliveryRecentRecipients.length > 0 && (
+            <RecentDelivery
+              data={recentDelivery}
+              onSelectRecentDelivery={onSelectRecentDelivery}
+              navigation={navigation}
+            />
+          )}
+        </ScrollView>
       )}
       {!showMap && searchLoading && searchText !== '' && <SearchLoadingIndicator />}
     </View>

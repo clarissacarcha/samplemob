@@ -30,7 +30,7 @@ const ToktokPinLocation = ({navigation, route}) => {
   const {
     isFromLocationAccess = false,
     locCoordinates,
-    confirmedLocation,
+    formattedAddress,
     setConfirmedLocation,
     addressObj,
     setIsEdited,
@@ -38,9 +38,7 @@ const ToktokPinLocation = ({navigation, route}) => {
   } = route.params;
 
   const [initialCoord, setInitialCoord] = useState(locCoordinates?.latitude ? locCoordinates : {});
-  const [searchedText, setSearchedText] = useState(
-    confirmedLocation?.place?.formattedAddress ? confirmedLocation?.place?.formattedAddress : '',
-  );
+  const [searchedText, setSearchedText] = useState(formattedAddress ? formattedAddress : '');
   const [disableAddressBox, setDisableAddressBox] = useState(true);
   const [searchedData, setSearchedData] = useState('');
   const [searchedLocation, setSearchedLocation] = useState({});
@@ -85,7 +83,6 @@ const ToktokPinLocation = ({navigation, route}) => {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      console.log('zion', response);
       setButtonLabel('Confirm');
       // setInitialCoord(response.getPlaceByLocation);
       setSearchedLocation(response.getPlaceByLocation);

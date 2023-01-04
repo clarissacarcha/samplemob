@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useCallback} from 'react';
+import React, {useRef, useEffect, useCallback, useState} from 'react';
 import {View, StyleSheet, TextInput, TouchableOpacity, Image} from 'react-native';
 import {debounce} from 'lodash';
 import axios from 'axios';
@@ -79,6 +79,7 @@ const SearchBar = ({
   navigation,
   onClearSearchBar,
 }) => {
+  const [enteredText, setEnteredText] = useState('');
   const getGooglePlaceAutocomplete = async ({searchString}) => {
     try {
       onSearchLoadingChange(true);
@@ -126,6 +127,13 @@ const SearchBar = ({
     onClearSearchBar();
   };
 
+  const executeGetGooglePlaceAutocomplete = value => {
+    if (value != enteredText) {
+      getGooglePlaceAutocomplete({searchString: value});
+    }
+    setEnteredText(value);
+  };
+
   return (
     <>
       <ThrottledOpacity
@@ -140,7 +148,7 @@ const SearchBar = ({
           placeholder={placeholder}
           onChangeText={value => onSearchTextChange(value)}
           onClearSearch={onClearSearch}
-          executeGetGooglePlaceAutocomplete={value => getGooglePlaceAutocomplete({searchString: value})}
+          executeGetGooglePlaceAutocomplete={executeGetGooglePlaceAutocomplete}
         />
       )}
     </>
