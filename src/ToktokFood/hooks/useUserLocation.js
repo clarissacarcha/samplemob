@@ -9,6 +9,7 @@ import {useLazyQuery} from '@apollo/react-hooks';
 
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
+import {saveUserLocation} from '../helper/PersistentLocation';
 
 export const useUserLocation = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,13 @@ export const useUserLocation = () => {
       longitude: defaultAddress?.place?.location?.longitude,
       address: defaultAddress?.place?.formattedAddress,
     };
-    if (!location.latitude) {
+
+    const saveLocation = await getUserLocation();
+
+    if (saveLocation !== null && Object.keys(saveLocation).length === 2) {
+      dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload: {...saveLocation.mapInfo}});
+      dispatch({type: 'SET_TOKTOKFOOD_ORDER_RECEIVER', payload: {...saveLocation.details}});
+    } else {
       dispatch({type: 'SET_TOKTOKFOOD_LOCATION', payload});
     }
     //   const saveLocation = await getUserLocation();
