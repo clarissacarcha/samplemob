@@ -1,7 +1,6 @@
 import {useEffect} from 'react';
 
 // Helpers
-import {getFormattedAddress, getLocation} from 'toktokfood/helper';
 import {getUserLocation} from 'toktokfood/helper/PersistentLocation';
 
 import {useDispatch, useSelector} from 'react-redux';
@@ -9,7 +8,6 @@ import {useLazyQuery} from '@apollo/react-hooks';
 
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
 import {GET_SHOPS} from 'toktokfood/graphql/toktokfood';
-import {saveUserLocation} from '../helper/PersistentLocation';
 
 export const useUserLocation = () => {
   const dispatch = useDispatch();
