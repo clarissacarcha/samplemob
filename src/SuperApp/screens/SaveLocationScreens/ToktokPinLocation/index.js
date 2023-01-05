@@ -44,8 +44,7 @@ const ToktokPinLocation = ({navigation, route}) => {
   const [searchedLocation, setSearchedLocation] = useState({});
   const [mapDragCoords, setMapDragCoords] = useState({});
   const [showSuccessOperationAddressModal, setShowSuccessOperationAddressModal] = useState(false);
-  const [buttonLabel, setButtonLabel] = useState('Confirm');
-
+  const [showConfirmLocButton, setShowConfirmLocButton] = useState(false);
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['PIN', 'Location']} />,
@@ -73,7 +72,6 @@ const ToktokPinLocation = ({navigation, route}) => {
       );
       setSearchedLocation(response.getPlaceById);
       setSearchedData(null);
-      setButtonLabel('Confirm');
     },
     onError: onError,
   });
@@ -82,7 +80,6 @@ const ToktokPinLocation = ({navigation, route}) => {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setButtonLabel('Confirm');
       // setInitialCoord(response.getPlaceByLocation);
       setSearchedLocation(response.getPlaceByLocation);
       setSearchedText(response.getPlaceByLocation.place.formattedAddress);
@@ -149,7 +146,9 @@ const ToktokPinLocation = ({navigation, route}) => {
       value.latitude.toFixed(4) != initialCoord.latitude.toFixed(4) &&
       value.longitude.toFixed(4) != initialCoord.longitude.toFixed(4)
     ) {
-      setButtonLabel('Select Location');
+      setShowConfirmLocButton(true);
+    } else {
+      setShowConfirmLocButton(false);
     }
     setMapDragCoords(value);
   };
@@ -190,8 +189,8 @@ const ToktokPinLocation = ({navigation, route}) => {
     setSearchedText(value);
   };
 
-  const onSubmit = () => {
-    if (buttonLabel != 'Confirm') {
+  const onConfirmLoc = () => {
+    if (showConfirmLocButton) {
       getPlaceByLocation({
         variables: {
           input: {
@@ -203,9 +202,12 @@ const ToktokPinLocation = ({navigation, route}) => {
           },
         },
       });
+      setShowConfirmLocButton(false);
       return;
     }
+  };
 
+  const onSubmit = () => {
     if (AddressesData?.prefGetSavedAddresses.length < 1 && !isFromLocationAccess) {
       saveDefaultAddress();
       return;
@@ -261,7 +263,7 @@ const ToktokPinLocation = ({navigation, route}) => {
         provider={PROVIDER_GOOGLE}
         style={{height: '100%', width: '100%'}}
         initialRegion={initialCoord}
-        showsUserLocation={true}
+        // showsUserLocation={true}
         onRegionChangeComplete={e => {
           onMapDrag(e);
         }}
@@ -343,19 +345,26 @@ const ToktokPinLocation = ({navigation, route}) => {
           }}
         />
       </View>
-      <View style={{alignItems: 'center', zIndex: 999, alignContent: 'center', position: 'absolute'}}>
-        <Image
-          source={PinLocationIcon}
-          style={{height: 36, width: 36, marginTop: -26, zIndex: 1000}}
-          resizeMode={'contain'}
-        />
-      </View>
+      <>
+        {showConfirmLocButton && (
+          <ThrottledOpacity onPress={onConfirmLoc} style={styles.floatingButton} delay={4000}>
+            <Text style={{color: 'white'}}>Confrim Pin</Text>
+          </ThrottledOpacity>
+        )}
+        <View style={{alignItems: 'center', zIndex: 999, alignContent: 'center', position: 'absolute'}}>
+          <Image
+            source={PinLocationIcon}
+            style={{height: 36, width: 36, marginTop: -26, zIndex: 1000}}
+            resizeMode={'contain'}
+          />
+        </View>
+      </>
       {/*---------------------------------------- BUTTON ----------------------------------------*/}
 
       <View style={styles.submitContainer}>
         <ThrottledOpacity disabled={false} delay={4000} onPress={onSubmit} style={{borderRadius: 5}}>
           <View style={styles.submit}>
-            <Text style={styles.submitText}>{buttonLabel}</Text>
+            <Text style={styles.submitText}>Confirm</Text>
           </View>
         </ThrottledOpacity>
       </View>
@@ -459,5 +468,11 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     textAlign: 'center',
+  },
+  floatingButton: {
+    backgroundColor: CONSTANTS.COLOR.ORANGE,
+    padding: 7,
+    borderRadius: 5,
+    bottom: '58%',
   },
 });
