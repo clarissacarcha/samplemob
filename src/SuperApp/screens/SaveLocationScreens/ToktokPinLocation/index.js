@@ -264,6 +264,9 @@ const ToktokPinLocation = ({navigation, route}) => {
         style={{height: '100%', width: '100%'}}
         initialRegion={initialCoord}
         // showsUserLocation={true}
+        onPanDrag={e => {
+          setShowConfirmLocButton(false);
+        }}
         onRegionChangeComplete={e => {
           onMapDrag(e);
         }}
@@ -347,9 +350,11 @@ const ToktokPinLocation = ({navigation, route}) => {
       </View>
       <>
         {showConfirmLocButton && (
-          <ThrottledOpacity onPress={onConfirmLoc} style={styles.floatingButton} delay={4000}>
-            <Text style={{color: 'white'}}>Confrim Pin</Text>
-          </ThrottledOpacity>
+          <View style={styles.floatinButtonContainer}>
+            <ThrottledOpacity onPress={onConfirmLoc} style={styles.floatingButton} delay={4000}>
+              <Text style={{color: 'white'}}>Confrim Pin</Text>
+            </ThrottledOpacity>
+          </View>
         )}
         <View style={{alignItems: 'center', zIndex: 999, alignContent: 'center', position: 'absolute'}}>
           <Image
@@ -473,6 +478,10 @@ const styles = StyleSheet.create({
     backgroundColor: CONSTANTS.COLOR.ORANGE,
     padding: 7,
     borderRadius: 5,
-    bottom: '58%',
+    marginBottom: 100,
+  },
+  floatinButtonContainer: {
+    position: 'absolute',
+    zIndex: 999,
   },
 });
