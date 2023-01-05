@@ -135,6 +135,9 @@ const ToktokFoodMapSearch = () => {
               style={styles.mapView}
               provider={PROVIDER_GOOGLE}
               initialRegion={mapRegion}
+              onPanDrag={e => {
+                setMapMoved(false);
+              }}
               onRegionChangeComplete={r => onMapMove(r)}
             />
             {mapMoved && (

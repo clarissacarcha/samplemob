@@ -78,6 +78,9 @@ export const SearchMap = ({navigation, route}) => {
         initialRegion={{
           ...localData,
         }}
+        onPanDrag={e => {
+          setShowConfirmLocButton(false);
+        }}
         onRegionChangeComplete={e => onMapScrollEnd(e)}>
         {/*---------------------------------------- FOR CHECKING FLOATING PIN ACCURACY ----------------------------------------*/}
         {/*<Marker coordinate={localData}>*/}
