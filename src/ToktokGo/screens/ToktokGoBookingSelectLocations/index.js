@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
-import {Text, View, TouchableHighlight, Image, ScrollView} from 'react-native';
+import {Text, View, TouchableHighlight, Image, ScrollView, FlatList} from 'react-native';
 import {
   Location,
   Header,
@@ -23,7 +23,7 @@ import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {throttle, debounce, get} from 'lodash';
 import {connect, useDispatch, useSelector} from 'react-redux';
 import {useDebounce} from '../../helpers';
-import {EmptyRecent, ToktokgoBeta} from '../../components';
+import {EmptyRecent, SearchDisplayCard, ToktokgoBeta} from '../../components';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 import DestinationBC from '../../../assets/toktokgo/destination4.png';
 import {useFocusEffect} from '@react-navigation/native';
@@ -365,25 +365,9 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     navigation.push('ToktokSavedLocations', {getAddressObj});
   };
 
-  return (
-    <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, flex: 1, justifyContent: 'space-between'}}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Location
-          onChangeOrigin={onChangeOrigin}
-          onChange={onChange}
-          inputRef={inputRef}
-          selectedInput={selectedInput}
-          onChangeSelectedInput={onChangeSelectedInput}
-          titleOrigin={searchOrigin}
-          title={searchDestination}
-          setSearchDestination={setSearchDestination}
-          setSearchOrigin={setSearchOrigin}
-          loading={loading}
-          setLoadingAutoComplete={setLoadingAutoComplete}
-          loadingAutoComplete={loadingAutoComplete}
-          setSearchResponse={setSearchResponse}
-          onPressSearch={onPressSearch}
-        />
+  const emptyList = () => {
+    return (
+      <>
         {searchResponse?.length == 0 ? (
           <View>
             {recentSearchDataList.length == 0 && recentDestinationList.length == 0 && savedAddressList.length == 0 ? (
@@ -462,18 +446,46 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           </View>
         ) : (
           <View>
-            {serviceableAreaScreen == true ? (
+            {serviceableAreaScreen == true && (
               <OutsideServiceableArea
                 setServiceableAreVisible={setServiceableAreVisible}
                 serviceableAreVisible={serviceableAreVisible}
                 serviceableAreaList={serviceableAreaList}
               />
-            ) : (
-              <SearchLocation searchResponse={searchResponse} onSelectPlace={onSelectPlace} />
             )}
           </View>
         )}
-      </ScrollView>
+      </>
+    );
+  };
+
+  return (
+    <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, flex: 1, justifyContent: 'space-between'}}>
+      <FlatList
+        ListHeaderComponent={
+          <Location
+            onChangeOrigin={onChangeOrigin}
+            onChange={onChange}
+            inputRef={inputRef}
+            selectedInput={selectedInput}
+            onChangeSelectedInput={onChangeSelectedInput}
+            titleOrigin={searchOrigin}
+            title={searchDestination}
+            setSearchDestination={setSearchDestination}
+            setSearchOrigin={setSearchOrigin}
+            loading={loading}
+            setLoadingAutoComplete={setLoadingAutoComplete}
+            loadingAutoComplete={loadingAutoComplete}
+            setSearchResponse={setSearchResponse}
+            onPressSearch={onPressSearch}
+          />
+        }
+        ListEmptyComponent={emptyList}
+        showsVerticalScrollIndicator={false}
+        data={searchResponse}
+        // keyExtractor={item => item.id}
+        renderItem={({item, index}) => <SearchDisplayCard item={item} onSelectPlace={onSelectPlace} />}
+      />
       <ThrottledHighlight
         delay={500}
         onPress={() => {
