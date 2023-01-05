@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image} from 'react-native';
+import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image, Dimensions} from 'react-native';
 import {DestinationMap, ConfirmDestinationButton} from './Sections';
 import constants from '../../../common/res/constants';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
@@ -15,6 +15,8 @@ import {onError} from '../../../util/ErrorUtility';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
+
+const screenWidth = Dimensions.get('window').width;
 
 const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
   const {destination, origin} = useSelector(state => state.toktokGo);
