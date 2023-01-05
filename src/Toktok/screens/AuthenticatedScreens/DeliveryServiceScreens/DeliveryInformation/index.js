@@ -62,7 +62,7 @@ const DeliveryDetails = ({navigation, route, session}) => {
     'Animal Accessories',
     'Automotive Parts',
     'Beauty Products',
-    'Clothings',
+    'Clothing',
     'Electronics',
     'Fragile',
     'Furniture',

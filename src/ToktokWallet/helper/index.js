@@ -5,6 +5,7 @@ export * from './inputRegexFormat';
 export * from './locationPermission';
 export * from './logsHelper';
 export * from './MaskLeftZero';
+export * from './noteHelper';
 export * from './numberFormat';
 export * from './scale';
 export * from './strings';

@@ -2,14 +2,18 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, Dimensions, Image, ScrollView} from 'react-native';
 import {TransactionModal} from '../Reports';
 import CONSTANTS from 'common/res/constants';
-import {moderateScale, pesonetPolicy} from 'toktokwallet/helper';
+import {moderateScale, pesonetPolicy, pendingCashOutNote} from 'toktokwallet/helper';
 import {PolicyNote} from 'toktokwallet/components';
 
 const {COLOR, FONT_FAMILY: FONTS, FONT_SIZE} = CONSTANTS;
-const {width} = Dimensions.get('window');
+
+const DisplayCashOutPending = ({provider}) => {
+  const note = pendingCashOutNote(provider.key);
+  return <PolicyNote note1={note.note1} note2={note.note2} containerStyle={{marginTop: moderateScale(10)}} />;
+};
 
 export const TransactionDetails = ({transaction, visible, setVisible}) => {
-  const {name, phrase, displayInfo, createdAt, transactionType} = transaction;
+  const {name, phrase, displayInfo, transactionType, provider} = transaction;
   const isCashOutPending = transactionType?.key === 'CASH_OUT' && displayInfo.Status === 'Pending';
   const isBTPending = transactionType?.key === 'pesoNet' && displayInfo.Status === 'Pending';
 
@@ -44,12 +48,7 @@ export const TransactionDetails = ({transaction, visible, setVisible}) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={styles.cashOutText}>{name}</Text>
         <Text style={styles.labelCashOut}>{phrase}</Text>
-        {isCashOutPending && (
-          <PolicyNote
-            note1="All transactions made before 01:00 PM will be processed within the day. All transactions after 01:00 PM will be processed the next banking day."
-            containerStyle={{marginTop: moderateScale(10)}}
-          />
-        )}
+        {isCashOutPending && <DisplayCashOutPending provider={provider} />}
         {isBTPending && <PolicyNote note1={pesonetPolicy} containerStyle={{marginTop: moderateScale(10)}} />}
         <View style={{marginTop: isCashOutPending ? 5 : 15}}>{renderDetails({details: displayInfo})}</View>
       </ScrollView>

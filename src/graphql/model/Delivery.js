@@ -21,6 +21,7 @@ const Delivery = `
   description
   status
   createdAt
+  shareLink
   senderStop {
     name
     mobile

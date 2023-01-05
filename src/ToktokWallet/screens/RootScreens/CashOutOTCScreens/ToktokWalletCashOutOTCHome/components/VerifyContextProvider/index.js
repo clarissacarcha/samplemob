@@ -30,7 +30,11 @@ export const VerifyContextProvider = ({children}) => {
         .value();
 
       setCashOutProviderPartnersHighlighted([
-        {'Bank Partners': groupData['Bank Partners'] ? groupData['Bank Partners'] : []},
+        {
+          'Bank Partners': groupData['Bank Partners']
+            ? groupData['Bank Partners'].sort((a, b) => a.description < b.description)
+            : [],
+        },
         {'Non-bank Partners': groupData['Non-bank Partners'] ? groupData['Non-bank Partners'] : []},
       ]);
       setRefreshing(false);

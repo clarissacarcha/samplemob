@@ -64,9 +64,14 @@ const ItemDescriptionScreen = ({route, navigation}) => {
             placeholder="Search"
             placeholderTextColor="gray"
           />
-          <ThrottledOpacity onPress={clearSearchField}>
-            <Image source={ClearTextIcon} resizeMode={'contain'} style={styles.searchIcon} />
-          </ThrottledOpacity>
+
+          {searchedValue.length > 0 ? (
+            <ThrottledOpacity onPress={clearSearchField}>
+              <Image source={ClearTextIcon} resizeMode={'contain'} style={styles.searchIcon} />
+            </ThrottledOpacity>
+          ) : (
+            <View style={styles.searchIcon} />
+          )}
         </View>
       </View>
 
