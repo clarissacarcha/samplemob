@@ -16,27 +16,39 @@ export const SearchMap = ({navigation, route}) => {
 
   let loading = false;
   const {data, setData} = route.params;
+
+  const [buttonLabel, setButtonLabel] = useState('Confirm Location');
+  const [mapDraggedData, setMapDraggedData] = useState({});
   const [localData, setLocalData] = useState({
     ...data,
   });
 
-  const onMapScrollEnd = async (data) => {
-    if (!loading) {
+  const onMapScrollEnd = value => {
+    if (
+      value.longitude.toFixed(5) != data.longitude.toFixed(5) &&
+      value.latitude.toFixed(5) != data.latitude.toFixed(5)
+    ) {
+      setButtonLabel('Select Location');
+    }
+    setMapDraggedData(value);
+  };
+
+  const onSubmit = async () => {
+    if (buttonLabel == 'Select Location' && !loading) {
       loading = true;
-      const result = await reverseGeocode(data);
+      const result = await reverseGeocode(mapDraggedData);
       setLocalData({
         ...localData,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        latitudeDelta: data.latitudeDelta,
-        longitudeDelta: data.longitudeDelta,
+        latitude: mapDraggedData.latitude,
+        longitude: mapDraggedData.longitude,
+        latitudeDelta: mapDraggedData.latitudeDelta,
+        longitudeDelta: mapDraggedData.longitudeDelta,
         formattedAddress: result.formattedAddress,
       });
       loading = false;
+      setButtonLabel('Confirm Location');
+      return;
     }
-  };
-
-  const onSubmit = () => {
     setData({...localData, ...MAP_DELTA});
     navigation.pop();
   };
@@ -46,10 +58,10 @@ export const SearchMap = ({navigation, route}) => {
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.container}
-        region={{
+        initialRegion={{
           ...localData,
         }}
-        onRegionChangeComplete={onMapScrollEnd}>
+        onRegionChangeComplete={e => onMapScrollEnd(e)}>
         {/*---------------------------------------- FOR CHECKING FLOATING PIN ACCURACY ----------------------------------------*/}
         {/*<Marker coordinate={localData}>*/}
         {/*  <FA5Icon name="map-pin" size={24} color="red" />*/}
@@ -63,7 +75,7 @@ export const SearchMap = ({navigation, route}) => {
       <FA5Icon name="map-pin" size={24} color={DARK} style={{marginTop: -26}} />
       {/*---------------------------------------- BUTTON ----------------------------------------*/}
       <View style={styles.submitBox}>
-        <YellowButton onPress={onSubmit} label="Confirm Location" />
+        <YellowButton onPress={onSubmit} label={buttonLabel} />
       </View>
 
       {/* <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
