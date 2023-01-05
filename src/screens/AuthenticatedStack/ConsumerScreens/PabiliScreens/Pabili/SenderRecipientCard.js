@@ -19,58 +19,31 @@ const SenderRecipientCard = ({
   routeParams = null,
 }) => {
   const [userStop, setUserStop] = useState(recipientStop);
-  const session = useSelector((state) => state.session);
+  const session = useSelector(state => state.session);
+  const superApp = useSelector(state => state.superApp);
 
-  const [getGoogleGeocodeReverse, {loading, error}] = useLazyQuery(GET_GOOGLE_GEOCODE_REVERSE, {
-    fetchPolicy: 'network-only',
-    onCompleted: ({getGoogleGeocodeReverse}) => {
-      // console.log(JSON.stringify({USER: userStop}, null, 4));
-      // console.log(JSON.stringify({GEOCODED: getGoogleGeocodeReverse}, null, 4));
+  const getDefaultLocation = () => {
+    if (superApp?.defaultAddress) {
+      onLocationDetected({
+        latitude: superApp?.defaultAddress?.place?.location?.latitude,
+        longitude: superApp?.defaultAddress?.place?.location?.longitude,
+      });
 
       const updatedUserStop = [
         {
           ...userStop[0],
+          latitude: superApp?.defaultAddress?.place?.location?.latitude,
+          longitude: superApp?.defaultAddress?.place?.location?.longitude,
           name: `${session.user.person.firstName} ${session.user.person.lastName}`,
           mobile: session.user.username.replace('+63', ''),
-          formattedAddress: getGoogleGeocodeReverse.formattedAddress,
+          formattedAddress: superApp?.defaultAddress?.place?.formattedAddress,
+          addressBreakdownHash: superApp?.defaultAddress?.placeHash,
           // addressBreakdown: getGoogleGeocodeReverse.addressBreakdown,
-          addressBreakdownHash: getGoogleGeocodeReverse.addressBreakdownHash,
         },
       ];
 
       setRecipientStop(updatedUserStop);
       setUserStop(updatedUserStop);
-    },
-    onError: (error) => console.log({error}),
-  });
-
-  const getLocationHash = async () => {
-    const currentLocation = await GeolocationUtility.getCurrentLocation();
-
-    if (currentLocation) {
-      setUserStop([
-        {
-          ...userStop[0],
-          latitude: currentLocation.coords.latitude,
-          longitude: currentLocation.coords.longitude,
-        },
-      ]);
-
-      onLocationDetected({
-        latitude: currentLocation.coords.latitude,
-        longitude: currentLocation.coords.longitude,
-      });
-
-      getGoogleGeocodeReverse({
-        variables: {
-          input: {
-            coordinates: {
-              latitude: currentLocation.coords.latitude,
-              longitude: currentLocation.coords.longitude,
-            },
-          },
-        },
-      });
     }
   };
 
@@ -90,8 +63,8 @@ const SenderRecipientCard = ({
         setUserStop(updatedUserStop);
 
         onLocationDetected({
-          latitude: routeParams.formattedAddressFromSearch.latitude,
-          longitude: routeParams.formattedAddressFromSearch.longitude,
+          latitude: superApp?.defaultAddress?.place?.location?.latitude,
+          longitude: superApp?.defaultAddress?.place?.location?.longitude,
         });
 
         return;
@@ -99,7 +72,7 @@ const SenderRecipientCard = ({
     }
 
     if (!recipientStop[0].formattedAddress) {
-      getLocationHash();
+      getDefaultLocation();
     }
   }, []);
 

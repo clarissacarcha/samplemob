@@ -51,19 +51,14 @@ const SearchBarInput = ({searchText, placeholder, onChangeText, onClearSearch, e
           placeholderTextColor={COLOR.MEDIUM}
           style={{flex: 1, marginLeft: 16}}
         />
-        {searchText !== '' && (
-          <TouchableOpacity onPress={onClearSearch} style={styles.clearIcon}>
-            <VectorIcon name="close-circle" iconSet={ICON_SET.MaterialCommunity} color={COLOR.MEDIUM} />
-          </TouchableOpacity>
-        )}
+
+        <TouchableOpacity onPress={onClearSearch} style={styles.clearIcon}>
+          <VectorIcon name="close-circle" iconSet={ICON_SET.MaterialCommunity} color={COLOR.MEDIUM} />
+        </TouchableOpacity>
       </View>
-      {searchText !== '' && (
-        <View style={styles.searchContainer}>
-          <ThrottledOpacity onPress={() => executeGetGooglePlaceAutocomplete(searchText)}>
-            <Image source={SearchIcon} style={{width: 15, height: 15}} resizeMode={'contain'} />
-          </ThrottledOpacity>
-        </View>
-      )}
+      <ThrottledOpacity onPress={() => executeGetGooglePlaceAutocomplete(searchText)} style={styles.searchContainer}>
+        <Image source={SearchIcon} style={{width: 15, height: 15}} resizeMode={'contain'} />
+      </ThrottledOpacity>
     </View>
   );
 };
