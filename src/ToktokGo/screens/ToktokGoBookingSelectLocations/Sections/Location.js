@@ -43,6 +43,10 @@ export const Location = ({
           ) : (
             <ThrottledOpacity
               delay={500}
+              style={{
+                width: '80%',
+                paddingVertical: 12,
+              }}
               onPress={() => {
                 onChangeSelectedInput('P'), setLoadingAutoComplete(true);
                 setSearchResponse([]);
@@ -97,6 +101,7 @@ export const Location = ({
           ) : (
             <ThrottledOpacity
               delay={500}
+              style={{width: '80%', paddingVertical: 12}}
               onPress={() => {
                 onChangeSelectedInput('D');
                 setSearchResponse([]);
@@ -112,7 +117,7 @@ export const Location = ({
               </Text>
             </ThrottledOpacity>
           )}
-          {loading && selectedInput == 'D' ? (
+          {loading == true && selectedInput == 'D' ? (
             <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
           ) : (
             !isEmpty(title) &&

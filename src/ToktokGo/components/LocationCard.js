@@ -51,7 +51,7 @@ export const SavedAddressCard = ({navigation, item, image, onPress, lastItem = f
   return (
     <>
       <View style={{paddingHorizontal: 20, paddingVertical: 16, backgroundColor: 'white'}}>
-        <View style={{flexDirection: 'row', width: windowWidth * 0.9}}>
+        <View style={{flexDirection: 'row'}}>
           {image && <Image source={image} resizeMode={'contain'} style={{height: 15, width: 15, marginRight: 10}} />}
           <TouchableOpacity onPress={() => onPress(item)}>
             {item.isHome && (
@@ -94,11 +94,13 @@ export const SavedAddressCard = ({navigation, item, image, onPress, lastItem = f
               </Text>
             </View>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={navigateToEditSavedAddress}
+            style={{alignItems: 'center', justifyContent: 'center'}}>
+            <Image source={editIcon} resizeMode={'contain'} style={{width: normalize(15), height: normalize(15)}} />
+          </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity onPress={navigateToEditSavedAddress} style={{position: 'absolute', right: 25, top: 35}}>
-        <Image source={editIcon} resizeMode={'contain'} style={{width: normalize(15), height: normalize(15)}} />
-      </TouchableOpacity>
       {!lastItem && <View style={{borderBottomWidth: 2, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />}
     </>
   );

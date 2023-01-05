@@ -41,6 +41,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {RecentSearch} from './sections/RecentSearch';
 import {onError} from '../../../../util/ErrorUtility';
 import {SavedAddress} from './sections/SavedAddress';
+import SearchBar from './sections/SearchBar';
 
 const initialPickUpDetails = {
   pickUpAddress: '',
@@ -388,53 +389,50 @@ const ToktokFoodAddressDetails = ({route}) => {
     state.pickUpAddress !== '' ? debouncedGetGooglePlaceAutocomplete() : setAddressList([]);
   }, [state.pickUpAddress]);
 
-  return (
-    <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, flex: 1, justifyContent: 'space-between'}}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, paddingHorizontal: 16, marginBottom: 15}}>
-          <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 19}}>
-            <View style={styles.containerInput}>
-              <Image source={DestinationIcon} style={{height: 20, width: 20, marginLeft: 12}} resizeMode={'contain'} />
-
-              <TextInput
-                onChangeText={query => {
-                  setSearchValue(query);
-                  setAddressList([]);
-                }}
-                style={styles.input}
-                placeholder={'Enter location'}
-                value={searchValue}
-                onSubmitEditing={onPressSearch}
-              />
-
-              <ThrottledOpacity
-                delay={500}
-                style={{padding: 8}}
-                onPress={() => {
-                  dispatch({type: 'SET_PICKUP_ADDRESS', value: ''});
-                  setSearchValue('');
-                }}>
-                {/* {loading == true ? (
-                <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
-              ) : ( */}
-                {searchValue != '' && (
-                  <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />
-                )}
-                {/*  )} */}
-              </ThrottledOpacity>
-            </View>
-            <ThrottledOpacity
-              onPress={onPressSearch}
-              style={{padding: 12, backgroundColor: CONSTANTS.COLOR.ORANGE, borderRadius: 5, marginLeft: 8}}>
-              <FIcons name={'search'} size={18} color={CONSTANTS.COLOR.WHITE} />
-            </ThrottledOpacity>
-          </View>
+  const emptyList = () => {
+    if (state.pickUpAddress !== '' && !state.loading) {
+      return (
+        <View style={styles.emptyList}>
+          <Image source={empty_search_2} style={styles.emptyImage} />
+          <StyledText mode="semibold" fontSize={18} style={{color: COLOR.ORANGE}}>
+            No Result Found
+          </StyledText>
+          <StyledText style={{marginTop: 8}}>Try to search something similar.</StyledText>
         </View>
+      );
+    }
 
+    if (state.pickUpAddress !== '' && state.loading) {
+      return (
+        <>
+          {[1, 2, 3, 4, 5].map(v => (
+            <View key={v}>
+              <View style={styles.placeItem}>
+                <View style={styles.iconLoader} />
+                <View style={{flex: 1}}>
+                  <View style={{width: '100%'}}>
+                    <ContentLoader
+                      active
+                      pRows={2}
+                      pWidth={['40%', '80%']}
+                      title={false}
+                      primaryColor="#FFFFFF"
+                      secondaryColor="rgba(256,186,28,0.4)"
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+          ))}
+        </>
+      );
+    }
+
+    return (
+      <>
         {recentSearchDataList.length > 0 && addressList.length === 0 && !state.loading && (
           <RecentSearch recentSearchDataList={recentSearchDataList} onPressRecentSearch={onSelectPresetAddresses} />
         )}
-
         {savedAddressList.length > 0 && addressList.length === 0 && !state.loading && (
           <SavedAddress
             recentSearchDataList={recentSearchDataList}
@@ -444,15 +442,39 @@ const ToktokFoodAddressDetails = ({route}) => {
             onPressSavedAddress={onSelectPresetAddresses}
           />
         )}
+      </>
+    );
+  };
+  console.log(addressList, recentSearchDataList, savedAddressList);
+  return (
+    <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, flex: 1, justifyContent: 'space-between'}}>
+      <FlatList
+        ListHeaderComponent={
+          <SearchBar
+            onPressSearch={onPressSearch}
+            searchValue={searchValue}
+            setAddressList={setAddressList}
+            setSearchValue={setSearchValue}
+            dispatch={dispatch}
+          />
+        }
+        showsVerticalScrollIndicator={false}
+        data={addressList}
+        ListEmptyComponent={emptyList}
+        keyExtractor={(item, index) => index}
+        renderItem={({item, index}) => <SearchDisplayCard item={item} onSelectPlace={onPressSearchedAddress} />}
+      />
+      {/* <ScrollView showsVerticalScrollIndicator={false}> */}
 
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={addressList}
-          ListEmptyComponent={renderLoader}
-          keyExtractor={(item, index) => index}
-          renderItem={({item, index}) => <SearchDisplayCard item={item} onSelectPlace={onPressSearchedAddress} />}
-        />
-      </ScrollView>
+      {/* {savedAddressList.length > 0 && addressList.length === 0 && !state.loading && (
+          <SavedAddress
+            recentSearchDataList={recentSearchDataList}
+            savedAddressList={savedAddressList}
+            navigation={navigation}
+            navigateToSavedAddress={navigateToSavedAddress}
+            onPressSavedAddress={onSelectPresetAddresses}
+          />
+        )} */}
       <ThrottledHighlight
         delay={500}
         onPress={() => {
