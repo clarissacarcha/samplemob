@@ -9,6 +9,7 @@ import {isEmpty} from 'lodash';
 import {ThrottledOpacity} from '../../../../components_section';
 import {useDispatch} from 'react-redux';
 import {set} from 'react-native-reanimated';
+import FIcons from 'react-native-vector-icons/Fontisto';
 export const Location = ({
   onChange,
   inputRef,
@@ -23,6 +24,7 @@ export const Location = ({
   setLoadingAutoComplete,
   loadingAutoComplete,
   setSearchResponse,
+  onPressSearch,
 }) => {
   const dispatch = useDispatch();
   return (
@@ -43,6 +45,7 @@ export const Location = ({
               delay={500}
               onPress={() => {
                 onChangeSelectedInput('P'), setLoadingAutoComplete(true);
+                setSearchResponse([]);
               }}>
               <Text
                 numberOfLines={1}
@@ -71,6 +74,13 @@ export const Location = ({
             </ThrottledOpacity>
           )}
         </View>
+        {selectedInput == 'P' && (
+          <ThrottledOpacity
+            onPress={() => onPressSearch(titleOrigin)}
+            style={{padding: 12, backgroundColor: CONSTANTS.COLOR.ORANGE, borderRadius: 5, marginLeft: 8}}>
+            <FIcons name={'search'} size={18} color={CONSTANTS.COLOR.WHITE} />
+          </ThrottledOpacity>
+        )}
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 19}}>
         <View style={selectedInput == 'D' ? styles.containerInput : styles.textContainerInput}>
@@ -85,7 +95,12 @@ export const Location = ({
               value={title}
             />
           ) : (
-            <ThrottledOpacity delay={500} onPress={() => onChangeSelectedInput('D')}>
+            <ThrottledOpacity
+              delay={500}
+              onPress={() => {
+                onChangeSelectedInput('D');
+                setSearchResponse([]);
+              }}>
               <Text
                 numberOfLines={1}
                 style={{
@@ -114,6 +129,13 @@ export const Location = ({
             )
           )}
         </View>
+        {selectedInput == 'D' && (
+          <ThrottledOpacity
+            onPress={() => onPressSearch(title)}
+            style={{padding: 12, backgroundColor: CONSTANTS.COLOR.ORANGE, borderRadius: 5, marginLeft: 8}}>
+            <FIcons name={'search'} size={18} color={CONSTANTS.COLOR.WHITE} />
+          </ThrottledOpacity>
+        )}
       </View>
     </View>
   );

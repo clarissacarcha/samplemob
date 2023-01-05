@@ -1,6 +1,6 @@
 import React, {useState, useReducer, useEffect} from 'react';
 import TextTicker from 'react-native-text-ticker';
-import {View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Dimensions} from 'react-native';
 
 import {verticalScale} from 'toktokfood/helper/scale';
 import {FONT, FONT_SIZE, COLOR, SIZE} from 'res/variables';
@@ -22,12 +22,15 @@ import {useAlert} from 'src/hooks';
 
 import {clearShopHistory} from 'toktokfood/helper/persistentHistory';
 import AddressBookModal from './AddressBookModal';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
 
 // const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
+const screenWidth = Dimensions.get('window').width;
 
-const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
+const PickUpDetails = ({pinAddress, onConfirm, isCart, addressLoading}) => {
   const alert = useAlert();
-
+  const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
   const navigation = useNavigation();
   const keyboardHeight = useKeyboard();
   const [showSuccess, setShowSuccess] = useState(false);
@@ -146,9 +149,16 @@ const PickUpDetails = ({pinAddress, onConfirm, isCart}) => {
       <View style={[styles.proto, styles.cartBorder, {bottom: keyboardHeight - 35}]}>
         <View style={styles.sheet}>
           <Text style={styles.pickUpAddressTitle}>Drop-off Address Details</Text>
-          <TextTicker loop duration={10000} repeatSpacer={25} marqueeDelay={1000} style={styles.pickUpAddress}>
-            {pinAddress + '.'}
-          </TextTicker>
+          <ShimmerPlaceHolder
+            style={[
+              {width: screenWidth / 1.08, marginBottom: !addressLoading ? 0 : 18},
+              addressLoading ? {height: 30} : {},
+            ]}
+            visible={!addressLoading}>
+            <TextTicker loop duration={10000} repeatSpacer={25} marqueeDelay={1000} style={styles.pickUpAddress}>
+              {pinAddress + '.'}
+            </TextTicker>
+          </ShimmerPlaceHolder>
           <View style={styles.inputWrapper}>
             <TextInput
               style={styles.input}

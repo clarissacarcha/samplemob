@@ -30,6 +30,7 @@ const ToktokPinLocation = ({navigation, route}) => {
   const {
     isFromLocationAccess = false,
     locCoordinates,
+    formattedAddress,
     setConfirmedLocation,
     addressObj,
     setIsEdited,
@@ -37,12 +38,13 @@ const ToktokPinLocation = ({navigation, route}) => {
   } = route.params;
 
   const [initialCoord, setInitialCoord] = useState(locCoordinates?.latitude ? locCoordinates : {});
+  const [searchedText, setSearchedText] = useState(formattedAddress ? formattedAddress : '');
   const [disableAddressBox, setDisableAddressBox] = useState(true);
   const [searchedData, setSearchedData] = useState('');
-  const [searchedText, setSearchedText] = useState('');
   const [searchedLocation, setSearchedLocation] = useState({});
+  const [mapDragCoords, setMapDragCoords] = useState({});
   const [showSuccessOperationAddressModal, setShowSuccessOperationAddressModal] = useState(false);
-
+  const [showConfirmLocButton, setShowConfirmLocButton] = useState(false);
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['PIN', 'Location']} />,
@@ -50,7 +52,6 @@ const ToktokPinLocation = ({navigation, route}) => {
 
   const [getPlaceAutocomplete, {loading}] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
     onCompleted: response => {
       setSearchedData(response.getPlaceAutocomplete);
     },
@@ -79,6 +80,7 @@ const ToktokPinLocation = ({navigation, route}) => {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
+      // setInitialCoord(response.getPlaceByLocation);
       setSearchedLocation(response.getPlaceByLocation);
       setSearchedText(response.getPlaceByLocation.place.formattedAddress);
       setDisableAddressBox(false);
@@ -100,18 +102,29 @@ const ToktokPinLocation = ({navigation, route}) => {
     onError: onError,
   });
 
-  const debouncedRequest = useDebounce(
-    value =>
-      getPlaceAutocomplete({
-        variables: {
-          input: {
-            searchString: value,
-            sessionToken: sessionToken,
-          },
+  // const debouncedRequest = useDebounce(
+  //   value =>
+  //     getPlaceAutocomplete({
+  //       variables: {
+  //         input: {
+  //           searchString: value,
+  //           sessionToken: sessionToken,
+  //         },
+  //       },
+  //     }),
+  //   1000,
+  // );
+
+  const initiategetPlaceAutocomplete = () => {
+    getPlaceAutocomplete({
+      variables: {
+        input: {
+          searchString: searchedText,
+          sessionToken: sessionToken,
         },
-      }),
-    1000,
-  );
+      },
+    });
+  };
 
   const getPlace = item => {
     setSearchedText(item.formattedAddress);
@@ -128,21 +141,17 @@ const ToktokPinLocation = ({navigation, route}) => {
     });
   };
 
-  const onMapDrag = useDebounce(
-    value =>
-      getPlaceByLocation({
-        variables: {
-          input: {
-            location: {
-              latitude: value.latitude,
-              longitude: value.longitude,
-            },
-            service: 'PREF',
-          },
-        },
-      }),
-    1000,
-  );
+  const onMapDrag = value => {
+    if (
+      value.latitude.toFixed(4) != initialCoord.latitude.toFixed(4) &&
+      value.longitude.toFixed(4) != initialCoord.longitude.toFixed(4)
+    ) {
+      setShowConfirmLocButton(true);
+    } else {
+      setShowConfirmLocButton(false);
+    }
+    setMapDragCoords(value);
+  };
 
   const saveDefaultAddress = () => {
     prefUserAddressCreate({
@@ -174,10 +183,28 @@ const ToktokPinLocation = ({navigation, route}) => {
   };
 
   const onChange = value => {
-    if (value.length >= 3) {
-      debouncedRequest(value);
-    }
+    // if (value.length >= 3) {
+    //   debouncedRequest(value);
+    // }
     setSearchedText(value);
+  };
+
+  const onConfirmLoc = () => {
+    if (showConfirmLocButton) {
+      getPlaceByLocation({
+        variables: {
+          input: {
+            location: {
+              latitude: mapDragCoords.latitude,
+              longitude: mapDragCoords.longitude,
+            },
+            service: 'PREF',
+          },
+        },
+      });
+      setShowConfirmLocButton(false);
+      return;
+    }
   };
 
   const onSubmit = () => {
@@ -236,31 +263,62 @@ const ToktokPinLocation = ({navigation, route}) => {
         provider={PROVIDER_GOOGLE}
         style={{height: '100%', width: '100%'}}
         initialRegion={initialCoord}
-        showsUserLocation={true}
+        // showsUserLocation={true}
+        onPanDrag={e => {
+          setShowConfirmLocButton(false);
+        }}
         onRegionChangeComplete={e => {
           onMapDrag(e);
         }}
       />
 
-      <View style={{position: 'absolute', width: '100%', top: 16}}>
+      <View style={{position: 'absolute', flex: 1, top: 16}}>
         <View style={styles.addressBox}>
-          <Image source={SearchICN} resizeMode={'contain'} style={{width: 17, height: 17, marginLeft: 16}} />
-          <TextInput
-            numberOfLines={1}
-            ref={inputRef}
-            editable={!GPLLoading && !disableAddressBox}
-            value={searchedText.length >= 40 ? searchedText.substring(0, 40) + '...' : searchedText}
-            onChangeText={onChange}
-            textAlign={'left'}
-            style={styles.input}
-          />
-          {loading || GPLLoading ? (
-            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{height: 17, width: 17, marginRight: 16}} />
-          ) : searchedText ? (
-            <ThrottledOpacity disabled={GPLLoading} delay={4000} onPress={clearSearhedData}>
-              <Image source={ClearTextInput} style={{height: 17, width: 17, marginRight: 16}} resizeMode={'contain'} />
+          <View
+            style={{
+              width: '90%',
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: 'white',
+              borderRadius: 5,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 5,
+              },
+              shadowOpacity: 0.34,
+              shadowRadius: 6.27,
+              elevation: 10,
+            }}>
+            <Image source={SearchICN} resizeMode={'contain'} style={{width: 17, height: 17, marginLeft: 16}} />
+            <TextInput
+              numberOfLines={1}
+              ref={inputRef}
+              // editable={!GPLLoading && !disableAddressBox}
+              value={searchedText.length >= 40 ? searchedText.substring(0, 40) + '...' : searchedText}
+              onChangeText={onChange}
+              textAlign={'left'}
+              style={styles.input}
+            />
+            {loading || GPLLoading ? (
+              <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{height: 17, width: 17, marginRight: 16}} />
+            ) : searchedText ? (
+              <ThrottledOpacity disabled={GPLLoading} delay={4000} onPress={clearSearhedData}>
+                <Image
+                  source={ClearTextInput}
+                  style={{height: 17, width: 17, marginRight: 16}}
+                  resizeMode={'contain'}
+                />
+              </ThrottledOpacity>
+            ) : (
+              <View style={{height: 17, width: 17, marginRight: 16}} />
+            )}
+          </View>
+          <View>
+            <ThrottledOpacity onPress={initiategetPlaceAutocomplete} delay={4000}>
+              <Text style={{color: CONSTANTS.COLOR.ORANGE}}>Search</Text>
             </ThrottledOpacity>
-          ) : null}
+          </View>
         </View>
 
         <FlatList
@@ -290,17 +348,26 @@ const ToktokPinLocation = ({navigation, route}) => {
           }}
         />
       </View>
-      <View style={{alignItems: 'center', zIndex: 999, alignContent: 'center', position: 'absolute'}}>
-        <Image
-          source={PinLocationIcon}
-          style={{height: 36, width: 36, marginTop: -26, zIndex: 1000}}
-          resizeMode={'contain'}
-        />
-      </View>
+      <>
+        {showConfirmLocButton && (
+          <View style={styles.floatinButtonContainer}>
+            <ThrottledOpacity onPress={onConfirmLoc} style={styles.floatingButton} delay={4000}>
+              <Text style={{color: 'white'}}>Confrim Pin</Text>
+            </ThrottledOpacity>
+          </View>
+        )}
+        <View style={{alignItems: 'center', zIndex: 999, alignContent: 'center', position: 'absolute'}}>
+          <Image
+            source={PinLocationIcon}
+            style={{height: 36, width: 36, marginTop: -26, zIndex: 1000}}
+            resizeMode={'contain'}
+          />
+        </View>
+      </>
       {/*---------------------------------------- BUTTON ----------------------------------------*/}
 
       <View style={styles.submitContainer}>
-        <ThrottledOpacity disabled={data ? false : true} delay={4000} onPress={onSubmit} style={{borderRadius: 5}}>
+        <ThrottledOpacity disabled={false} delay={4000} onPress={onSubmit} style={{borderRadius: 5}}>
           <View style={styles.submit}>
             <Text style={styles.submitText}>Confirm</Text>
           </View>
@@ -321,23 +388,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   addressBox: {
+    flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'white',
+
     height: 60,
     marginHorizontal: 16,
     alignItems: 'center',
     paddingHorizontal: 8,
-    borderRadius: 5,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-    elevation: 10,
   },
-
   submitBox: {
     position: 'absolute',
     bottom: 0,
@@ -415,5 +473,15 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     textAlign: 'center',
+  },
+  floatingButton: {
+    backgroundColor: CONSTANTS.COLOR.ORANGE,
+    padding: 7,
+    borderRadius: 5,
+    marginBottom: 100,
+  },
+  floatinButtonContainer: {
+    position: 'absolute',
+    zIndex: 999,
   },
 });

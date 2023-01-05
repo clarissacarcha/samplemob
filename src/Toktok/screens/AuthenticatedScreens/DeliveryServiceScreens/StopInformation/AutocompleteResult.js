@@ -10,23 +10,24 @@ import {COLOR} from '../../../../../res/variables';
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const AutocompleteResult = ({searchResult, sessionToken, setSessionToken, onLocationSelect, setSearchText}) => {
-  const [selectedFormattedAddress, setSelectedFormattedAddress] = useState('');
+  const [selectedAddress, setSelectedAddress] = useState({});
 
   const [getGooglePlaceDetails, {loading}] = useLazyQuery(GET_GOOGLE_PLACE_DETAILS, {
     fetchPolicy: 'network-only',
     onCompleted: data => {
-      console.log({result: data.getGooglePlaceDetails.location});
+      console.log({result: data.getGooglePlaceDetails});
       setSessionToken(uuid.v4()); // Use new sessionToken after Place Details Request
       onLocationSelect({
         location: data.getGooglePlaceDetails.location,
         addressBreakdownHash: data.getGooglePlaceDetails.addressBreakdownHash,
-        formattedAddress: selectedFormattedAddress,
+        formattedAddress: selectedAddress.formattedAddress,
+        placeId: selectedAddress.placeId,
       });
     },
   });
 
   const onResultSelect = ({prediction}) => {
-    setSelectedFormattedAddress(prediction.formattedAddress);
+    setSelectedAddress(prediction);
     getGooglePlaceDetails({
       variables: {
         input: {

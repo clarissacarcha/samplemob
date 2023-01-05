@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {View, TouchableOpacity, StyleSheet, Platform} from 'react-native';
+import {View, TouchableOpacity, StyleSheet, Platform, Text} from 'react-native';
 
 import {COLOR} from 'res/variables';
 import {MAP_DELTA_LOW} from 'res/constants';
@@ -17,6 +17,9 @@ import {saveUserLocation} from 'toktokfood/helper/PersistentLocation';
 import {getFormattedAddress} from 'toktokfood/helper';
 
 import {PickUpDetails} from './component';
+import {ThrottledOpacity} from '../../../../components_section';
+import {FONT, FONT_SIZE} from '../../../../res/variables';
+import constants from '../../../../common/res/constants';
 
 const PHILIPPINE_REGION = {
   latitude: 11.22309004847093,
@@ -31,6 +34,13 @@ const ToktokFoodMapSearch = () => {
   const navigation = useNavigation();
   const mapViewRef = useRef(null);
   const [mapMoveCount, setMapMoveCount] = useState(0);
+  const [addressLoading, setAddressLoading] = useState(false);
+  const {coordinates} = route.params;
+  const [mapRegion, setMapRegion] = useState(
+    coordinates?.latitude ? {...coordinates, ...MAP_DELTA_LOW} : PHILIPPINE_REGION,
+  );
+  const [mapMoved, setMapMoved] = useState(false);
+  const [movedCoordinates, setMovedCoordinates] = useState(null);
 
   const [mapInfo, setMapInfo] = useState({});
 
@@ -52,30 +62,29 @@ const ToktokFoodMapSearch = () => {
     }
   }, [route.params]);
 
-  const onMapMove = async c => {
+  const onMapMove = c => {
     setMapMoveCount(prevState => prevState + 1);
-
-    const {latitude, longitude} = c;
-
     if (mapMoveCount === 0) {
       return;
     }
-
-    try {
-      const result = await getFormattedAddress(latitude, longitude);
-      const payload = {
-        latitude,
-        longitude,
-        address: result.formattedAddress,
-      };
-      setMapInfo({
-        coordinates: {latitude, longitude},
-        address: result.formattedAddress,
-        fullInfo: payload,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    setMapMoved(true);
+    setMovedCoordinates(c);
+    // try {
+    //   const result = await getFormattedAddress(latitude, longitude);
+    //   setMapRegion(c);
+    //   const payload = {
+    //     latitude,
+    //     longitude,
+    //     address: result.formattedAddress,
+    //   };
+    //   setMapInfo({
+    //     coordinates: {latitude, longitude},
+    //     address: result.formattedAddress,
+    //     fullInfo: payload,
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const onConfirmAddress = details => {
@@ -88,27 +97,32 @@ const ToktokFoodMapSearch = () => {
     }
   };
 
-  const closeMap = () => {
-    navigation.goBack();
+  const onPressMapUpdate = async () => {
+    setAddressLoading(true);
+    setMapMoved(false);
+    const {latitude, longitude} = movedCoordinates;
+    try {
+      const result = await getFormattedAddress(latitude, longitude);
+      setMapRegion(movedCoordinates);
+      const payload = {
+        latitude,
+        longitude,
+        address: result.formattedAddress,
+      };
+      setMapInfo({
+        coordinates: {latitude, longitude},
+        address: result.formattedAddress,
+        fullInfo: payload,
+      });
+      setAddressLoading(false);
+    } catch (error) {
+      setAddressLoading(false);
+      console.log(error);
+    }
   };
 
-  const onMapReady = () => {
-    if (route.params) {
-      const {coordinates} = route.params;
-      const isCoordinate = !isNaN(coordinates.latitude) && !isNaN(coordinates.longitude);
-      if (isCoordinate) {
-        return mapViewRef.current?.animateToRegion(
-          {
-            latitude: parseFloat(coordinates.latitude),
-            longitude: parseFloat(coordinates.longitude),
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121,
-          },
-          1000,
-        );
-      }
-    }
-    return mapViewRef.current?.animateToRegion(PHILIPPINE_REGION, 1000);
+  const closeMap = () => {
+    navigation.goBack();
   };
 
   return (
@@ -118,13 +132,21 @@ const ToktokFoodMapSearch = () => {
           <View style={styles.mapViewContainer}>
             <MapView
               ref={mapViewRef}
-              onMapReady={() => setTimeout(() => onMapReady(), 500)}
               style={styles.mapView}
               provider={PROVIDER_GOOGLE}
-              initialRegion={PHILIPPINE_REGION}
+              initialRegion={mapRegion}
+              onPanDrag={e => {
+                setMapMoved(false);
+              }}
               onRegionChangeComplete={r => onMapMove(r)}
             />
-
+            {mapMoved && (
+              <View style={styles.mapUpdateContainer}>
+                <ThrottledOpacity style={styles.mapUpdate} onPress={onPressMapUpdate}>
+                  <Text style={{color: COLOR.WHITE, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>Confirm Pin</Text>
+                </ThrottledOpacity>
+              </View>
+            )}
             <FA5Icon style={styles.mapMarker} name="map-pin" size={40} color={COLOR.BLACK} />
           </View>
         ) : null}
@@ -132,7 +154,12 @@ const ToktokFoodMapSearch = () => {
           <FA5Icon name="chevron-left" size={25} color={COLOR.BLACK} />
         </TouchableOpacity>
       </View>
-      <PickUpDetails isCart={route.params?.isCart} pinAddress={mapInfo.address} onConfirm={d => onConfirmAddress(d)} />
+      <PickUpDetails
+        addressLoading={addressLoading}
+        isCart={route.params?.isCart}
+        pinAddress={mapInfo.address}
+        onConfirm={d => onConfirmAddress(d)}
+      />
     </>
   );
 };
@@ -178,6 +205,23 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'center',
     paddingBottom: 35,
+  },
+  mapUpdate: {
+    padding: 8,
+    borderRadius: 5,
+    backgroundColor: constants.COLOR.ORANGE,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+  },
+  mapUpdateContainer: {
+    position: 'absolute',
+    alignSelf: 'center',
+    paddingBottom: 120,
   },
 });
 

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image} from 'react-native';
+import {Text, View, StyleSheet, StatusBar, TouchableOpacity, Image, Dimensions} from 'react-native';
 import {DestinationMap, ConfirmDestinationButton} from './Sections';
 import constants from '../../../common/res/constants';
 import ArrowLeftIcon from '../../../assets/icons/arrow-left-icon.png';
@@ -13,12 +13,17 @@ import {useDebounce} from '../../helpers';
 import {throttle} from 'lodash';
 import {onError} from '../../../util/ErrorUtility';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+
+const screenWidth = Dimensions.get('window').width;
 
 const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
   const {destination, origin} = useSelector(state => state.toktokGo);
   const {popTo} = route.params;
   const [initialRegionChange, setInitialRegionChange] = useState(true);
   const dispatch = useDispatch();
+  const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
   const onConfirm = throttle(
     () => {
       if (data?.getPlaceByLocation) {
@@ -39,7 +44,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
       : {...origin.place.location, ...MAP_DELTA_LOW},
   );
 
-  const [getPlaceByLocation, {data}] = useLazyQuery(GET_PLACE_BY_LOCATION, {
+  const [getPlaceByLocation, {data, loading}] = useLazyQuery(GET_PLACE_BY_LOCATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
@@ -91,11 +96,15 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
               textAlign: 'center',
             }}>
             <Image source={DestinationIcon} style={{height: 20, width: 25, marginRight: 5}} resizeMode={'contain'} />
-            <Text style={{paddingRight: 30}}>
-              {destination?.place?.formattedAddress
-                ? destination.place.formattedAddress
-                : origin.place.formattedAddress}
-            </Text>
+            <ShimmerPlaceHolder
+              style={[{width: screenWidth / 1.08, marginBottom: !loading ? 0 : 18}, loading ? {height: 30} : {}]}
+              visible={!loading}>
+              <Text style={{paddingRight: 30}}>
+                {destination?.place?.formattedAddress
+                  ? destination.place.formattedAddress
+                  : origin.place.formattedAddress}
+              </Text>
+            </ShimmerPlaceHolder>
           </View>
         </View>
         <ConfirmDestinationButton onConfirm={onConfirm} />

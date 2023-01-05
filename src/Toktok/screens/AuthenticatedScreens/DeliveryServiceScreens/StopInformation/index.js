@@ -9,6 +9,7 @@ import {
   StatusBar,
   Alert,
   Platform,
+  ScrollView,
 } from 'react-native';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {throttle, debounce, set} from 'lodash';
@@ -18,8 +19,7 @@ import uuid from 'react-native-uuid';
 import MapView, {Marker, PROVIDER_GOOGLE, Callout, Overlay} from 'react-native-maps';
 import validator from 'validator';
 import {useAlert} from '../../../../../hooks';
-
-import {HeaderBack, HeaderTitle} from '../../../../../components';
+import AsyncStorage from '@react-native-community/async-storage';
 import {Shadow, YellowButton, VectorIcon, ICON_SET} from '../../../../../revamp';
 import {MEDIUM, DARK} from '../../../../../res/constants';
 import {COLOR, FONT, FONT_SIZE, SIZE, MAP_DELTA} from '../../../../../res/variables';
@@ -27,6 +27,9 @@ import {COLOR, FONT, FONT_SIZE, SIZE, MAP_DELTA} from '../../../../../res/variab
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 
 //SELF IMPORTS
+import SavedAddresses from '../Components/SavedAddresses';
+import RecentDelivery from '../Components/RecentDelivery';
+import RecentSearch from './RecentSearch';
 import AutocompleteResult from './AutocompleteResult';
 import SearchBar from './SearchBar';
 import {SearchLoadingIndicator} from './SearchLoadingIndicator';
@@ -51,12 +54,14 @@ const StopDetails = ({navigation, route}) => {
 
   const AlertHook = useAlert();
 
-  const {onStopConfirm} = route.params;
+  const {onStopConfirm, savedAddresses, recentDelivery} = route.params;
 
   const [showMap, setShowMap] = useState(stopData.latitude ? true : false);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [recentSearchDataList, setRecentSearchDataList] = useState([]);
 
   const onLocationSelect = value => {
+    addItemToList(value);
     console.log({value});
     setShowMap(true);
     setStopData({
@@ -223,6 +228,99 @@ const StopDetails = ({navigation, route}) => {
     navigation.pop();
   };
 
+  const addItemToList = async response => {
+    console.log(response);
+    try {
+      const data = await AsyncStorage.getItem('recentSearchDeliveryList');
+      if (data === null) {
+        const searchList = JSON.stringify([response]);
+
+        await AsyncStorage.setItem('recentSearchDeliveryList', searchList);
+      } else {
+        const recentList = JSON.parse(data);
+        if (recentList.length >= 3) {
+          let obj = recentList.find(o => o.formattedAddress === response.formattedAddress);
+          if (obj != undefined) {
+            console.log('SameAddress');
+          } else {
+            setRecentSearchDataList([]);
+            const removedItem = recentList.slice(0, 2);
+            removedItem.unshift(response);
+            const searchList = JSON.stringify(removedItem);
+            await AsyncStorage.setItem('recentSearchDeliveryList', searchList);
+          }
+        } else {
+          let obj = recentList.find(o => o.formattedAddress === response.formattedAddress);
+          if (obj != undefined) {
+            console.log('SameAddress');
+          } else {
+            recentSearchDataList.push(response);
+            const searchList = JSON.stringify(recentSearchDataList);
+            await AsyncStorage.setItem('recentSearchDeliveryList', searchList);
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getSearchList = async () => {
+    try {
+      const data = await AsyncStorage.getItem('recentSearchDeliveryList');
+
+      const output = JSON.parse(data);
+      if (output != null) {
+        setRecentSearchDataList(output);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    async function tempFunction() {
+      await getSearchList();
+    }
+
+    tempFunction();
+
+    return () => {};
+  }, [showMap]);
+
+  const onPressAddAddress = item => {
+    navigation.push('ToktokAddEditLocation', {coordsFromService: item.location});
+  };
+
+  const onSelectSavedAddress = item => {
+    setShowMap(true);
+    setStopData({
+      ...stopData,
+      latitude: item.place.location.latitude,
+      longitude: item.place.location.longitude,
+      formattedAddress: item.place.formattedAddress,
+    });
+    setSearchText(item.formattedAddress);
+  };
+
+  const onClearSearchBar = () => {
+    setSearchResult({
+      ...searchResult,
+      predictions: [],
+    });
+  };
+
+  const onSelectRecentDelivery = item => {
+    setShowMap(true);
+    setStopData({
+      ...stopData,
+      latitude: item.hashedPlace.place.location.latitude,
+      longitude: item.hashedPlace.place.location.longitude,
+      formattedAddress: item.hashedPlace.place.formattedAddress,
+    });
+    setSearchText(item.hashedPlace.place.formattedAddress);
+  };
+
   return (
     <View style={styles.screenBox}>
       <View style={{height: StatusBar.currentHeight}} />
@@ -243,6 +341,7 @@ const StopDetails = ({navigation, route}) => {
           searchEnabled={!showMap}
           onSearchLoadingChange={setSearchLoading}
           navigation={navigation}
+          onClearSearchBar={onClearSearchBar}
         />
       </View>
 
@@ -400,6 +499,29 @@ const StopDetails = ({navigation, route}) => {
           onLocationSelect={onLocationSelect}
           setSearchText={setSearchText}
         />
+      )}
+      {!showMap && searchResult?.predictions.length == 0 && (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {recentSearchDataList.length > 0 && (
+            <RecentSearch
+              recentSearchDataList={recentSearchDataList}
+              setShowMap={setShowMap}
+              stopData={stopData}
+              setStopData={setStopData}
+              setSearchText={setSearchText}
+              onPressAddAddress={onPressAddAddress}
+            />
+          )}
+
+          <SavedAddresses navigation={navigation} data={savedAddresses} onSelectSavedAddress={onSelectSavedAddress} />
+          {recentDelivery?.getDeliveryRecentRecipients.length > 0 && (
+            <RecentDelivery
+              data={recentDelivery}
+              onSelectRecentDelivery={onSelectRecentDelivery}
+              navigation={navigation}
+            />
+          )}
+        </ScrollView>
       )}
       {!showMap && searchLoading && searchText !== '' && <SearchLoadingIndicator />}
     </View>

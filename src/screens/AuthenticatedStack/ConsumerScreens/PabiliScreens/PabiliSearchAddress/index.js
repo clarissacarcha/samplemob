@@ -236,6 +236,13 @@ const StopDetails = ({navigation, route}) => {
     );
   };
 
+  const onClearSearchBar = () => {
+    setSearchResult({
+      ...searchResult,
+      predictions: [],
+    });
+  };
+
   return (
     <View style={styles.screenBox}>
       <View style={{height: StatusBar.currentHeight}} />
@@ -255,6 +262,8 @@ const StopDetails = ({navigation, route}) => {
           onSearchResultChange={value => setSearchResult(value)}
           searchEnabled={!showMap}
           onSearchLoadingChange={setSearchLoading}
+          navigation={navigation}
+          onClearSearchBar={onClearSearchBar}
         />
       </View>
 
