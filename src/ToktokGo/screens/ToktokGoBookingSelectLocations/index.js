@@ -35,6 +35,8 @@ import {NoRecordFound, ServiceableArea} from './Components';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useAlertGO} from '../../hooks';
 import {PREF_GET_SAVED_ADDRESSES} from '../../../graphql';
+import {BackButton} from '../../../components_section/Buttons';
+import {HeaderTitle} from '../../../components_section/Texts';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const alertGO = useAlertGO();
@@ -58,6 +60,11 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const [serviceableAreaList, setServiceableAreaList] = useState('');
   const [savedAddressList, setSavedAddressList] = useState([]);
   const [addressObj, setAddressObj] = useState(null);
+
+  navigation.setOptions({
+    headerLeft: () => <BackButton navigation={navigation} />,
+    headerTitle: () => <HeaderTitle label={'Address'} />,
+  });
 
   useEffect(() => {
     async function tempFunction() {
@@ -361,7 +368,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   return (
     <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, flex: 1, justifyContent: 'space-between'}}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Header navigation={navigation} />
         <Location
           onChangeOrigin={onChangeOrigin}
           onChange={onChange}

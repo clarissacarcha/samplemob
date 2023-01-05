@@ -20,6 +20,7 @@ import ClearTextInput from '../../../../assets/icons/EraseTextInput.png';
 import {MAP_DELTA_LOW} from '../../../../res/constants';
 import {onError} from '../../../../util/ErrorUtility';
 import {SuccesOperationAddressModal} from '../Components';
+import FIcons from 'react-native-vector-icons/Fontisto';
 
 const FULL_WIDTH = Dimensions.get('window').width;
 
@@ -276,7 +277,7 @@ const ToktokPinLocation = ({navigation, route}) => {
         <View style={styles.addressBox}>
           <View
             style={{
-              width: '90%',
+              width: '86%',
               flexDirection: 'row',
               alignItems: 'center',
               backgroundColor: 'white',
@@ -315,8 +316,10 @@ const ToktokPinLocation = ({navigation, route}) => {
             )}
           </View>
           <View>
-            <ThrottledOpacity onPress={initiategetPlaceAutocomplete} delay={4000}>
-              <Text style={{color: CONSTANTS.COLOR.ORANGE}}>Search</Text>
+            <ThrottledOpacity
+              onPress={initiategetPlaceAutocomplete}
+              style={{padding: 12, backgroundColor: CONSTANTS.COLOR.ORANGE, borderRadius: 5, marginLeft: 8}}>
+              <FIcons name={'search'} size={18} color={CONSTANTS.COLOR.WHITE} />
             </ThrottledOpacity>
           </View>
         </View>
@@ -352,7 +355,7 @@ const ToktokPinLocation = ({navigation, route}) => {
         {showConfirmLocButton && (
           <View style={styles.floatinButtonContainer}>
             <ThrottledOpacity onPress={onConfirmLoc} style={styles.floatingButton} delay={4000}>
-              <Text style={{color: 'white'}}>Confrim Pin</Text>
+              <Text style={{color: 'white'}}>Confirm Pin</Text>
             </ThrottledOpacity>
           </View>
         )}
@@ -390,9 +393,7 @@ const styles = StyleSheet.create({
   addressBox: {
     flex: 1,
     flexDirection: 'row',
-
-    height: 60,
-    marginHorizontal: 16,
+    marginHorizontal: 8,
     alignItems: 'center',
     paddingHorizontal: 8,
   },

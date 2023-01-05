@@ -10,6 +10,9 @@ import {VectorIcon, ICON_SET} from '../../../../../revamp';
 import {ThrottledOpacity} from '../../../../../components_section';
 import BackIcon from '../../../../../assets/icons/arrow-left-icon.png';
 import SearchIcon from '../../../../../assets/icons/Search_White.png';
+import CONSTANTS from '../../../../../common/res/constants';
+import DestinationIcon from '../../../../../assets/icons/DestinationIcon.png';
+import FIcons from 'react-native-vector-icons/Fontisto';
 
 const INITIAL_RESULT = {
   payload: {
@@ -43,21 +46,29 @@ const SearchBarInput = ({searchText, placeholder, onChangeText, onClearSearch, e
   return (
     <View style={styles.container}>
       <View style={styles.textFieldContainer}>
+        <Image source={DestinationIcon} style={{height: 20, width: 20, marginLeft: 12}} resizeMode={'contain'} />
         <TextInput
           ref={searchRef}
           value={searchText}
           placeholder={placeholder}
           onChangeText={onChangeText}
           placeholderTextColor={COLOR.MEDIUM}
-          style={{flex: 1, marginLeft: 16}}
+          style={{
+            marginLeft: 12,
+            color: CONSTANTS.COLOR.BLACK,
+            paddingVertical: 12,
+            flex: 1,
+          }}
         />
 
         <TouchableOpacity onPress={onClearSearch} style={styles.clearIcon}>
           <VectorIcon name="close-circle" iconSet={ICON_SET.MaterialCommunity} color={COLOR.MEDIUM} />
         </TouchableOpacity>
       </View>
-      <ThrottledOpacity onPress={() => executeGetGooglePlaceAutocomplete(searchText)} style={styles.searchContainer}>
-        <Image source={SearchIcon} style={{width: 15, height: 15}} resizeMode={'contain'} />
+      <ThrottledOpacity
+        onPress={() => executeGetGooglePlaceAutocomplete(searchText)}
+        style={{padding: 12, backgroundColor: CONSTANTS.COLOR.ORANGE, borderRadius: 5, marginLeft: 8}}>
+        <FIcons name={'search'} size={18} color={CONSTANTS.COLOR.WHITE} />
       </ThrottledOpacity>
     </View>
   );
@@ -131,20 +142,16 @@ const SearchBar = ({
 
   return (
     <>
-      <ThrottledOpacity
-        style={{alignSelf: 'center', paddingHorizontal: 16}}
-        onPress={() => navigation.pop()}
-        delay={4000}>
-        <Image source={BackIcon} resizeMode={'contain'} style={{width: 15, height: 15}} />
-      </ThrottledOpacity>
       {searchEnabled && (
-        <SearchBarInput
-          searchText={searchText}
-          placeholder={placeholder}
-          onChangeText={value => onSearchTextChange(value)}
-          onClearSearch={onClearSearch}
-          executeGetGooglePlaceAutocomplete={executeGetGooglePlaceAutocomplete}
-        />
+        <View style={{flex: 1, paddingHorizontal: 16}}>
+          <SearchBarInput
+            searchText={searchText}
+            placeholder={placeholder}
+            onChangeText={value => onSearchTextChange(value)}
+            onClearSearch={onClearSearch}
+            executeGetGooglePlaceAutocomplete={executeGetGooglePlaceAutocomplete}
+          />
+        </View>
       )}
     </>
   );
@@ -159,10 +166,11 @@ const styles = StyleSheet.create({
   },
   textFieldContainer: {
     flex: 1,
-    marginRight: 16,
+    marginRight: 8,
     backgroundColor: COLOR.LIGHT,
     borderRadius: 5,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   searchContainer: {
     marginRight: 16,

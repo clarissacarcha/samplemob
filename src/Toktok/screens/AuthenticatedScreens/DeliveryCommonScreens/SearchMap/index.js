@@ -98,13 +98,13 @@ export const SearchMap = ({navigation, route}) => {
       {/*---------------------------------------- FLOATING PIN ----------------------------------------*/}
       {showConfirmLocButton && (
         <ThrottledOpacity onPress={onConfirmLoc} style={styles.floatingButton} delay={4000}>
-          <Text style={{color: 'white'}}>Confrim Pin</Text>
+          <Text style={{color: 'white'}}>Confirm Pin</Text>
         </ThrottledOpacity>
       )}
       <FA5Icon name="map-pin" size={24} color={DARK} style={{marginTop: -26}} />
       {/*---------------------------------------- BUTTON ----------------------------------------*/}
       <View style={styles.submitBox}>
-        <YellowButton onPress={onSubmit} label={'Confirm Locatoin'} />
+        <YellowButton onPress={onSubmit} label={'Confirm Location'} />
       </View>
 
       {/* <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>

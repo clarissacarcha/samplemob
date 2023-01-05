@@ -33,6 +33,8 @@ import RecentSearch from './RecentSearch';
 import AutocompleteResult from './AutocompleteResult';
 import SearchBar from './SearchBar';
 import {SearchLoadingIndicator} from './SearchLoadingIndicator';
+import {BackButton} from '../../../../../components_section/Buttons';
+import {HeaderTitle} from '../../../../../components_section/Texts';
 
 const INITIAL_RESULT = {
   payload: {
@@ -59,6 +61,11 @@ const StopDetails = ({navigation, route}) => {
   const [showMap, setShowMap] = useState(stopData.latitude ? true : false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [recentSearchDataList, setRecentSearchDataList] = useState([]);
+
+  navigation.setOptions({
+    headerLeft: () => <BackButton navigation={navigation} />,
+    headerTitle: () => <HeaderTitle label={'Address'} />,
+  });
 
   const onLocationSelect = value => {
     addItemToList(value);
@@ -323,27 +330,31 @@ const StopDetails = ({navigation, route}) => {
 
   return (
     <View style={styles.screenBox}>
-      <View style={{height: StatusBar.currentHeight}} />
-      <View
-        style={{
-          height: 50,
-          backgroundColor: 'white',
-          borderBottomWidth: 1,
-          borderColor: COLOR.LIGHT,
-          flexDirection: 'row',
-        }}>
-        <SearchBar
-          sessionToken={sessionToken}
-          placeholder={route.params.searchPlaceholder}
-          searchText={searchText}
-          onSearchTextChange={value => setSearchText(value)}
-          onSearchResultChange={value => setSearchResult(value)}
-          searchEnabled={!showMap}
-          onSearchLoadingChange={setSearchLoading}
-          navigation={navigation}
-          onClearSearchBar={onClearSearchBar}
-        />
-      </View>
+      {!showMap && (
+        <>
+          <View style={{height: StatusBar.currentHeight}} />
+          <View
+            style={{
+              height: 50,
+              backgroundColor: 'white',
+              borderBottomWidth: 1,
+              borderColor: COLOR.LIGHT,
+              flexDirection: 'row',
+            }}>
+            <SearchBar
+              sessionToken={sessionToken}
+              placeholder={route.params.searchPlaceholder}
+              searchText={searchText}
+              onSearchTextChange={value => setSearchText(value)}
+              onSearchResultChange={value => setSearchResult(value)}
+              searchEnabled={!showMap}
+              onSearchLoadingChange={setSearchLoading}
+              navigation={navigation}
+              onClearSearchBar={onClearSearchBar}
+            />
+          </View>
+        </>
+      )}
 
       {showMap && (
         <View style={{flex: 1}}>

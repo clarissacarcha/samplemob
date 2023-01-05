@@ -28,7 +28,7 @@ export const Location = ({
 }) => {
   const dispatch = useDispatch();
   return (
-    <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, paddingHorizontal: 16, marginBottom: 15}}>
+    <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, paddingHorizontal: 16, marginBottom: 15, paddingTop: 16}}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <View style={selectedInput == 'P' ? styles.containerInput : styles.textContainerInput}>
           <FA5Icon name="map-pin" size={18} color={CONSTANTS.COLOR.YELLOW} style={{marginLeft: 16}} />
