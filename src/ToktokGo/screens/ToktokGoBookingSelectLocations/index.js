@@ -93,7 +93,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
   const [getPlaceAutocomplete, {loading}] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
     onCompleted: response => {
       if (response.getPlaceAutocomplete.length == 0) {
         alertGO({

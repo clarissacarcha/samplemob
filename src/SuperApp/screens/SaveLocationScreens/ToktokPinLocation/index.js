@@ -53,7 +53,6 @@ const ToktokPinLocation = ({navigation, route}) => {
 
   const [getPlaceAutocomplete, {loading}] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
     onCompleted: response => {
       setSearchedData(response.getPlaceAutocomplete);
     },
