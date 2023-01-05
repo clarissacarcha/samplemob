@@ -34,6 +34,7 @@ const ToktokFoodMapSearch = () => {
   const navigation = useNavigation();
   const mapViewRef = useRef(null);
   const [mapMoveCount, setMapMoveCount] = useState(0);
+  const [addressLoading, setAddressLoading] = useState(false);
   const {coordinates} = route.params;
   const [mapRegion, setMapRegion] = useState(
     coordinates?.latitude ? {...coordinates, ...MAP_DELTA_LOW} : PHILIPPINE_REGION,
@@ -97,6 +98,7 @@ const ToktokFoodMapSearch = () => {
   };
 
   const onPressMapUpdate = async () => {
+    setAddressLoading(true);
     setMapMoved(false);
     const {latitude, longitude} = movedCoordinates;
     try {
@@ -112,7 +114,9 @@ const ToktokFoodMapSearch = () => {
         address: result.formattedAddress,
         fullInfo: payload,
       });
+      setAddressLoading(false);
     } catch (error) {
+      setAddressLoading(false);
       console.log(error);
     }
   };
@@ -147,7 +151,12 @@ const ToktokFoodMapSearch = () => {
           <FA5Icon name="chevron-left" size={25} color={COLOR.BLACK} />
         </TouchableOpacity>
       </View>
-      <PickUpDetails isCart={route.params?.isCart} pinAddress={mapInfo.address} onConfirm={d => onConfirmAddress(d)} />
+      <PickUpDetails
+        addressLoading={addressLoading}
+        isCart={route.params?.isCart}
+        pinAddress={mapInfo.address}
+        onConfirm={d => onConfirmAddress(d)}
+      />
     </>
   );
 };

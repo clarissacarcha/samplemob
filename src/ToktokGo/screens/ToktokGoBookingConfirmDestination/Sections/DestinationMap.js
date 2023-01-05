@@ -1,9 +1,10 @@
-import React, {useEffect} from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, Image, Text} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {MAP_DELTA_LOW} from '../../../../res/constants';
 import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
+import {ThrottledOpacity} from '../../../../components_section';
 
 export const DestinationMap = ({onDragEndMarker, mapRegion}) => {
   const INITIAL_REGION = {
@@ -12,11 +13,23 @@ export const DestinationMap = ({onDragEndMarker, mapRegion}) => {
     ...MAP_DELTA_LOW,
   };
 
-  useEffect(() => {
-    if (!mapRegion.latitude) {
-      onDragEndMarker({latitude: INITIAL_REGION.latitude, longitude: INITIAL_REGION.longitude});
+  const [mapMoveCount, setMapMoveCount] = useState(0);
+  const [mapMoved, setMapMoved] = useState(false);
+  const [mapMovedCoordinates, setMapMovedCoordinates] = useState(null);
+
+  const onPressMapUpdate = () => {
+    setMapMoved(false);
+    onDragEndMarker(mapMovedCoordinates);
+  };
+
+  const onMapMove = e => {
+    setMapMoveCount(prevState => prevState + 1);
+    if (mapMoveCount === 0) {
+      return;
     }
-  }, []);
+    setMapMoved(true);
+    setMapMovedCoordinates(e);
+  };
 
   return (
     <View style={styles.container}>
@@ -24,9 +37,24 @@ export const DestinationMap = ({onDragEndMarker, mapRegion}) => {
         provider={PROVIDER_GOOGLE}
         style={{height: '100%', width: '100%'}}
         initialRegion={mapRegion.latitude ? {...mapRegion} : {...INITIAL_REGION}}
-        onRegionChangeComplete={e => {
-          onDragEndMarker(e);
-        }}></MapView>
+        onPanDrag={e => {
+          setMapMoved(false);
+        }}
+        onRegionChangeComplete={e => onMapMove(e)}></MapView>
+      {mapMoved && (
+        <View style={styles.mapUpdateContainer}>
+          <ThrottledOpacity style={styles.mapUpdate} onPress={onPressMapUpdate}>
+            <Text
+              style={{
+                color: CONSTANTS.COLOR.WHITE,
+                fontSize: CONSTANTS.FONT_SIZE.M,
+                fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+              }}>
+              Confirm Pin
+            </Text>
+          </ThrottledOpacity>
+        </View>
+      )}
       <View style={{alignItems: 'center', zIndex: 999, alignContent: 'center', position: 'absolute'}}>
         <Image source={DestinationIcon} style={{height: 20, width: 35}} resizeMode={'contain'} />
       </View>
@@ -74,5 +102,22 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
 
     elevation: 7,
+  },
+  mapUpdate: {
+    padding: 8,
+    borderRadius: 5,
+    backgroundColor: CONSTANTS.COLOR.ORANGE,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+  },
+  mapUpdateContainer: {
+    position: 'absolute',
+    alignSelf: 'center',
+    paddingBottom: 70,
   },
 });

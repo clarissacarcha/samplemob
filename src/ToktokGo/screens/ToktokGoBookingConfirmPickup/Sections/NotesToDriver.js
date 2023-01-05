@@ -1,35 +1,42 @@
 import React from 'react';
-import {Text, StyleSheet, View, TextInput, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, View, TextInput, TouchableOpacity, Dimensions} from 'react-native';
 import constants from '../../../../common/res/constants';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector} from 'react-redux';
 import {ThrottledOpacity} from '../../../../components_section';
-
-export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote, notesToDriver, notes}) => {
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+const screenWidth = Dimensions.get('window').width;
+export const NotesToDriver = ({dropDownRef, navigation, popTo, note, setNote, notesToDriver, notes, loading}) => {
   const {origin} = useSelector(state => state.toktokGo);
+  const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
   return (
     <View>
-      <ThrottledOpacity
-        delay={500}
-        onPress={() => {
-          navigation.pop();
-          navigation.push('ToktokGoBookingSelectLocations', {
-            popTo: popTo + 1,
-            selectInput: 'P',
-          });
-        }}
-        style={{
-          backgroundColor: '#F8F8F8',
-          paddingHorizontal: 10,
-          paddingVertical: 10,
-          borderRadius: 5,
-        }}>
-        <View style={{flexDirection: 'row', textAlign: 'center', marginHorizontal: 5}}>
-          <FA5Icon name="map-pin" size={18} color={constants.COLOR.YELLOW} style={{marginRight: 10}} />
-          <Text style={{paddingRight: 20}}>{origin?.place?.formattedAddress}</Text>
-        </View>
-      </ThrottledOpacity>
+      <ShimmerPlaceHolder
+        style={[{width: screenWidth / 1.08, marginBottom: !loading ? 0 : 18}, loading ? {height: 30} : {}]}
+        visible={!loading}>
+        <ThrottledOpacity
+          delay={500}
+          onPress={() => {
+            navigation.pop();
+            navigation.push('ToktokGoBookingSelectLocations', {
+              popTo: popTo + 1,
+              selectInput: 'P',
+            });
+          }}
+          style={{
+            backgroundColor: '#F8F8F8',
+            paddingHorizontal: 10,
+            paddingVertical: 10,
+            borderRadius: 5,
+          }}>
+          <View style={{flexDirection: 'row', textAlign: 'center', marginHorizontal: 5}}>
+            <FA5Icon name="map-pin" size={18} color={constants.COLOR.YELLOW} style={{marginRight: 10}} />
+            <Text style={{paddingRight: 20}}>{origin?.place?.formattedAddress}</Text>
+          </View>
+        </ThrottledOpacity>
+      </ShimmerPlaceHolder>
       <Text
         style={{
           color: '#525252',

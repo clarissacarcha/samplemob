@@ -45,6 +45,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const inputRef = useRef();
   const dispatch = useDispatch();
   const {origin, destination, sessionToken} = useSelector(state => state.toktokGo);
+  const {defaultAddress} = useSelector(state => state.superApp);
 
   const [searchDestination, setSearchDestination] = useState(destination?.place?.formattedAddress);
   const [searchOrigin, setSearchOrigin] = useState(origin?.place?.formattedAddress);
@@ -70,6 +71,16 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
     return () => {};
   }, []);
+
+  const setBookingInitialState = () => {
+    const payload = {
+      hash: defaultAddress.placeHash,
+      name: defaultAddress.contactDetails.fullname,
+      place: defaultAddress.place,
+    };
+    dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
+    setSearchOrigin(defaultAddress?.place?.formattedAddress);
+  };
 
   const [getSavedAddress] = useLazyQuery(PREF_GET_SAVED_ADDRESSES, {
     client: TOKTOK_ADDRESS_CLIENT,
@@ -162,49 +173,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     },
   });
 
-  const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
-    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    onCompleted: response => {
-      const payload = response.getPlaceByLocation;
-      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
-      setSearchOrigin(payload?.place?.formattedAddress);
-    },
-    onError: error => {
-      const {graphQLErrors, networkError} = error;
-
-      if (networkError) {
-        alertGO({message: 'Network error occurred. Please check your internet connection.'});
-      } else if (graphQLErrors.length > 0) {
-        graphQLErrors.map(({message, locations, path, code, errorType, serviceableArea}) => {
-          if (code === 'INTERNAL_SERVER_ERROR') {
-            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
-          } else if (code === 'USER_INPUT_ERROR') {
-            alertGO({message});
-          } else if (code === 'BAD_USER_INPUT') {
-            if (errorType === 'AREA_UNSERVICEABLE') {
-              setServiceableAreaScreen(true);
-              setServiceableAreaList(serviceableArea);
-            } else if (errorType === 'PLACE_NOT_FOUND') {
-              alertGO({
-                title: 'Location Not Available',
-                message: 'Location is no longer available. Please select another location.',
-              });
-            } else {
-              alertGO({message});
-              setServiceableAreaScreen(false);
-            }
-          } else if (code === 'AUTHENTICATION_ERROR') {
-            // Do Nothing. Error handling should be done on the scren
-          } else {
-            console.log('ELSE ERROR:', error);
-            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
-          }
-        });
-      }
-    },
-  });
-
   const onPressRecentSearch = loc => {
     if (selectedInput == 'D') {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
@@ -250,17 +218,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   );
 
   const setPlaceFunction = async () => {
-    const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
-    getPlaceByLocation({
-      variables: {
-        input: {
-          location: {
-            latitude: latitude,
-            longitude: longitude,
-          },
-        },
-      },
-    });
+    setBookingInitialState();
   };
 
   useFocusEffect(
@@ -280,11 +238,14 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
   const onChange = value => {
     setSearchDestination(value);
-    debouncedRequest(value);
   };
   const onChangeOrigin = value => {
     setSearchOrigin(value);
-    debouncedRequest(value);
+  };
+  const onPressSearch = value => {
+    if (value) {
+      debouncedRequest(value);
+    }
   };
 
   const onPressLocation = () => {
@@ -382,11 +343,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
   const onChangeSelectedInput = value => {
     setSelectedInput(value);
-    if (value == 'D') {
-      debouncedRequest(searchDestination);
-    } else {
-      debouncedRequest(searchOrigin);
-    }
   };
 
   useEffect(() => {
@@ -421,6 +377,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           setLoadingAutoComplete={setLoadingAutoComplete}
           loadingAutoComplete={loadingAutoComplete}
           setSearchResponse={setSearchResponse}
+          onPressSearch={onPressSearch}
         />
         {searchResponse?.length == 0 ? (
           <View>
