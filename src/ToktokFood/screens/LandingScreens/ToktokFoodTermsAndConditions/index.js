@@ -24,17 +24,36 @@ const ToktokFoodTermsAndConditions = ({navigation}) => {
   };
 
   const ListContent = (props) => {
-    const {contents, extented} = props;
+    const {contents, extented, multiple} = props;
     return (
       <View style={styles.sectionWrapper}>
         <Text style={styles.sectionTitle}>{contents.title}</Text>
-        <Text style={styles.sectionText}>{contents.content}</Text>
-        {typeof contents.listContent !== 'undefined' &&
-          contents.listContent.map((v) => (
-            <Text style={[styles.sectionText, styles.listTextContent]}>{'● ' + v.content}</Text>
-          ))}
-        {extented && (
-          <Text style={[styles.sectionText, {marginTop: moderateScale(15)}]}>{contents.extentedContent}</Text>
+        {multiple ? (
+          <>
+            {contents.multiContent.map((item, index) => (
+              <View style={index !== contents.multiContent.length - 1 && {marginBottom: 15}}>
+                <Text style={styles.sectionText}>{item.content}</Text>
+                {typeof item.listContent !== 'undefined' &&
+                  item.listContent.map(v => (
+                    <Text style={[styles.sectionText, styles.listTextContent]}>{'● ' + v.content}</Text>
+                  ))}
+              </View>
+            ))}
+            {extented && (
+              <Text style={[styles.sectionText, {marginTop: moderateScale(15)}]}>{item.extentedContent}</Text>
+            )}
+          </>
+        ) : (
+          <>
+            <Text style={styles.sectionText}>{contents.content}</Text>
+            {typeof contents.listContent !== 'undefined' &&
+              contents.listContent.map(v => (
+                <Text style={[styles.sectionText, styles.listTextContent]}>{'● ' + v.content}</Text>
+              ))}
+            {extented && (
+              <Text style={[styles.sectionText, {marginTop: moderateScale(15)}]}>{contents.extentedContent}</Text>
+            )}
+          </>
         )}
       </View>
     );
@@ -62,8 +81,9 @@ const ToktokFoodTermsAndConditions = ({navigation}) => {
             <SectionContent contents={TermsAndConditions.USE_OF_THE_PLATFORM} />
             <ListContent contents={TermsAndConditions.RESTRICTIONS} />
             <SectionContent contents={TermsAndConditions.ORDERS} />
-            <ListContent contents={TermsAndConditions.PRODUCT_POLICY} />
+            <ListContent multiple contents={TermsAndConditions.PRODUCT_POLICY} />
             <ListContent extented contents={TermsAndConditions.DELIVERY} />
+            <ListContent extented contents={TermsAndConditions.PICK_UP_ORDER} />
             <ListContent extented contents={TermsAndConditions.PAYMENT} />
             <SectionContent contents={TermsAndConditions.CANCELLATION} />
             <ListContent extented contents={TermsAndConditions.REFUND} />

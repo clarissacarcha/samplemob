@@ -157,8 +157,8 @@ const ToktokDelivery = ({navigation, session, route}) => {
           latitude: rebookDeliveryData.senderStop.latitude,
           longitude: rebookDeliveryData.senderStop.longitude,
           formattedAddress: rebookDeliveryData.senderStop.formattedAddress,
-          name: `${session.user.person.firstName} ${session.user.person.lastName}`,
-          mobile: session.user.username.replace('+63', ''),
+          name: rebookDeliveryData.senderStop?.name,
+          mobile: rebookDeliveryData.senderStop?.mobile.replace('+63', ''),
           landmark: rebookDeliveryData.senderStop.landmark,
           orderType: rebookDeliveryData.senderStop?.orderType === 1 ? 'ASAP' : 'SCHEDULED',
           scheduledFrom:
@@ -187,8 +187,8 @@ const ToktokDelivery = ({navigation, session, route}) => {
             latitude: rebookDeliveryData.recipientStop.latitude,
             longitude: rebookDeliveryData.recipientStop.longitude,
             formattedAddress: rebookDeliveryData.recipientStop.formattedAddress,
-            name: `${session.user.person.firstName} ${session.user.person.lastName}`,
-            mobile: session.user.username.replace('+63', ''),
+            name: rebookDeliveryData.recipientStop?.name,
+            mobile: rebookDeliveryData.recipientStop?.mobile.replace('+63', ''),
             landmark: rebookDeliveryData.recipientStop.landmark,
             orderType: rebookDeliveryData.recipientStop?.orderType === 1 ? 'ASAP' : 'SCHEDULED',
             scheduledFrom:

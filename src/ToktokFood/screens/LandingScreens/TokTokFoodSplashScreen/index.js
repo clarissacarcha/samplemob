@@ -27,9 +27,21 @@ const TokTokFoodSplashScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const {user} = useSelector(state => state.session);
+  const [onBoarding, setOnBoarding] = useState(true)
   const {location, customerInfo, receiver} = useSelector(state => state.toktokFood);
   const [errorModal, setErrorModal] = useState({error: {}, visible: false});
   const [createdFlag, setCreatedFlag] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const data = await AsyncStorage.getItem('TOKTOKFOOD_ONBOARDING');
+      if (data != null) {
+        setOnBoarding(JSON.parse(data));
+      } else {
+        setOnBoarding(true);
+      }
+    })();
+  }, []);
 
   const [createAccount] = useMutation(CREATE_ACCOUNT, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
@@ -178,7 +190,12 @@ const TokTokFoodSplashScreen = () => {
     },
     onCompleted: () => {
       setNewInstall();
-      navigation.replace('ToktokFoodHomeScreen');
+      if (onBoarding) {
+        navigation.replace('ToktokFoodOnBoarding');
+      } else {
+        navigation.replace('ToktokFoodLanding');
+        // navigation.replace('ToktokFoodHomeScreen');
+      }
     },
     onError: () => {
       // Alert.alert('', 'Something went wrong.');
@@ -202,12 +219,20 @@ const TokTokFoodSplashScreen = () => {
       if (temporaryCart.checkHasTemporaryCart.shopid !== 0 && Object.keys(receiver).length !== 3) {
         deleteShopTemporaryCart();
       } else {
-        // navigation.replace('ToktokFoodHomeScreen');
-        navigation.replace('ToktokFoodLanding');
+        if (onBoarding) {
+          navigation.replace('ToktokFoodOnBoarding');
+        } else {
+          navigation.replace('ToktokFoodLanding');
+          // navigation.replace('ToktokFoodHomeScreen');
+        }
       }
     } else {
-      // navigation.replace('ToktokFoodHomeScreen');
-      navigation.replace('ToktokFoodLanding');
+      if (onBoarding) {
+        navigation.replace('ToktokFoodOnBoarding');
+      } else {
+        navigation.replace('ToktokFoodLanding');
+        // navigation.replace('ToktokFoodHomeScreen');
+      }
     }
   };
 

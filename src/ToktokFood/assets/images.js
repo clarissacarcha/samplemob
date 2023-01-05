@@ -163,3 +163,10 @@ export const fab_activities = require('./images/fab_icons/fab_activities.png');
 export const fab_food = require('./images/fab_icons/fab_food.png');
 export const fab_notification = require('./images/fab_icons/fab_notification.png');
 export const fab_wallet = require('./images/fab_icons/fab_wallet.png');
+
+//onboarding
+export const food_header = require('./images/onboarding/food_header.png');
+export const onboarding_bg = require('./images/onboarding/onboarding_bg.png');
+export const onboarding1 = require('./images/onboarding/food_onboarding_1.png');
+export const onboarding2 = require('./images/onboarding/food_onboarding_2.png');
+export const onboarding3 = require('./images/onboarding/food_onboarding_3.png');

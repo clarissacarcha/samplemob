@@ -84,30 +84,6 @@ export const Menu = ({setUserLocation, constants}) => {
       },
     },
     {
-      identifier: 'pabili',
-      label: 'Pabili',
-      icon: PabiliIcon,
-      onPress: () => {
-        SheetManager.hide('homeMenu_Services'), navigation.push('Pabili');
-      },
-    },
-    {
-      identifier: 'wallet',
-      label: 'Wallet',
-      icon: WalletIcon,
-      onPress: () => {
-        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokWalletLoginPage');
-      },
-    },
-    {
-      identifier: 'food',
-      label: 'Food',
-      icon: ToktokfoodIcon,
-      onPress: () => {
-        SheetManager.hide('homeMenu_Services'), navigation.push('TokTokFoodSplashScreen');
-      },
-    },
-    {
       identifier:
         constants.iosVersionDisableBeta == APP_VERSION && Platform.OS == 'ios'
           ? 'HideForVersion-GoComingSoon' // Just change identifier to hide
@@ -117,7 +93,6 @@ export const Menu = ({setUserLocation, constants}) => {
       onPress: () => {
         SheetManager.hide('homeMenu_Services'), navigation.push('ToktokgoComingSoon');
       },
-      isNew: true,
     },
     {
       identifier:
@@ -129,16 +104,14 @@ export const Menu = ({setUserLocation, constants}) => {
       onPress: () => {
         SheetManager.hide('homeMenu_Services'), navigation.push('ToktokGoLanding');
       },
-      isNew: true,
     },
     {
-      identifier: `${Platform.OS}Load`,
-      label: 'Load',
-      icon: LoadIcon,
+      identifier: 'food',
+      label: 'Food',
+      icon: ToktokfoodIcon,
       onPress: () => {
-        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokLoadHome');
+        SheetManager.hide('homeMenu_Services'), navigation.push('TokTokFoodSplashScreen');
       },
-      isNew: true,
     },
     {
       identifier: `${Platform.OS}Mall`,
@@ -146,6 +119,23 @@ export const Menu = ({setUserLocation, constants}) => {
       icon: ToktokMallIcon,
       onPress: () => {
         SheetManager.hide('homeMenu_Services'), navigation.push('ToktokMallSplashScreen');
+      },
+      isNew: true,
+    },
+    {
+      identifier: 'wallet',
+      label: 'Wallet',
+      icon: WalletIcon,
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokWalletLoginPage');
+      },
+    },
+    {
+      identifier: `${Platform.OS}Load`,
+      label: 'Load',
+      icon: LoadIcon,
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('ToktokLoadHome');
       },
     },
     {
@@ -156,6 +146,14 @@ export const Menu = ({setUserLocation, constants}) => {
         SheetManager.hide('homeMenu_Services'), navigation.push('ToktokBillsSplashScreen');
       },
       isNew: true,
+    },
+    {
+      identifier: 'pabili',
+      label: 'Pabili',
+      icon: PabiliIcon,
+      onPress: () => {
+        SheetManager.hide('homeMenu_Services'), navigation.push('Pabili');
+      },
     },
     {
       identifier: `${Platform.OS}Promos`,

@@ -8,6 +8,8 @@ import ToktokPinLocation from '../../../SuperApp/screens/SaveLocationScreens/Tok
 import {ToktokAddEditLocation, ToktokSavedLocations, ToktokLocationAccess} from '../../../SuperApp/screens';
 import {ContactsScreen} from '../../../SuperApp/screens/ContactsScreen';
 import SuperAppServiceMaintenance from '../../../SuperApp/screens/SuperAppServiceMaintenance';
+import DeveloperScreen from '../../../SuperApp/screens/DeveloperScreen';
+import {headerOptions} from '../../../components_section/Texts';
 
 export default ({Navigator}) => (
   <>
@@ -21,6 +23,7 @@ export default ({Navigator}) => (
     <Navigator.Screen name="ToktokAddEditLocation" component={ToktokAddEditLocation} />
     <Navigator.Screen name="ToktokLocationAccess" component={ToktokLocationAccess} options={{headerShown: false}} />
     <Navigator.Screen name="ContactsScreen" component={ContactsScreen} />
+    <Navigator.Screen name="DeveloperScreen" component={DeveloperScreen} options={headerOptions} />
     <Navigator.Screen
       name="SuperAppServiceMaintenance"
       component={SuperAppServiceMaintenance}

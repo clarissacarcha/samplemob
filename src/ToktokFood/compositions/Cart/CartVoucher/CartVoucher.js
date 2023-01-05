@@ -122,9 +122,23 @@ const CartVoucher = (props: PropsType): React$Node => {
       return;
     }
     const promoCount = 0;
+    console.log("CART ITEMS AYE", JSON.stringify(cartItems))
     const orders = await parseAmountComputation(cartItems);
     const payload = {isVisible: true, text: 'Applying Voucher', type: null};
     dispatch({type: 'SET_TOKTOKFOOD_LOADER', payload});
+    console.log({
+      input: {
+        userId: Number(customerInfo.userId),
+        brandId: cartItems[0].companyId,
+        shopid: cartItems[0]?.shopid,
+        code: voucherCode,
+        region: cartItems[0]?.shopRegion,
+        subtotal: totalAmount,
+        paymentMethod: paymentMethod === 'cash' ? 'COD' : paymentMethod.toUpperCase(),
+        promoCount,
+        orders,
+      },
+    })
     validateVoucherCode({
       variables: {
         input: {
@@ -137,7 +151,7 @@ const CartVoucher = (props: PropsType): React$Node => {
           paymentMethod: paymentMethod === 'cash' ? 'COD' : paymentMethod.toUpperCase(),
           promoCount,
           orders,
-        },
+        }
       },
     });
   };
@@ -192,7 +206,7 @@ const CartVoucher = (props: PropsType): React$Node => {
             error={errorVoucherMessage}
             onSubmitEditing={onApplyVoucher}
           />
-          {errorVoucherMessage.length > 0 && <VoucherErrorText>{errorVoucherMessage}</VoucherErrorText>}
+          {errorVoucherMessage?.length > 0 && <VoucherErrorText>{errorVoucherMessage}</VoucherErrorText>}
         </Column>
         <TouchableOpacity activeOpacity={0.9} onPress={onApplyVoucher}>
           <ApplyButton>Apply</ApplyButton>

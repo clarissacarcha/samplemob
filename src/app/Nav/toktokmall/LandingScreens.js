@@ -76,21 +76,22 @@ const countNotifications = (notifs) => {
 const RenderBadge = ({data}) => {
 
   if(data == 0 || data == "" || data == null){
-    return (
-      <Badge
-        status="warning"
-        containerStyle={{
-          position: 'absolute',
-          top: 2,
-          right: 2,
-          left: 16
-        }}
-        textStyle={{
-          fontFamily: FONT.REGULAR,
-          fontSize: 9
-        }}
-      />
-    )
+    return <></>
+    // return (
+    //   <Badge
+    //     status="warning"
+    //     containerStyle={{
+    //       position: 'absolute',
+    //       top: 2,
+    //       right: 2,
+    //       left: 16
+    //     }}
+    //     textStyle={{
+    //       fontFamily: FONT.REGULAR,
+    //       fontSize: 9
+    //     }}
+    //   />
+    // )
   }else{
     return (
       <Badge

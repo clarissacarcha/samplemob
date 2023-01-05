@@ -32,7 +32,8 @@ const INITIAL_STATE = {
     text: '',
     type: null,
   },
-  scrollAnimation: [480, -480, 430]
+  scrollAnimation: [480, -480, 430],
+  onBoarding: true
 };
 
 // [350, -350, 300]
@@ -71,6 +72,8 @@ export default (state = INITIAL_STATE, action) => {
       return {...state, loader: action.payload};
     case 'SET_TOKTOKFOOD_SCROLL_ANIMATION':
       return {...state, scrollAnimation: action.payload};
+    case 'SET_TOKTOKFOOD_ONBOARDING':
+      return {...state, onBoarding: action.payload};
     default:
       return state;
   }

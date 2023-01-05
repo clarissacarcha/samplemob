@@ -9,6 +9,11 @@ const otcDetails = `
   description
   logo
   cashOutProvider
+  provider {
+    id
+    name
+    key
+  }
   maximumAmount
   type
   status
