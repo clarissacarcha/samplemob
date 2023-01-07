@@ -43,7 +43,7 @@ const ToktokPinLocation = ({navigation, route}) => {
   const [disableAddressBox, setDisableAddressBox] = useState(true);
   const [searchedData, setSearchedData] = useState('');
   const [searchedLocation, setSearchedLocation] = useState({});
-  const [mapDragCoords, setMapDragCoords] = useState({});
+  const [mapDragCoords, setMapDragCoords] = useState(locCoordinates);
   const [showSuccessOperationAddressModal, setShowSuccessOperationAddressModal] = useState(false);
   const [showConfirmLocButton, setShowConfirmLocButton] = useState(false);
   navigation.setOptions({
@@ -175,6 +175,17 @@ const ToktokPinLocation = ({navigation, route}) => {
 
   useEffect(() => {
     prefGetSavedAddresses();
+    getPlaceByLocation({
+      variables: {
+        input: {
+          location: {
+            latitude: mapDragCoords.latitude,
+            longitude: mapDragCoords.longitude,
+          },
+          service: 'PREF',
+        },
+      },
+    });
   }, []);
 
   const goToHome = () => {

@@ -16,6 +16,7 @@ import {
   PREF_USER_ADDRESS_CREATE,
   TOKTOK_ADDRESS_CLIENT,
   PREF_GET_SAVED_ADDRESS,
+  PREF_GET_SAVED_ADDRESSES,
 } from '../../../../graphql';
 import {
   ConfirmOperationAddressModal,
@@ -61,6 +62,9 @@ const AddEditLocation = ({navigation, route, session}) => {
   const [contactNumber, setContactNumber] = useState(addressObj?.id ? addressObj.contactDetails.mobile_no : '');
   const [contactName, setContactName] = useState(addressObj?.id ? addressObj.contactDetails.fullname : '');
 
+  const [isOfficeTakenCheck, setIsOfficeTaken] = useState(isHomeTaken);
+  const [isHomeTakenCheck, setIsHomeTaken] = useState(isOfficeTaken);
+
   const [prefUserAddressDelete] = useMutation(PREF_USER_ADDRESS_DELETE, {
     client: TOKTOK_ADDRESS_CLIENT,
     onError: onError,
@@ -68,6 +72,16 @@ const AddEditLocation = ({navigation, route, session}) => {
       setShowConfirmOperationAddressModal(false);
       setShowSuccessOperationAddressModal(true);
     },
+  });
+
+  const [prefGetSavedAddresses, {data}] = useLazyQuery(PREF_GET_SAVED_ADDRESSES, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: res => {
+      res.prefGetSavedAddresses.find(item => item.isOffice) ? setIsOfficeTaken(true) : setIsOfficeTaken(false);
+      res.prefGetSavedAddresses.find(item => item.isHome) ? setIsHomeTaken(true) : setIsHomeTaken(false);
+    },
+    onError: onError,
   });
 
   const [prefUserAddressUpdate, {loading: PACLoading}] = useMutation(PREF_USER_ADDRESS_UPDATE, {
@@ -78,7 +92,7 @@ const AddEditLocation = ({navigation, route, session}) => {
     },
     onError: error => {
       const {graphQLErrors, networkError} = error;
-
+      setShowConfirmOperationAddressModal(false);
       if (networkError) {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
       } else if (graphQLErrors.length > 0) {
@@ -180,6 +194,7 @@ const AddEditLocation = ({navigation, route, session}) => {
 
   useFocusEffect(
     useCallback(() => {
+      prefGetSavedAddresses();
       if (addressObj?.id) {
         setLocCoordinates({
           latitude: addressObj?.place?.location?.latitude,
@@ -353,14 +368,14 @@ const AddEditLocation = ({navigation, route, session}) => {
   };
 
   const showCustomFunc = () => {
-    if (isOfficeTaken && isHomeTaken) {
+    if (isHomeTakenCheck && isOfficeTakenCheck) {
       if (addressObj && !addressObj?.label) {
         return true;
       } else {
         return false;
       }
     } else {
-      if (!isOfficeTaken || !isHomeTaken) {
+      if (!isHomeTakenCheck || !isOfficeTakenCheck) {
         return true;
       } else {
         return false;
@@ -370,11 +385,11 @@ const AddEditLocation = ({navigation, route, session}) => {
 
   const showHomeFunc = () => {
     if (!addressObj) {
-      return !isHomeTaken;
+      return !isOfficeTakenCheck;
     } else {
-      if (isHomeTaken && addressObj?.isHome) {
+      if (isOfficeTakenCheck && addressObj?.isHome) {
         return true;
-      } else if (!isHomeTaken) {
+      } else if (!isOfficeTakenCheck) {
         return true;
       } else {
         return false;
@@ -384,11 +399,11 @@ const AddEditLocation = ({navigation, route, session}) => {
 
   const showOfficeFunc = () => {
     if (!addressObj) {
-      return !isOfficeTaken;
+      return !isHomeTakenCheck;
     } else {
-      if (isOfficeTaken && addressObj?.isOffice) {
+      if (isHomeTakenCheck && addressObj?.isOffice) {
         return true;
-      } else if (!isOfficeTaken) {
+      } else if (!isHomeTakenCheck) {
         return true;
       } else {
         return false;
@@ -455,15 +470,15 @@ const AddEditLocation = ({navigation, route, session}) => {
 
     if (addressObj) return;
 
-    if (!isHomeTaken && !isOfficeTaken) {
+    if (!isOfficeTakenCheck && !isHomeTakenCheck) {
       setIsHomeSelected(true);
       setIsCustomSelected(false);
-    } else if (isHomeTaken && !isOfficeTaken) {
+    } else if (isOfficeTakenCheck && !isHomeTakenCheck) {
       setIsOfficeSelected(true);
-    } else if (!isHomeTaken && isOfficeTaken) {
+    } else if (!isOfficeTakenCheck && isHomeTakenCheck) {
       setIsHomeSelected(true);
     } else {
-      if (!isOfficeTaken || !isHomeTaken) {
+      if (!isHomeTakenCheck || !isOfficeTakenCheck) {
         setIsCustomSelected(false);
       } else {
         setIsCustomSelected(true);
