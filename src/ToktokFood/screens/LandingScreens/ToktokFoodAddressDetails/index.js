@@ -431,7 +431,11 @@ const ToktokFoodAddressDetails = ({route}) => {
     return (
       <>
         {recentSearchDataList.length > 0 && addressList.length === 0 && !state.loading && (
-          <RecentSearch recentSearchDataList={recentSearchDataList} onPressRecentSearch={onSelectPresetAddresses} />
+          <RecentSearch
+            recentSearchDataList={recentSearchDataList}
+            onPressRecentSearch={onSelectPresetAddresses}
+            navigation={navigation}
+          />
         )}
         {savedAddressList.length > 0 && addressList.length === 0 && !state.loading && (
           <SavedAddress

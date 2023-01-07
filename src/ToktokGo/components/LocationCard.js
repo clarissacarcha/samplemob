@@ -12,7 +12,10 @@ const windowWidth = Dimensions.get('window').width;
 
 export const LocationCard = ({navigation, item, image, onPress, lastItem = false}) => {
   const navigateToAddSavedAddress = () => {
-    navigation.push('ToktokAddEditLocation', {coordsFromService: item?.place?.location});
+    navigation.push('ToktokAddEditLocation', {
+      coordsFromService: item?.place?.location,
+      formattedAddress: item?.place?.formattedAddress,
+    });
   };
   return (
     <>
