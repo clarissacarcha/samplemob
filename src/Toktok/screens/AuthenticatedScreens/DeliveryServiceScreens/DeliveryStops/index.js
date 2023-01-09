@@ -554,7 +554,13 @@ const ToktokDelivery = ({navigation, session, route}) => {
             onSelectSavedAddress={onSelectSavedAddress}
           />
           {GDRRdata?.getDeliveryRecentRecipients.length > 0 && (
-            <RecentDelivery data={GDRRdata} onSelectRecentDelivery={onSelectRecentDelivery} navigation={navigation} />
+            <RecentDelivery
+              data={GDRRdata}
+              onSelectRecentDelivery={onSelectRecentDelivery}
+              navigation={navigation}
+              isOfficeTaken={isOfficeTaken}
+              isHomeTaken={isHomeTaken}
+            />
           )}
         </ScrollView>
 
