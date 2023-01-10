@@ -71,8 +71,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
   const [voucherTitleMessage, setVoucherTitleMessage] = useState('');
   const [recentDestinationList, setrecentDestinationList] = useState([]);
   const [isNotVoucherApplicable, setIsNotVoucherApplicable] = useState(false);
-  const [proceedBooking, setProceedBooking] = useState(false);
-  const [bookingState, setBookingState] = useState(false);
   const [viewOutstandingFeeInfoModal, setViewOutstandingFeeInfoModal] = useState(false);
   const [voucherUsed, setVoucherUsed] = useState(false);
   const [voucherRemoved, setVoucherRemoved] = useState(false);
@@ -92,9 +90,6 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         payload: {...details, rate: response.getTripFare},
       });
       setLoading(false);
-      if (bookingState) {
-        setProceedBooking(true);
-      }
     },
     onError: error => {
       // setSelectedVouchersNull();
@@ -332,6 +327,20 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     });
   };
 
+  const proceedTripBook = () => {
+    if (selectedPaymentMethod == 'CASH') {
+      tripBooking({pinCode: null}, num);
+    } else {
+      tripInitializePayment({
+        variables: {
+          input: {
+            tripFareHash: details?.rate?.hash,
+          },
+        },
+      });
+    }
+  };
+
   const confirmBooking = num => {
     // console.log(selectedPaymentMethod)
     SheetManager.hide('passenger_capacity');
@@ -339,17 +348,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       setSelectedSeatNum(num);
       // setvoucherRemovedVisible(true);
       setTimeout(() => {
-        if (selectedPaymentMethod == 'CASH') {
-          tripBooking({pinCode: null}, num);
-        } else {
-          tripInitializePayment({
-            variables: {
-              input: {
-                tripFareHash: details?.rate?.hash,
-              },
-            },
-          });
-        }
+        proceedTripBook();
       }, 500);
     } else if (selectedPaymentMethod == 'CASH' && details.voucher.isCash == 0) {
       setvoucherTextMessage('WrongPaymentMethod');
@@ -365,17 +364,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       setSelectedSeatNum(num);
       // setvoucherRemovedVisible(true);
       setTimeout(() => {
-        if (selectedPaymentMethod == 'CASH') {
-          tripBooking({pinCode: null}, num);
-        } else {
-          tripInitializePayment({
-            variables: {
-              input: {
-                tripFareHash: details?.rate?.hash,
-              },
-            },
-          });
-        }
+        proceedTripBook();
       }, 500);
     }
   };
@@ -384,24 +373,8 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     setSelectedVouchersNull();
     dispatchRequest();
     setvoucherRemovedVisible(false);
-    setBookingState(true);
+    proceedTripBook();
   };
-
-  useEffect(() => {
-    if (proceedBooking) {
-      if (selectedPaymentMethod == 'CASH') {
-        tripBooking({pinCode: null}, selectedSeatNum);
-      } else {
-        tripInitializePayment({
-          variables: {
-            input: {
-              tripFareHash: details?.rate?.hash,
-            },
-          },
-        });
-      }
-    }
-  }, [proceedBooking]);
 
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {
     client: TOKTOK_GO_GRAPHQL_CLIENT,
