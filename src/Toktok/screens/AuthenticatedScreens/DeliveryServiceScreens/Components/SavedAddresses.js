@@ -27,7 +27,7 @@ const SavedAddresses = ({navigation, data, seeAlltoggle, onSelectSavedAddress, p
           listKey={1}
           ItemSeparatorComponent={ItemSeparator}
           keyExtractor={item => item.id}
-          ListHeaderComponent={() => (
+          ListHeaderComponent={data => (
             <View style={styles.wrapper}>
               <Text style={styles.title}>Saved Addresses</Text>
               {seeAlltoggle && (

@@ -87,7 +87,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setSavedAddressList(response.prefGetSavedAddresses.slice(0, 3));
+      setSavedAddressList(response.prefGetSavedAddresses);
     },
     onError: onError,
   });
