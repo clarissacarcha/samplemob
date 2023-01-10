@@ -42,6 +42,7 @@ export const FrequentlyUsed = ({navigation, popTo, recentSearchDataList, onPress
       <FlatList
         showsVerticalScrollIndicator={false}
         data={recentSearchDataList}
+        listKey={1}
         // keyExtractor={item => item.id}
         renderItem={({item, index}) => (
           <LocationCard item={item} onPress={onPressRecentSearch} navigation={navigation} />

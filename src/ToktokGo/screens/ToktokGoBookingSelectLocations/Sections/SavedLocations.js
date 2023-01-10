@@ -51,6 +51,7 @@ export const SavedLocations = ({recentDestinationList, popTo, navigation, onPres
       <FlatList
         showsVerticalScrollIndicator={false}
         data={recentDestinationList}
+        listKey={3}
         // keyExtractor={item => item.id}
         renderItem={({item, index}) => (
           <LocationCard item={item} onPress={onPressRecentDestination} navigation={navigation} />

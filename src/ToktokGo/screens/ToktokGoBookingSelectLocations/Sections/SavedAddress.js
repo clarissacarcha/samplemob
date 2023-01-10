@@ -54,7 +54,7 @@ export const SavedAddress = ({
         showsVerticalScrollIndicator={false}
         data={savedAddressList}
         // keyExtractor={item => item.id}
-        listKey={item => item.id}
+        listKey={2}
         renderItem={({item, index}) => (
           <SavedAddressCard item={item} onPress={onPressSavedAddress} navigation={navigation} />
         )}

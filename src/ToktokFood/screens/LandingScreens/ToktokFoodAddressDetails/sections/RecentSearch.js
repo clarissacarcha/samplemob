@@ -4,7 +4,7 @@ import CONSTANTS from '../../../../../common/res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import {LocationCard} from '../../../../../ToktokGo/components';
-export const RecentSearch = ({navigation, popTo, recentSearchDataList, onPressRecentSearch}) => {
+export const RecentSearch = ({navigation, popTo, recentSearchDataList, onPressRecentSearch, getSavedAddress}) => {
   return (
     <>
       <View
@@ -43,7 +43,7 @@ export const RecentSearch = ({navigation, popTo, recentSearchDataList, onPressRe
         data={recentSearchDataList}
         // keyExtractor={item => item.id}
         renderItem={({item, index}) => (
-          <LocationCard item={item} onPress={onPressRecentSearch} navigation={navigation} />
+          <LocationCard item={item} onPress={onPressRecentSearch} navigation={navigation} postback={getSavedAddress} />
         )}
       />
     </>

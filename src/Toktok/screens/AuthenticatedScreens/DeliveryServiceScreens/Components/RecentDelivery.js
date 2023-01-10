@@ -21,6 +21,7 @@ const RecentDelivery = ({data, onSelectRecentDelivery, navigation, isOfficeTaken
       <View style={styles.container}>
         <Text style={styles.title}>Recent Delivery</Text>
         <FlatList
+          listKey={2}
           showsVerticalScrollIndicator={false}
           data={data?.getDeliveryRecentRecipients}
           ItemSeparatorComponent={ItemSeparator}
