@@ -435,6 +435,7 @@ const ToktokFoodAddressDetails = ({route}) => {
             recentSearchDataList={recentSearchDataList}
             onPressRecentSearch={onSelectPresetAddresses}
             navigation={navigation}
+            getSavedAddress={getSavedAddress}
           />
         )}
         {savedAddressList.length > 0 && addressList.length === 0 && !state.loading && (
@@ -449,7 +450,7 @@ const ToktokFoodAddressDetails = ({route}) => {
       </>
     );
   };
-  console.log(addressList, recentSearchDataList, savedAddressList);
+
   return (
     <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, flex: 1, justifyContent: 'space-between'}}>
       <FlatList

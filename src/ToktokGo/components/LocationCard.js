@@ -10,11 +10,12 @@ import normalize from 'react-native-normalize';
 
 const windowWidth = Dimensions.get('window').width;
 
-export const LocationCard = ({navigation, item, image, onPress, lastItem = false}) => {
+export const LocationCard = ({navigation, item, image, onPress, lastItem = false, postback}) => {
   const navigateToAddSavedAddress = () => {
     navigation.push('ToktokAddEditLocation', {
       coordsFromService: item?.place?.location,
       formattedAddress: item?.place?.formattedAddress,
+      postback: postback,
     });
   };
   return (
