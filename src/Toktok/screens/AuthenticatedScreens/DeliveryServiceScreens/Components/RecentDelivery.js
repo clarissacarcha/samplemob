@@ -7,11 +7,13 @@ import EditIcon from '../../../../../assets/icons/SavedAddress/custom.png';
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const RecentDelivery = ({data, onSelectRecentDelivery, navigation}) => {
+const RecentDelivery = ({data, onSelectRecentDelivery, navigation, isOfficeTaken, isHomeTaken}) => {
   const onPressAddAddress = item => {
     navigation.push('ToktokAddEditLocation', {
       coordsFromService: item.hashedPlace.place.location,
       formattedAddress: item.hashedPlace.place.formattedAddress,
+      isOfficeTaken,
+      isHomeTaken,
     });
   };
   return (
