@@ -9,14 +9,13 @@ import LocationCard from './LocationCard';
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const SavedAddresses = ({navigation, data, isOfficeTaken, isHomeTaken, onSelectSavedAddress}) => {
+const SavedAddresses = ({navigation, data, seeAlltoggle, onSelectSavedAddress, prefGetSavedAddresses}) => {
   const onPressAddAddress = item => {
-    navigation.push('ToktokAddEditLocation', {addressIdFromService: item.id, isOfficeTaken, isHomeTaken});
+    navigation.push('ToktokAddEditLocation', {addressIdFromService: item.id, postBack: prefGetSavedAddresses});
   };
 
   const getAddressObj = item => {
     onSelectSavedAddress(item);
-    // callMe(item);
   };
 
   return (
@@ -31,14 +30,16 @@ const SavedAddresses = ({navigation, data, isOfficeTaken, isHomeTaken, onSelectS
           ListHeaderComponent={() => (
             <View style={styles.wrapper}>
               <Text style={styles.title}>Saved Addresses</Text>
-              <ThrottledOpacity
-                style={styles.innerWrapper}
-                onPress={() => {
-                  navigation.push('ToktokSavedLocations', {getAddressObj});
-                }}>
-                <Text style={styles.textstyle}>See All</Text>
-                <Image source={NavIcon} resizeMode={'contain'} style={{width: 11, height: 11}} />
-              </ThrottledOpacity>
+              {seeAlltoggle && (
+                <ThrottledOpacity
+                  style={styles.innerWrapper}
+                  onPress={() => {
+                    navigation.push('ToktokSavedLocations', {getAddressObj});
+                  }}>
+                  <Text style={styles.textstyle}>See All</Text>
+                  <Image source={NavIcon} resizeMode={'contain'} style={{width: 11, height: 11}} />
+                </ThrottledOpacity>
+              )}
             </View>
           )}
           renderItem={({item, index}) => {

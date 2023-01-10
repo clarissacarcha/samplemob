@@ -9,17 +9,21 @@ import {
   StatusBar,
   Alert,
   Platform,
+  FlatList,
   ScrollView,
 } from 'react-native';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {throttle, debounce, set} from 'lodash';
-import {useLazyQuery} from '@apollo/react-hooks';
+import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import InputScrollView from 'react-native-input-scroll-view';
+import {PREF_GET_SAVED_ADDRESSES, TOKTOK_ADDRESS_CLIENT, GET_DELIVERY_RECENT_RECIPIENTS} from '../../../../../graphql';
+import {onError} from '../../../../../util/ErrorUtility';
 import uuid from 'react-native-uuid';
 import MapView, {Marker, PROVIDER_GOOGLE, Callout, Overlay} from 'react-native-maps';
 import validator from 'validator';
 import {useAlert} from '../../../../../hooks';
 import AsyncStorage from '@react-native-community/async-storage';
+import {useFocusEffect} from '@react-navigation/native';
 import {Shadow, YellowButton, VectorIcon, ICON_SET} from '../../../../../revamp';
 import {MEDIUM, DARK} from '../../../../../res/constants';
 import {COLOR, FONT, FONT_SIZE, SIZE, MAP_DELTA} from '../../../../../res/variables';
@@ -56,11 +60,13 @@ const StopDetails = ({navigation, route}) => {
 
   const AlertHook = useAlert();
 
-  const {onStopConfirm, savedAddresses, recentDelivery} = route.params;
+  const {onStopConfirm} = route.params;
 
   const [showMap, setShowMap] = useState(stopData.latitude ? true : false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [recentSearchDataList, setRecentSearchDataList] = useState([]);
+  const [savedAddresses, setSavedAddresses] = useState();
+  const [seeAlltoggle, setsSeeAllToggle] = useState(false);
 
   navigation.setOptions({
     headerLeft: () => <BackButton navigation={navigation} />,
@@ -272,6 +278,28 @@ const StopDetails = ({navigation, route}) => {
     }
   };
 
+  const [prefGetSavedAddresses, {loading: PGSALoading}] = useLazyQuery(PREF_GET_SAVED_ADDRESSES, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: res => {
+      if (res.prefGetSavedAddresses.length > 3) {
+        setsSeeAllToggle(true);
+      } else {
+        setsSeeAllToggle(false);
+      }
+      setSavedAddresses(res.prefGetSavedAddresses?.splice(0, 3));
+    },
+    onError: onError,
+  });
+
+  const [getDeliveryRecentRecipients, {data: GDRRdata, loading: GDRRLoading}] = useLazyQuery(
+    GET_DELIVERY_RECENT_RECIPIENTS,
+    {
+      fetchPolicy: 'network-only',
+      onError: onError,
+    },
+  );
+
   const getSearchList = async () => {
     try {
       const data = await AsyncStorage.getItem('recentSearchDeliveryList');
@@ -284,6 +312,13 @@ const StopDetails = ({navigation, route}) => {
       console.log(err);
     }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      prefGetSavedAddresses();
+      getDeliveryRecentRecipients();
+    }, []),
+  );
 
   useEffect(() => {
     async function tempFunction() {
@@ -308,6 +343,8 @@ const StopDetails = ({navigation, route}) => {
       formattedAddress: item.place.formattedAddress,
     });
     setSearchText(item.formattedAddress);
+    setMobile(item.contactDetails.mobile_no ? item.contactDetails.mobile_no : '');
+    setPerson(item.contactDetails.fullname ? item.contactDetails.mobile_no : '');
   };
 
   const onClearSearchBar = () => {
@@ -330,32 +367,6 @@ const StopDetails = ({navigation, route}) => {
 
   return (
     <View style={styles.screenBox}>
-      {!showMap && (
-        <>
-          <View style={{height: StatusBar.currentHeight}} />
-          <View
-            style={{
-              height: 50,
-              backgroundColor: 'white',
-              borderBottomWidth: 1,
-              borderColor: COLOR.LIGHT,
-              flexDirection: 'row',
-            }}>
-            <SearchBar
-              sessionToken={sessionToken}
-              placeholder={route.params.searchPlaceholder}
-              searchText={searchText}
-              onSearchTextChange={value => setSearchText(value)}
-              onSearchResultChange={value => setSearchResult(value)}
-              searchEnabled={!showMap}
-              onSearchLoadingChange={setSearchLoading}
-              navigation={navigation}
-              onClearSearchBar={onClearSearchBar}
-            />
-          </View>
-        </>
-      )}
-
       {showMap && (
         <View style={{flex: 1}}>
           <View style={{flex: 1}}>
@@ -512,28 +523,70 @@ const StopDetails = ({navigation, route}) => {
         />
       )}
       {!showMap && searchResult?.predictions.length == 0 && (
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {recentSearchDataList.length > 0 && (
-            <RecentSearch
-              recentSearchDataList={recentSearchDataList}
-              setShowMap={setShowMap}
-              stopData={stopData}
-              setStopData={setStopData}
-              setSearchText={setSearchText}
-              onPressAddAddress={onPressAddAddress}
-            />
-          )}
+        <FlatList
+          data={[]}
+          ListHeaderComponent={() => {
+            return (
+              <>
+                <View
+                  style={{
+                    marginTop: 16,
+                    height: 50,
+                    backgroundColor: 'white',
+                    borderBottomWidth: 1,
+                    borderColor: COLOR.LIGHT,
+                    flexDirection: 'row',
+                  }}>
+                  <SearchBar
+                    sessionToken={sessionToken}
+                    placeholder={route.params.searchPlaceholder}
+                    searchText={searchText}
+                    onSearchTextChange={value => setSearchText(value)}
+                    onSearchResultChange={value => setSearchResult(value)}
+                    searchEnabled={!showMap}
+                    onSearchLoadingChange={setSearchLoading}
+                    navigation={navigation}
+                    onClearSearchBar={onClearSearchBar}
+                  />
+                </View>
+              </>
+            );
+          }}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => {
+            return (
+              <>
+                {recentSearchDataList.length > 0 && (
+                  <RecentSearch
+                    recentSearchDataList={recentSearchDataList}
+                    setShowMap={setShowMap}
+                    stopData={stopData}
+                    setStopData={setStopData}
+                    setSearchText={setSearchText}
+                    onPressAddAddress={onPressAddAddress}
+                  />
+                )}
 
-          <SavedAddresses navigation={navigation} data={savedAddresses} onSelectSavedAddress={onSelectSavedAddress} />
-          {recentDelivery?.getDeliveryRecentRecipients.length > 0 && (
-            <RecentDelivery
-              data={recentDelivery}
-              onSelectRecentDelivery={onSelectRecentDelivery}
-              navigation={navigation}
-            />
-          )}
-        </ScrollView>
+                <SavedAddresses
+                  navigation={navigation}
+                  data={savedAddresses}
+                  onSelectSavedAddress={onSelectSavedAddress}
+                  seeAlltoggle={seeAlltoggle}
+                  prefGetSavedAddresses={prefGetSavedAddresses}
+                />
+                {GDRRdata?.getDeliveryRecentRecipients.length > 0 && (
+                  <RecentDelivery
+                    data={GDRRdata}
+                    onSelectRecentDelivery={onSelectRecentDelivery}
+                    navigation={navigation}
+                  />
+                )}
+              </>
+            );
+          }}
+        />
       )}
+
       {!showMap && searchLoading && searchText !== '' && <SearchLoadingIndicator />}
     </View>
   );

@@ -24,6 +24,7 @@ const RecentSearch = ({recentSearchDataList, setShowMap, stopData, setStopData, 
       <View style={styles.container}>
         <Text style={styles.title}>Recent Search</Text>
         <FlatList
+          listKey={3}
           showsVerticalScrollIndicator={false}
           data={recentSearchDataList}
           ItemSeparatorComponent={ItemSeparator}

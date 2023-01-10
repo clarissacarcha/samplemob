@@ -229,8 +229,7 @@ const ToktokDelivery = ({navigation, session, route}) => {
 
   const [userCoordinates, setUserCoordinates] = useState(null);
   const [savedAddresses, setSavedAddresses] = useState();
-  const [isHomeTaken, setIsHomeTaken] = useState(false);
-  const [isOfficeTaken, setIsOfficeTaken] = useState(false);
+  const [seeAlltoggle, setsSeeAllToggle] = useState(false);
 
   useLayoutEffect(() => {
     if (rebookDeliveryData.senderStop) {
@@ -307,9 +306,12 @@ const ToktokDelivery = ({navigation, session, route}) => {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      res.prefGetSavedAddresses.find(item => item.isOffice) ? setIsOfficeTaken(true) : setIsOfficeTaken(false);
-      res.prefGetSavedAddresses.find(item => item.isHome) ? setIsHomeTaken(true) : setIsHomeTaken(false);
-      setSavedAddresses(res.prefGetSavedAddresses.splice(0, 3));
+      if (res.prefGetSavedAddresses.length > 3) {
+        setsSeeAllToggle(true);
+      } else {
+        setsSeeAllToggle(false);
+      }
+      setSavedAddresses(res.prefGetSavedAddresses?.splice(0, 3));
     },
     onError: onError,
   });
@@ -423,6 +425,8 @@ const ToktokDelivery = ({navigation, session, route}) => {
           formattedAddress: item.place.formattedAddress,
           latitude: item.place.location.latitude,
           longitude: item.place.location.longitude,
+          name: item.contactDetails.fullname ? item.contactDetails.fullname : '',
+          mobile: item.contactDetails.mobile_no ? item.contactDetails.mobile_no : '',
         },
       ],
     };
@@ -431,14 +435,13 @@ const ToktokDelivery = ({navigation, session, route}) => {
       searchPlaceholder: 'Enter drop off location',
       stopData: stopData.recipientStop[0],
       onStopConfirm: onRecipientConfirm,
-      savedAddresses: savedAddresses,
-      recentDelivery: GDRRdata,
     });
   };
 
   const onSelectRecentDelivery = item => {
     const stopData = {
       ...orderData,
+
       recipientStop: [
         {
           ...orderData.recipientStop[0],
@@ -453,8 +456,6 @@ const ToktokDelivery = ({navigation, session, route}) => {
       searchPlaceholder: 'Enter drop off location',
       stopData: stopData.recipientStop[0],
       onStopConfirm: onRecipientConfirm,
-      savedAddresses: savedAddresses,
-      recentDelivery: GDRRdata,
     });
   };
   const onPressThrottled = useThrottle(() => navigation.pop(), 1000);
@@ -555,9 +556,9 @@ const ToktokDelivery = ({navigation, session, route}) => {
                 <SavedAddresses
                   navigation={navigation}
                   data={savedAddresses}
-                  isOfficeTaken={isOfficeTaken}
-                  isHomeTaken={isHomeTaken}
+                  seeAlltoggle={seeAlltoggle}
                   onSelectSavedAddress={onSelectSavedAddress}
+                  prefGetSavedAddresses={prefGetSavedAddresses}
                 />
                 {GDRRdata?.getDeliveryRecentRecipients.length > 0 && (
                   <RecentDelivery
