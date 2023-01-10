@@ -1,5 +1,5 @@
 import React, {useState, useCallback} from 'react';
-import {StyleSheet, Text, View, Image, Dimensions, ActivityIndicator, ScrollView} from 'react-native';
+import {StyleSheet, Text, View, Image, Dimensions, ActivityIndicator, ScrollView, Alert} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {onError} from '../../../util/ErrorUtility';
@@ -86,7 +86,12 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
             Alert.alert('', message);
             setProcessingVisible(false);
           } else if (code === 'BAD_USER_INPUT') {
-            if (errorType == 'VOUCHER_LIFETIME_MAX_COUNT_HIT') {
+            if (errorType == 'VOUCHER_DISABLED') {
+             Alert.alert('Voucher is not active.', '', [{text: 'OK', onPress: () => handleGetData()}], {
+                cancelable: false,
+              });
+            }
+            else if (errorType == 'VOUCHER_LIFETIME_MAX_COUNT_HIT') {
               toktokAlert({
                 title: 'Voucher Reached Limit',
                 message: 'Sorry but this voucher reached the maximum redemption limit. You may try another voucher.',
