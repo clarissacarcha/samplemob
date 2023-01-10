@@ -65,7 +65,7 @@ const StopDetails = ({navigation, route}) => {
   const [showMap, setShowMap] = useState(stopData.latitude ? true : false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [recentSearchDataList, setRecentSearchDataList] = useState([]);
-  const [savedAddresses, setSavedAddresses] = useState();
+  const [savedAddresses, setSavedAddresses] = useState([]);
   const [seeAlltoggle, setsSeeAllToggle] = useState(false);
 
   navigation.setOptions({
@@ -282,12 +282,7 @@ const StopDetails = ({navigation, route}) => {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      if (res.prefGetSavedAddresses.length > 3) {
-        setsSeeAllToggle(true);
-      } else {
-        setsSeeAllToggle(false);
-      }
-      setSavedAddresses(res.prefGetSavedAddresses?.splice(0, 3));
+      setSavedAddresses(res.prefGetSavedAddresses);
     },
     onError: onError,
   });
@@ -571,7 +566,6 @@ const StopDetails = ({navigation, route}) => {
                   navigation={navigation}
                   data={savedAddresses}
                   onSelectSavedAddress={onSelectSavedAddress}
-                  seeAlltoggle={seeAlltoggle}
                   prefGetSavedAddresses={prefGetSavedAddresses}
                 />
                 {GDRRdata?.getDeliveryRecentRecipients.length > 0 && (

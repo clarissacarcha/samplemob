@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useRef, useState, useEffect, useLayoutEffect} from 'react';
-import {View, StyleSheet, Text, StatusBar, TouchableOpacity, TouchableHighlight, Image, ScrollView} from 'react-native';
+import {View, StyleSheet, Text, StatusBar, TouchableOpacity, TouchableHighlight, Image, FlatList} from 'react-native';
 import {PREF_GET_SAVED_ADDRESSES, TOKTOK_ADDRESS_CLIENT} from '../../../../../graphql';
 import {onError} from '../../../../../util/ErrorUtility';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
@@ -24,7 +24,6 @@ import Greeting from './Greeting';
 import SenderRecipientCard from './SenderRecipientCard';
 import SavedAddresses from '../Components/SavedAddresses';
 import RecentDelivery from '../Components/RecentDelivery';
-import {FlatList} from 'react-native-gesture-handler';
 
 const SCHEDULES = [
   {label: 'Anytime', value: '23:59:59'},
@@ -228,8 +227,7 @@ const ToktokDelivery = ({navigation, session, route}) => {
   const [scheduleTimeNow, setScheduleTimeNow] = useState(SCHEDULE_TIME_AFTER);
 
   const [userCoordinates, setUserCoordinates] = useState(null);
-  const [savedAddresses, setSavedAddresses] = useState();
-  const [seeAlltoggle, setsSeeAllToggle] = useState(false);
+  const [savedAddresses, setSavedAddresses] = useState([]);
 
   useLayoutEffect(() => {
     if (rebookDeliveryData.senderStop) {
@@ -306,12 +304,7 @@ const ToktokDelivery = ({navigation, session, route}) => {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      if (res.prefGetSavedAddresses.length > 3) {
-        setsSeeAllToggle(true);
-      } else {
-        setsSeeAllToggle(false);
-      }
-      setSavedAddresses(res.prefGetSavedAddresses?.splice(0, 3));
+      setSavedAddresses(res.prefGetSavedAddresses);
     },
     onError: onError,
   });
@@ -525,8 +518,6 @@ const ToktokDelivery = ({navigation, session, route}) => {
               searchPlaceholder: 'Enter pick up location',
               stopData: orderData.senderStop,
               onStopConfirm: onSenderConfirm,
-              savedAddresses: savedAddresses,
-              recentDelivery: GDRRdata,
             });
           }}
           onRecipientPress={() => {
@@ -534,8 +525,6 @@ const ToktokDelivery = ({navigation, session, route}) => {
               searchPlaceholder: 'Enter drop off location',
               stopData: orderData.recipientStop[0],
               onStopConfirm: onRecipientConfirm,
-              savedAddresses: savedAddresses,
-              recentDelivery: GDRRdata,
             });
           }}
           setRecipientStop={() => {}}
@@ -556,10 +545,10 @@ const ToktokDelivery = ({navigation, session, route}) => {
                 <SavedAddresses
                   navigation={navigation}
                   data={savedAddresses}
-                  seeAlltoggle={seeAlltoggle}
                   onSelectSavedAddress={onSelectSavedAddress}
                   prefGetSavedAddresses={prefGetSavedAddresses}
                 />
+
                 {GDRRdata?.getDeliveryRecentRecipients.length > 0 && (
                   <RecentDelivery
                     data={GDRRdata}
