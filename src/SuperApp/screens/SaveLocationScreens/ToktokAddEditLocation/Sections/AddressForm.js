@@ -130,29 +130,9 @@ export const AddressForm = ({
       />
 
       <Text style={styles.label}>Mobile Number</Text>
-      <View
-        style={{
-          marginHorizontal: 16,
-          marginBottom: 16,
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
-        <View
-          style={{
-            backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
-            flex: 1,
-            flexDirection: 'row',
-            marginRight: 16,
-            borderRadius: 5,
-          }}>
-          <View
-            style={{
-              borderRightColor: '#CCCCCC',
-              borderRightWidth: 1,
-              paddingHorizontal: 16,
-              justifyContent: 'center',
-              marginRight: 16,
-            }}>
+      <View style={styles.mobileNumContainer}>
+        <View style={styles.mobileNumWrapper}>
+          <View style={styles.mobileSuffix}>
             <Text>+63</Text>
           </View>
 
@@ -167,15 +147,8 @@ export const AddressForm = ({
             returnKeyType="done"
           />
         </View>
-        <ThrottledOpacity delay={4000} onPress={() => onPressContacts()}>
-          <View
-            style={{
-              backgroundColor: CONSTANTS.COLOR.ORANGE,
-              padding: 10,
-              borderRadius: 5,
-            }}>
-            <Image source={ContactIcon} resizeMode={'contain'} style={{height: 30, width: 30}} />
-          </View>
+        <ThrottledOpacity style={styles.iconWrapper} delay={4000} onPress={() => onPressContacts()}>
+          <Image source={ContactIcon} resizeMode={'contain'} style={{height: 30, width: 30}} />
         </ThrottledOpacity>
       </View>
     </>
@@ -196,6 +169,31 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     fontSize: CONSTANTS.FONT_SIZE.S,
     color: CONSTANTS.COLOR.ALMOST_BLACK,
+  },
+  mobileNumContainer: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  mobileNumWrapper: {
+    backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
+    flex: 1,
+    flexDirection: 'row',
+    marginRight: 16,
+    borderRadius: 5,
+  },
+  mobileSuffix: {
+    borderRightColor: '#CCCCCC',
+    borderRightWidth: 1,
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+    marginRight: 16,
+  },
+  iconWrapper: {
+    backgroundColor: CONSTANTS.COLOR.ORANGE,
+    padding: 10,
+    borderRadius: 5,
   },
   input: {
     marginHorizontal: 16,

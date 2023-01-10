@@ -83,8 +83,12 @@ const ToktokPinLocation = ({navigation, route}) => {
     onCompleted: response => {
       // setInitialCoord(response.getPlaceByLocation);
       setSearchedLocation(response.getPlaceByLocation);
+
       setSearchedText(response.getPlaceByLocation.place.formattedAddress);
       setDisableAddressBox(false);
+      if (formattedAddress) {
+        setConfirmedLocation(response.getPlaceByLocation);
+      }
     },
     onError: onError,
   });
@@ -286,22 +290,7 @@ const ToktokPinLocation = ({navigation, route}) => {
 
       <View style={{position: 'absolute', flex: 1, top: 16}}>
         <View style={styles.addressBox}>
-          <View
-            style={{
-              width: '86%',
-              flexDirection: 'row',
-              alignItems: 'center',
-              backgroundColor: 'white',
-              borderRadius: 5,
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 5,
-              },
-              shadowOpacity: 0.34,
-              shadowRadius: 6.27,
-              elevation: 10,
-            }}>
+          <View style={styles.searchContainer}>
             <Image source={SearchICN} resizeMode={'contain'} style={{width: 17, height: 17, marginLeft: 16}} />
             <TextInput
               numberOfLines={1}
@@ -417,9 +406,25 @@ const styles = StyleSheet.create({
     margin: 16,
     borderRadius: 5,
   },
+  searchContainer: {
+    width: '86%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 10,
+  },
   input: {
     width: '80%',
     paddingLeft: 16,
+    height: 50,
     color: DARK,
   },
   searchedAddresses: {
