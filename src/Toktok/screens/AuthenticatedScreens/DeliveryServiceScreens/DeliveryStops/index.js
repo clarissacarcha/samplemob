@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useRef, useState, useEffect, useLayoutEffect} from 'react';
-import {View, StyleSheet, Text, StatusBar, TouchableOpacity, TouchableHighlight, Image, ScrollView} from 'react-native';
+import {View, StyleSheet, Text, StatusBar, TouchableOpacity, TouchableHighlight, Image, FlatList} from 'react-native';
 import {PREF_GET_SAVED_ADDRESSES, TOKTOK_ADDRESS_CLIENT} from '../../../../../graphql';
 import {onError} from '../../../../../util/ErrorUtility';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
@@ -24,7 +24,6 @@ import Greeting from './Greeting';
 import SenderRecipientCard from './SenderRecipientCard';
 import SavedAddresses from '../Components/SavedAddresses';
 import RecentDelivery from '../Components/RecentDelivery';
-import {FlatList} from 'react-native-gesture-handler';
 
 const SCHEDULES = [
   {label: 'Anytime', value: '23:59:59'},
@@ -228,9 +227,7 @@ const ToktokDelivery = ({navigation, session, route}) => {
   const [scheduleTimeNow, setScheduleTimeNow] = useState(SCHEDULE_TIME_AFTER);
 
   const [userCoordinates, setUserCoordinates] = useState(null);
-  const [savedAddresses, setSavedAddresses] = useState();
-  const [isHomeTaken, setIsHomeTaken] = useState(false);
-  const [isOfficeTaken, setIsOfficeTaken] = useState(false);
+  const [savedAddresses, setSavedAddresses] = useState([]);
 
   useLayoutEffect(() => {
     if (rebookDeliveryData.senderStop) {
@@ -307,9 +304,7 @@ const ToktokDelivery = ({navigation, session, route}) => {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: res => {
-      res.prefGetSavedAddresses.find(item => item.isOffice) ? setIsOfficeTaken(true) : setIsOfficeTaken(false);
-      res.prefGetSavedAddresses.find(item => item.isHome) ? setIsHomeTaken(true) : setIsHomeTaken(false);
-      setSavedAddresses(res.prefGetSavedAddresses.splice(0, 3));
+      setSavedAddresses(res.prefGetSavedAddresses);
     },
     onError: onError,
   });
@@ -423,6 +418,8 @@ const ToktokDelivery = ({navigation, session, route}) => {
           formattedAddress: item.place.formattedAddress,
           latitude: item.place.location.latitude,
           longitude: item.place.location.longitude,
+          name: item.contactDetails.fullname ? item.contactDetails.fullname : '',
+          mobile: item.contactDetails.mobile_no ? item.contactDetails.mobile_no : '',
         },
       ],
     };
@@ -431,14 +428,13 @@ const ToktokDelivery = ({navigation, session, route}) => {
       searchPlaceholder: 'Enter drop off location',
       stopData: stopData.recipientStop[0],
       onStopConfirm: onRecipientConfirm,
-      savedAddresses: savedAddresses,
-      recentDelivery: GDRRdata,
     });
   };
 
   const onSelectRecentDelivery = item => {
     const stopData = {
       ...orderData,
+
       recipientStop: [
         {
           ...orderData.recipientStop[0],
@@ -453,8 +449,6 @@ const ToktokDelivery = ({navigation, session, route}) => {
       searchPlaceholder: 'Enter drop off location',
       stopData: stopData.recipientStop[0],
       onStopConfirm: onRecipientConfirm,
-      savedAddresses: savedAddresses,
-      recentDelivery: GDRRdata,
     });
   };
   const onPressThrottled = useThrottle(() => navigation.pop(), 1000);
@@ -524,8 +518,6 @@ const ToktokDelivery = ({navigation, session, route}) => {
               searchPlaceholder: 'Enter pick up location',
               stopData: orderData.senderStop,
               onStopConfirm: onSenderConfirm,
-              savedAddresses: savedAddresses,
-              recentDelivery: GDRRdata,
             });
           }}
           onRecipientPress={() => {
@@ -533,8 +525,6 @@ const ToktokDelivery = ({navigation, session, route}) => {
               searchPlaceholder: 'Enter drop off location',
               stopData: orderData.recipientStop[0],
               onStopConfirm: onRecipientConfirm,
-              savedAddresses: savedAddresses,
-              recentDelivery: GDRRdata,
             });
           }}
           setRecipientStop={() => {}}
@@ -555,10 +545,10 @@ const ToktokDelivery = ({navigation, session, route}) => {
                 <SavedAddresses
                   navigation={navigation}
                   data={savedAddresses}
-                  isOfficeTaken={isOfficeTaken}
-                  isHomeTaken={isHomeTaken}
                   onSelectSavedAddress={onSelectSavedAddress}
+                  prefGetSavedAddresses={prefGetSavedAddresses}
                 />
+
                 {GDRRdata?.getDeliveryRecentRecipients.length > 0 && (
                   <RecentDelivery
                     data={GDRRdata}

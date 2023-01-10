@@ -31,17 +31,17 @@ const ERROR_RESULT = {
 const SearchBarInput = ({searchText, placeholder, onChangeText, onClearSearch, executeGetGooglePlaceAutocomplete}) => {
   const searchRef = useRef(null);
 
-  const focusInput = () => {
-    setTimeout(() => {
-      if (searchRef) {
-        searchRef.current.focus();
-      }
-    }, 0);
-  };
+  // const focusInput = () => {
+  //   setTimeout(() => {
+  //     if (searchRef) {
+  //       searchRef.current.focus();
+  //     }
+  //   }, 0);
+  // };
 
-  useEffect(() => {
-    focusInput();
-  }, []);
+  // useEffect(() => {
+  //   focusInput();
+  // }, []);
 
   return (
     <View style={styles.container}>

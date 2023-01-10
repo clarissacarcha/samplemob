@@ -9,29 +9,31 @@ import LocationCard from './LocationCard';
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const SavedAddresses = ({navigation, data, isOfficeTaken, isHomeTaken, onSelectSavedAddress}) => {
+const SavedAddresses = ({navigation, data, onSelectSavedAddress, prefGetSavedAddresses}) => {
   const onPressAddAddress = item => {
-    navigation.push('ToktokAddEditLocation', {addressIdFromService: item.id, isOfficeTaken, isHomeTaken});
+    navigation.push('ToktokAddEditLocation', {addressIdFromService: item.id, postBack: prefGetSavedAddresses});
   };
 
   const getAddressObj = item => {
     onSelectSavedAddress(item);
-    // callMe(item);
   };
+
+  const filteredArr = data.filter((a, index) => index < 3);
 
   return (
     <>
       <View style={styles.container}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={data}
+          // data={data?.splice(0, 3)}
+          data={filteredArr}
           listKey={1}
           ItemSeparatorComponent={ItemSeparator}
           keyExtractor={item => item.id}
           ListHeaderComponent={data => (
             <View style={styles.wrapper}>
               <Text style={styles.title}>Saved Addresses</Text>
-              {data?.length > 3 && (
+              {data?.length < 3 && (
                 <ThrottledOpacity
                   style={styles.innerWrapper}
                   onPress={() => {
