@@ -24,6 +24,7 @@ import Greeting from './Greeting';
 import SenderRecipientCard from './SenderRecipientCard';
 import SavedAddresses from '../Components/SavedAddresses';
 import RecentDelivery from '../Components/RecentDelivery';
+import {FlatList} from 'react-native-gesture-handler';
 
 const SCHEDULES = [
   {label: 'Anytime', value: '23:59:59'},
@@ -545,18 +546,30 @@ const ToktokDelivery = ({navigation, session, route}) => {
           hasAddressFromSearch={route.params.formattedAddressFromSearch ? true : false}
           hasAddressFromRebook={rebookDeliveryData.senderStop ? true : false}
         />
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <SavedAddresses
-            navigation={navigation}
-            data={savedAddresses}
-            isOfficeTaken={isOfficeTaken}
-            isHomeTaken={isHomeTaken}
-            onSelectSavedAddress={onSelectSavedAddress}
-          />
-          {GDRRdata?.getDeliveryRecentRecipients.length > 0 && (
-            <RecentDelivery data={GDRRdata} onSelectRecentDelivery={onSelectRecentDelivery} navigation={navigation} />
-          )}
-        </ScrollView>
+        <FlatList
+          data={[]}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => {
+            return (
+              <>
+                <SavedAddresses
+                  navigation={navigation}
+                  data={savedAddresses}
+                  isOfficeTaken={isOfficeTaken}
+                  isHomeTaken={isHomeTaken}
+                  onSelectSavedAddress={onSelectSavedAddress}
+                />
+                {GDRRdata?.getDeliveryRecentRecipients.length > 0 && (
+                  <RecentDelivery
+                    data={GDRRdata}
+                    onSelectRecentDelivery={onSelectRecentDelivery}
+                    navigation={navigation}
+                  />
+                )}
+              </>
+            );
+          }}
+        />
 
         <View style={{flex: 1}} />
         <View style={{backgroundColor: COLOR.LIGHT}}>
