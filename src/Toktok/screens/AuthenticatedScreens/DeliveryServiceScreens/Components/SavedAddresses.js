@@ -18,6 +18,7 @@ const SavedAddresses = ({navigation, data, onSelectSavedAddress, prefGetSavedAdd
     onSelectSavedAddress(item);
   };
 
+  const arrLength = data.length;
   const filteredArr = data.filter((a, index) => index < 3);
 
   return (
@@ -33,7 +34,7 @@ const SavedAddresses = ({navigation, data, onSelectSavedAddress, prefGetSavedAdd
           ListHeaderComponent={data => (
             <View style={styles.wrapper}>
               <Text style={styles.title}>Saved Addresses</Text>
-              {data?.length < 3 && (
+              {arrLength > 3 && (
                 <ThrottledOpacity
                   style={styles.innerWrapper}
                   onPress={() => {
