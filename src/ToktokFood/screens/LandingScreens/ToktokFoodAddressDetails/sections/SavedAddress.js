@@ -34,7 +34,7 @@ export const SavedAddress = ({
               }}>
               Saved Address
             </Text>
-            {savedAddressList.length == 3 && (
+            {savedAddressList.length > 3 && (
               <TouchableOpacity onPress={navigateToSavedAddress} style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
                   style={{
@@ -51,7 +51,7 @@ export const SavedAddress = ({
           </View>
         }
         showsVerticalScrollIndicator={false}
-        data={savedAddressList}
+        data={savedAddressList.slice(0, 3)}
         // keyExtractor={item => item.id}
         listKey={item => item.id}
         renderItem={({item, index}) => (

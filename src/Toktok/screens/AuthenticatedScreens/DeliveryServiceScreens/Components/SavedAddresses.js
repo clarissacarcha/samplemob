@@ -28,17 +28,19 @@ const SavedAddresses = ({navigation, data, isOfficeTaken, isHomeTaken, onSelectS
           listKey={1}
           ItemSeparatorComponent={ItemSeparator}
           keyExtractor={item => item.id}
-          ListHeaderComponent={() => (
+          ListHeaderComponent={data => (
             <View style={styles.wrapper}>
               <Text style={styles.title}>Saved Addresses</Text>
-              <ThrottledOpacity
-                style={styles.innerWrapper}
-                onPress={() => {
-                  navigation.push('ToktokSavedLocations', {getAddressObj});
-                }}>
-                <Text style={styles.textstyle}>See All</Text>
-                <Image source={NavIcon} resizeMode={'contain'} style={{width: 11, height: 11}} />
-              </ThrottledOpacity>
+              {data?.length > 3 && (
+                <ThrottledOpacity
+                  style={styles.innerWrapper}
+                  onPress={() => {
+                    navigation.push('ToktokSavedLocations', {getAddressObj});
+                  }}>
+                  <Text style={styles.textstyle}>See All</Text>
+                  <Image source={NavIcon} resizeMode={'contain'} style={{width: 11, height: 11}} />
+                </ThrottledOpacity>
+              )}
             </View>
           )}
           renderItem={({item, index}) => {
