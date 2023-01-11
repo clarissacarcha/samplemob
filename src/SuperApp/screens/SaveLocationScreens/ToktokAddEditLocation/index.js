@@ -481,6 +481,7 @@ const AddEditLocation = ({navigation, route, session}) => {
         addressObj,
         setIsEdited,
         setErrorAddressField,
+        popTo: 2,
       });
     }
   }, []);

@@ -1,5 +1,15 @@
 import React, {useState, useRef, useEffect} from 'react';
-import {View, TextInput, StyleSheet, ActivityIndicator, FlatList, Image, Text, Dimensions} from 'react-native';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Text,
+  Dimensions,
+  BackHandler,
+} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {HeaderBack, HeaderTitle} from '../../../../components';
 import {DARK} from '../../../../res/constants';
@@ -36,6 +46,7 @@ const ToktokPinLocation = ({navigation, route}) => {
     addressObj,
     setIsEdited,
     setErrorAddressField,
+    popTo,
   } = route.params;
 
   const [initialCoord, setInitialCoord] = useState(locCoordinates?.latitude ? locCoordinates : {});
@@ -47,7 +58,13 @@ const ToktokPinLocation = ({navigation, route}) => {
   const [showSuccessOperationAddressModal, setShowSuccessOperationAddressModal] = useState(false);
   const [showConfirmLocButton, setShowConfirmLocButton] = useState(false);
   navigation.setOptions({
-    headerLeft: () => <HeaderBack />,
+    headerLeft: () => (
+      <HeaderBack
+        onBack={() => {
+          navigation.pop(popTo ? popTo : 1);
+        }}
+      />
+    ),
     headerTitle: () => <HeaderTitle label={['PIN', 'Location']} />,
   });
 
@@ -192,6 +209,10 @@ const ToktokPinLocation = ({navigation, route}) => {
         },
       });
     }
+
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      navigation.pop(popTo ? popTo : 1);
+    });
   }, []);
 
   const goToHome = () => {
