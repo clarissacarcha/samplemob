@@ -15,8 +15,13 @@ export const BookingSelectPaymentMethod = ({
   details,
   tokwaAccount,
   getMyAccountLoading,
+  getMyAccount,
 }) => {
   const {wallet, id} = tokwaAccount;
+
+  const onCashIn = () => {
+    getMyAccount();
+  };
   return (
     <>
       <View style={styles.container}>
@@ -55,7 +60,10 @@ export const BookingSelectPaymentMethod = ({
               <TouchableOpacity
                 style={styles.cashInWrapper}
                 onPress={() => {
-                  navigation.navigate('ToktokWalletLoginPage');
+                  navigation.navigate('ToktokWalletPaymentOptions', {
+                    amount: 0,
+                    onCashIn: onCashIn,
+                  });
                 }}>
                 <Text style={styles.cashIntextStyle}>Cash In</Text>
               </TouchableOpacity>

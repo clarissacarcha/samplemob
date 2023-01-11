@@ -34,7 +34,7 @@ const ToktokGoNewGuidelines = ({navigation, route}) => {
     <ImageBackground source={GradientBackground} style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container1}>
-          <TouchableOpacity style={{paddingLeft: 18}} onPress={() => navigation.pop()}>
+          <TouchableOpacity style={{paddingHorizontal: 18, paddingVertical: 8}} onPress={() => navigation.pop()}>
             <Image style={{height: 15, width: 10}} source={ArrowLeft} resizeMode={'contain'} />
           </TouchableOpacity>
         </View>
@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container1: {
+    zIndex: 999,
     marginTop: StatusBar.currentHeight + 25,
     flexDirection: 'row',
     alignItems: 'center',

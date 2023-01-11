@@ -378,6 +378,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
                             navigateToSavedAddress={navigateToSavedAddress}
                             onPressSavedAddress={onPressSavedAddress}
                             navigation={navigation}
+                            postback={getSavedAddress}
                           />
                         }
                         {recentDestinationList.length == 0 ? null : (
