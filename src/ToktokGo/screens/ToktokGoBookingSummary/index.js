@@ -560,6 +560,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
         details={details}
         tokwaAccount={tokwaAccount}
         getMyAccountLoading={getMyAccountLoading}
+        getMyAccount={getMyAccount}
         checkPaymentMethod={checkPaymentMethod}
         selectedPaymentMethod={selectedPaymentMethod}
       />
@@ -594,6 +595,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
           details={details}
           tokwaAccount={tokwaAccount}
           getMyAccountLoading={getMyAccountLoading}
+          getMyAccount={getMyAccount}
           navigation={navigation}
         />
         <BookingConfirmButton SheetManager={SheetManager} tokwaAccount={tokwaAccount} details={details} />

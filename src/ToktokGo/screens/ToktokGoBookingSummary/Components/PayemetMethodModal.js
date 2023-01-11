@@ -25,6 +25,7 @@ export const PaymentMethodModal = ({
   getMyAccountLoading,
   checkPaymentMethod,
   selectedPaymentMethod,
+  getMyAccount,
 }) => {
   const dispatch = useDispatch();
   const {wallet, id} = tokwaAccount;
@@ -48,6 +49,10 @@ export const PaymentMethodModal = ({
     } else {
       return false;
     }
+  };
+
+  const onCashIn = () => {
+    getMyAccount();
   };
 
   return (
@@ -74,7 +79,11 @@ export const PaymentMethodModal = ({
                 <TouchableOpacity
                   style={styles.cashInWrapper}
                   onPress={() => {
-                    setViewSelectPaymentModal(false), navigation.navigate('ToktokWalletLoginPage');
+                    setViewSelectPaymentModal(false),
+                      navigation.navigate('ToktokWalletPaymentOptions', {
+                        amount: 0,
+                        onCashIn: onCashIn,
+                      });
                   }}>
                   <Text style={styles.cashIntextStyle}>Cash In</Text>
                 </TouchableOpacity>
