@@ -10,6 +10,8 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {currentLocation} from '../../../../helper';
 import {useFocusEffect} from '@react-navigation/native';
 import {AddressChip, AddressForm, AddressButtons} from './Sections';
+import {GET_PLACE_BY_LOCATION} from '../../../../ToktokGo/graphql';
+import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
 import {
   PREF_USER_ADDRESS_DELETE,
   PREF_USER_ADDRESS_UPDATE,
@@ -197,6 +199,20 @@ const AddEditLocation = ({navigation, route, session}) => {
     });
   };
 
+  const [getPlaceByLocation, {loading: GPLLoading}] = useLazyQuery(GET_PLACE_BY_LOCATION, {
+    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setLocCoordinates({
+        latitude: response.getPlaceByLocation.place.location.latitude,
+        longitude: response.getPlaceByLocation.place.location.longitude,
+        ...MAP_DELTA_LOW,
+      });
+      setConfirmedLocation(response.getPlaceByLocation);
+    },
+    onError: onError,
+  });
+
   useFocusEffect(
     useCallback(() => {
       if (addressObj?.id) {
@@ -205,8 +221,12 @@ const AddEditLocation = ({navigation, route, session}) => {
           longitude: addressObj?.place?.location?.longitude,
           ...MAP_DELTA_LOW,
         });
-      } else {
+        return;
+      }
+
+      if (!coordsFromService) {
         getCurrentLocation();
+        return;
       }
     }, []),
   );
@@ -313,6 +333,7 @@ const AddEditLocation = ({navigation, route, session}) => {
   const onSearchMap = () => {
     navigation.navigate('ToktokPinLocation', {
       locCoordinates,
+      setLocCoordinates,
       formattedAddress: confirmedLocation?.place?.formattedAddress,
       setConfirmedLocation,
       addressObj,
@@ -468,20 +489,16 @@ const AddEditLocation = ({navigation, route, session}) => {
     }
 
     if (coordsFromService) {
-      let coordinates = {
-        latitude: coordsFromService?.latitude,
-        longitude: coordsFromService?.longitude,
-        ...MAP_DELTA_LOW,
-      };
-      // onSearchMap();
-      navigation.navigate('ToktokPinLocation', {
-        locCoordinates: coordinates,
-        setConfirmedLocation,
-        formattedAddress,
-        addressObj,
-        setIsEdited,
-        setErrorAddressField,
-        popTo: 2,
+      getPlaceByLocation({
+        variables: {
+          input: {
+            location: {
+              latitude: coordsFromService?.latitude,
+              longitude: coordsFromService?.longitude,
+            },
+            service: 'PREF',
+          },
+        },
       });
     }
   }, []);

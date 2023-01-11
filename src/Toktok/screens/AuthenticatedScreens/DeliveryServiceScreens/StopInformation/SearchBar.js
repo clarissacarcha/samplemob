@@ -56,7 +56,7 @@ const SearchBarInput = ({searchText, placeholder, onChangeText, onClearSearch, e
           style={{
             marginLeft: 12,
             color: CONSTANTS.COLOR.BLACK,
-            paddingVertical: 12,
+            height: 42,
             flex: 1,
           }}
         />
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   clearIcon: {
-    height: 50,
+    height: 42,
     width: 50,
     justifyContent: 'center',
     alignItems: 'center',

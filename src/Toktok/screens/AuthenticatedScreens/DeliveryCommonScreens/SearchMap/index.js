@@ -7,12 +7,13 @@ import {YellowButton} from '../../../../../revamp/buttons/YellowButton';
 import CONSTANTS from '../../../../../common/res/constants';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
-
+import LottieView from 'lottie-react-native';
 import {reverseGeocode} from '../../../../../helper';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {ThrottledOpacity} from '../../../../../components_section';
 
 const screenWidth = Dimensions.get('window').width;
+const lottieLoading = require('../../../../../assets/JSON/loader.json');
 
 export const SearchMap = ({navigation, route}) => {
   const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
@@ -26,6 +27,7 @@ export const SearchMap = ({navigation, route}) => {
 
   const [fakeLoading, setFakeLoading] = useState(false);
   const [showConfirmLocButton, setShowConfirmLocButton] = useState(false);
+  const [toggleLabelUpdateLocButton, setToggleLabelUpdateLocButton] = useState(true);
   const [mapDraggedData, setMapDraggedData] = useState({});
   const [localData, setLocalData] = useState({
     ...data,
@@ -36,9 +38,9 @@ export const SearchMap = ({navigation, route}) => {
       value.longitude.toFixed(5) != data.longitude.toFixed(5) &&
       value.latitude.toFixed(5) != data.latitude.toFixed(5)
     ) {
-      setShowConfirmLocButton(true);
+      setToggleLabelUpdateLocButton(true);
     } else {
-      setShowConfirmLocButton(false);
+      setToggleLabelUpdateLocButton(false);
     }
     setMapDraggedData(value);
   };
@@ -58,7 +60,7 @@ export const SearchMap = ({navigation, route}) => {
         formattedAddress: result.formattedAddress,
       });
       loading = false;
-      setShowConfirmLocButton(false);
+      setToggleLabelUpdateLocButton(false);
       setTimeout(() => {
         setFakeLoading(false);
       }, 500);
@@ -79,7 +81,8 @@ export const SearchMap = ({navigation, route}) => {
           ...localData,
         }}
         onPanDrag={e => {
-          setShowConfirmLocButton(false);
+          setShowConfirmLocButton(true);
+          setToggleLabelUpdateLocButton(true);
         }}
         onRegionChangeComplete={e => onMapScrollEnd(e)}>
         {/*---------------------------------------- FOR CHECKING FLOATING PIN ACCURACY ----------------------------------------*/}
@@ -97,8 +100,16 @@ export const SearchMap = ({navigation, route}) => {
       </View>
       {/*---------------------------------------- FLOATING PIN ----------------------------------------*/}
       {showConfirmLocButton && (
-        <ThrottledOpacity onPress={onConfirmLoc} style={styles.floatingButton} delay={4000}>
-          <Text style={{color: 'white'}}>Confirm Pin</Text>
+        <ThrottledOpacity
+          onPress={onConfirmLoc}
+          style={styles.floatingButton}
+          delay={4000}
+          disabled={!toggleLabelUpdateLocButton}>
+          {fakeLoading ? (
+            <LottieView source={lottieLoading} autoPlay loop style={styles.loader} resizeMode="cover" />
+          ) : (
+            <Text style={{color: 'white'}}>{toggleLabelUpdateLocButton ? 'Update Location' : 'Updated'}</Text>
+          )}
         </ThrottledOpacity>
       )}
       <FA5Icon name="map-pin" size={24} color={DARK} style={{marginTop: -26}} />
@@ -148,6 +159,13 @@ const styles = StyleSheet.create({
     // left: 0,
     // right: 0,
     // top: 0
+  },
+  loader: {
+    alignSelf: 'center',
+    margin: -10,
+    top: 4,
+    width: 50,
+    aspectRatio: 1.5,
   },
   floatingButton: {
     position: 'absolute',

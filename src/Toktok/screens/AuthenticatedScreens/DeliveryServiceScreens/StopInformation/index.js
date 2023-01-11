@@ -527,9 +527,7 @@ const StopDetails = ({navigation, route}) => {
                   style={{
                     marginTop: 16,
                     height: 50,
-                    backgroundColor: 'white',
-                    borderBottomWidth: 1,
-                    borderColor: COLOR.LIGHT,
+
                     flexDirection: 'row',
                   }}>
                   <SearchBar

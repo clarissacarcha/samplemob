@@ -41,6 +41,7 @@ const ToktokPinLocation = ({navigation, route}) => {
   const {
     isFromLocationAccess = false,
     locCoordinates,
+    setLocCoordinates,
     formattedAddress,
     setConfirmedLocation,
     addressObj,
@@ -57,6 +58,7 @@ const ToktokPinLocation = ({navigation, route}) => {
   const [mapDragCoords, setMapDragCoords] = useState(locCoordinates);
   const [showSuccessOperationAddressModal, setShowSuccessOperationAddressModal] = useState(false);
   const [showConfirmLocButton, setShowConfirmLocButton] = useState(false);
+  const [toggleLabelUpdateLocButton, setToggleLabelUpdateLocButton] = useState(true);
   navigation.setOptions({
     headerLeft: () => (
       <HeaderBack
@@ -65,7 +67,7 @@ const ToktokPinLocation = ({navigation, route}) => {
         }}
       />
     ),
-    headerTitle: () => <HeaderTitle label={['PIN', 'Location']} />,
+    headerTitle: () => <HeaderTitle label={['Address']} />,
   });
 
   const [getPlaceAutocomplete, {loading}] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
@@ -168,9 +170,9 @@ const ToktokPinLocation = ({navigation, route}) => {
       value.latitude.toFixed(4) != initialCoord.latitude.toFixed(4) &&
       value.longitude.toFixed(4) != initialCoord.longitude.toFixed(4)
     ) {
-      setShowConfirmLocButton(true);
+      setToggleLabelUpdateLocButton(true);
     } else {
-      setShowConfirmLocButton(false);
+      setToggleLabelUpdateLocButton(false);
     }
     setMapDragCoords(value);
   };
@@ -233,7 +235,7 @@ const ToktokPinLocation = ({navigation, route}) => {
   };
 
   const onConfirmLoc = () => {
-    if (showConfirmLocButton) {
+    if (toggleLabelUpdateLocButton) {
       getPlaceByLocation({
         variables: {
           input: {
@@ -245,7 +247,7 @@ const ToktokPinLocation = ({navigation, route}) => {
           },
         },
       });
-      setShowConfirmLocButton(false);
+      setToggleLabelUpdateLocButton(false);
       return;
     }
   };
@@ -259,6 +261,11 @@ const ToktokPinLocation = ({navigation, route}) => {
       setIsEdited(true);
     }
     setConfirmedLocation(searchedLocation);
+    setLocCoordinates({
+      latitude: searchedLocation.place.location.latitude,
+      longitude: searchedLocation.place.location.longitude,
+      ...MAP_DELTA_LOW,
+    });
     setErrorAddressField(false);
     navigation.pop();
   };
@@ -319,7 +326,8 @@ const ToktokPinLocation = ({navigation, route}) => {
         initialRegion={initialCoord}
         // showsUserLocation={true}
         onPanDrag={e => {
-          setShowConfirmLocButton(false);
+          setShowConfirmLocButton(true);
+          setToggleLabelUpdateLocButton(true);
         }}
         onRegionChangeComplete={e => {
           onMapDrag(e);
@@ -338,6 +346,8 @@ const ToktokPinLocation = ({navigation, route}) => {
               onChangeText={onChange}
               textAlign={'left'}
               style={styles.input}
+              returnKeyType="done"
+              onSubmitEditing={initiategetPlaceAutocomplete}
             />
             {loading || GPLLoading ? (
               <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{height: 17, width: 17, marginRight: 16}} />
@@ -392,11 +402,16 @@ const ToktokPinLocation = ({navigation, route}) => {
       <>
         {showConfirmLocButton && (
           <View style={styles.floatinButtonContainer}>
-            <ThrottledOpacity onPress={onConfirmLoc} style={styles.floatingButton} delay={4000}>
-              <Text style={{color: 'white'}}>Confirm Pin</Text>
+            <ThrottledOpacity
+              onPress={onConfirmLoc}
+              style={styles.floatingButton}
+              delay={4000}
+              disabled={!toggleLabelUpdateLocButton}>
+              <Text style={{color: 'white'}}>{toggleLabelUpdateLocButton ? 'Update Location' : 'Updated'}</Text>
             </ThrottledOpacity>
           </View>
         )}
+
         <View style={{alignItems: 'center', zIndex: 999, alignContent: 'center', position: 'absolute'}}>
           <Image
             source={PinLocationIcon}
@@ -462,7 +477,7 @@ const styles = StyleSheet.create({
   input: {
     width: '80%',
     paddingLeft: 16,
-    height: 50,
+    height: 42,
     color: DARK,
   },
   searchedAddresses: {
