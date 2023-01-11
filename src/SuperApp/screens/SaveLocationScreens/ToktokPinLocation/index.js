@@ -213,6 +213,10 @@ const ToktokPinLocation = ({navigation, route}) => {
     BackHandler.addEventListener('hardwareBackPress', () => {
       navigation.pop(popTo ? popTo : 1);
     });
+
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress');
+    };
   }, []);
 
   const goToHome = () => {
