@@ -196,17 +196,19 @@ const ToktokPinLocation = ({navigation, route}) => {
 
   useEffect(() => {
     prefGetSavedAddresses();
-    getPlaceByLocation({
-      variables: {
-        input: {
-          location: {
-            latitude: mapDragCoords.latitude,
-            longitude: mapDragCoords.longitude,
+    if (mapDragCoords.latitude) {
+      getPlaceByLocation({
+        variables: {
+          input: {
+            location: {
+              latitude: mapDragCoords.latitude,
+              longitude: mapDragCoords.longitude,
+            },
+            service: 'PREF',
           },
-          service: 'PREF',
         },
-      },
-    });
+      });
+    }
 
     BackHandler.addEventListener('hardwareBackPress', () => {
       navigation.pop(popTo ? popTo : 1);
@@ -268,6 +270,17 @@ const ToktokPinLocation = ({navigation, route}) => {
       latitude: latitude,
       longitude: longitude,
       ...MAP_DELTA_LOW,
+    });
+    getPlaceByLocation({
+      variables: {
+        input: {
+          location: {
+            latitude: latitude,
+            longitude: longitude,
+          },
+          service: 'PREF',
+        },
+      },
     });
   };
 
