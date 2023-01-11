@@ -327,7 +327,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     });
   };
 
-  const proceedTripBook = () => {
+  const proceedTripBook = num => {
     if (selectedPaymentMethod == 'CASH') {
       tripBooking({pinCode: null}, num);
     } else {
@@ -348,7 +348,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       setSelectedSeatNum(num);
       // setvoucherRemovedVisible(true);
       setTimeout(() => {
-        proceedTripBook();
+        proceedTripBook(num);
       }, 500);
     } else if (selectedPaymentMethod == 'CASH' && details.voucher.isCash == 0) {
       setvoucherTextMessage('WrongPaymentMethod');
@@ -364,7 +364,7 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
       setSelectedSeatNum(num);
       // setvoucherRemovedVisible(true);
       setTimeout(() => {
-        proceedTripBook();
+        proceedTripBook(num);
       }, 500);
     }
   };
@@ -373,7 +373,9 @@ const ToktokGoBookingSummary = ({navigation, route, session}) => {
     setSelectedVouchersNull();
     dispatchRequest();
     setvoucherRemovedVisible(false);
-    proceedTripBook();
+    setTimeout(() => {
+      proceedTripBook();
+    }, 3000);
   };
 
   const [getTripsConsumer] = useLazyQuery(GET_TRIPS_CONSUMER, {

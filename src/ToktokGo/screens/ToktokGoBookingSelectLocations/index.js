@@ -421,6 +421,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
                               onPressSavedAddress={onPressSavedAddress}
                               recentSearchDataList={recentSearchDataList}
                               navigation={navigation}
+                              postback={getSavedAddress}
                             />
                           </View>
                         )}

@@ -6,7 +6,7 @@ import Data from '../../../components/BookingDummyData';
 import {SavedAddressCard} from '../../../components';
 import saveIcon from '../../../../assets/toktokgo/editIcon.png';
 import normalize from 'react-native-normalize';
-export const SavedAddress = ({navigation, savedAddressList, navigateToSavedAddress, onPressSavedAddress}) => {
+export const SavedAddress = ({navigation, savedAddressList, navigateToSavedAddress, onPressSavedAddress, postback}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <FlatList
@@ -51,7 +51,7 @@ export const SavedAddress = ({navigation, savedAddressList, navigateToSavedAddre
         // keyExtractor={item => item.id}
         listKey={item => item.id}
         renderItem={({item, index}) => (
-          <SavedAddressCard item={item} onPress={onPressSavedAddress} navigation={navigation} />
+          <SavedAddressCard item={item} onPress={onPressSavedAddress} navigation={navigation} postback={postback} />
         )}
       />
     </SafeAreaView>
