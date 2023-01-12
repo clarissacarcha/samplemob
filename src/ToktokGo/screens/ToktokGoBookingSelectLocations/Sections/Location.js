@@ -44,7 +44,7 @@ export const Location = ({
             <ThrottledOpacity
               delay={500}
               style={{
-                width: '80%',
+                width: '100%',
                 paddingVertical: 12,
               }}
               onPress={() => {
@@ -82,7 +82,7 @@ export const Location = ({
           <ThrottledOpacity
             onPress={() => onPressSearch(titleOrigin)}
             style={{padding: 12, backgroundColor: CONSTANTS.COLOR.ORANGE, borderRadius: 5, marginLeft: 8}}>
-            <FIcons name={'search'} size={18} color={CONSTANTS.COLOR.WHITE} />
+            <FIcons name={'search'} size={15} color={CONSTANTS.COLOR.WHITE} />
           </ThrottledOpacity>
         )}
       </View>
@@ -101,7 +101,7 @@ export const Location = ({
           ) : (
             <ThrottledOpacity
               delay={500}
-              style={{width: '80%', paddingVertical: 12}}
+              style={{width: '100%', paddingVertical: 12}}
               onPress={() => {
                 onChangeSelectedInput('D');
                 setSearchResponse([]);
@@ -138,7 +138,7 @@ export const Location = ({
           <ThrottledOpacity
             onPress={() => onPressSearch(title)}
             style={{padding: 12, backgroundColor: CONSTANTS.COLOR.ORANGE, borderRadius: 5, marginLeft: 8}}>
-            <FIcons name={'search'} size={18} color={CONSTANTS.COLOR.WHITE} />
+            <FIcons name={'search'} size={15} color={CONSTANTS.COLOR.WHITE} />
           </ThrottledOpacity>
         )}
       </View>
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     color: CONSTANTS.COLOR.BLACK,
     width: '80%',
-    paddingVertical: 14,
+    paddingVertical: 12,
   },
   containerInput: {
     flex: 1,

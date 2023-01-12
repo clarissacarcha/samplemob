@@ -45,7 +45,7 @@ const SearchBar = ({setSearchValue, setAddressList, searchValue, onPressSearch, 
         <ThrottledOpacity
           onPress={onPressSearch}
           style={{padding: 12, backgroundColor: CONSTANTS.COLOR.ORANGE, borderRadius: 5, marginLeft: 8}}>
-          <FIcons name={'search'} size={18} color={CONSTANTS.COLOR.WHITE} />
+          <FIcons name={'search'} size={15} color={CONSTANTS.COLOR.WHITE} />
         </ThrottledOpacity>
       </View>
     </View>
