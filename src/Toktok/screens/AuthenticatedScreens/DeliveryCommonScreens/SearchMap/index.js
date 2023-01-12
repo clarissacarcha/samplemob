@@ -13,6 +13,7 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {ThrottledOpacity} from '../../../../../components_section';
 
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 const lottieLoading = require('../../../../../assets/JSON/loader.json');
 
 export const SearchMap = ({navigation, route}) => {
@@ -39,6 +40,7 @@ export const SearchMap = ({navigation, route}) => {
       value.latitude.toFixed(5) != data.latitude.toFixed(5)
     ) {
       setToggleLabelUpdateLocButton(true);
+      setShowConfirmLocButton(true);
     } else {
       setToggleLabelUpdateLocButton(false);
     }
@@ -64,6 +66,9 @@ export const SearchMap = ({navigation, route}) => {
       setTimeout(() => {
         setFakeLoading(false);
       }, 500);
+      setTimeout(() => {
+        setShowConfirmLocButton(false);
+      }, 1500);
     }
   };
 
@@ -81,7 +86,6 @@ export const SearchMap = ({navigation, route}) => {
           ...localData,
         }}
         onPanDrag={e => {
-          setShowConfirmLocButton(true);
           setToggleLabelUpdateLocButton(true);
         }}
         onRegionChangeComplete={e => onMapScrollEnd(e)}>
@@ -108,7 +112,7 @@ export const SearchMap = ({navigation, route}) => {
           {fakeLoading ? (
             <LottieView source={lottieLoading} autoPlay loop style={styles.loader} resizeMode="cover" />
           ) : (
-            <Text style={{color: 'white'}}>{toggleLabelUpdateLocButton ? 'Update Location' : 'Updated'}</Text>
+            <Text style={{color: 'white'}}>{toggleLabelUpdateLocButton ? 'Update Location' : 'Updated!'}</Text>
           )}
         </ThrottledOpacity>
       )}
@@ -170,7 +174,7 @@ const styles = StyleSheet.create({
   floatingButton: {
     position: 'absolute',
     zIndex: 9999,
-    top: '41%',
+    top: screenHeight * 0.37,
     backgroundColor: CONSTANTS.COLOR.ORANGE,
     padding: 7,
     borderRadius: 5,

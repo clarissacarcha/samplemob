@@ -362,6 +362,37 @@ const StopDetails = ({navigation, route}) => {
 
   return (
     <View style={styles.screenBox}>
+      {!showMap && (
+        <View
+          style={{
+            marginTop: 16,
+            height: 50,
+
+            flexDirection: 'row',
+          }}>
+          <SearchBar
+            sessionToken={sessionToken}
+            placeholder={route.params.searchPlaceholder}
+            searchText={searchText}
+            onSearchTextChange={value => setSearchText(value)}
+            onSearchResultChange={value => setSearchResult(value)}
+            searchEnabled={!showMap}
+            onSearchLoadingChange={setSearchLoading}
+            navigation={navigation}
+            onClearSearchBar={onClearSearchBar}
+          />
+        </View>
+      )}
+      {!showMap && !searchLoading && searchText !== '' && (
+        <AutocompleteResult
+          searchResult={searchResult}
+          sessionToken={sessionToken}
+          setSessionToken={setSessionToken}
+          onLocationSelect={onLocationSelect}
+          setSearchText={setSearchText}
+        />
+      )}
+
       {showMap && (
         <View style={{flex: 1}}>
           <View style={{flex: 1}}>
@@ -508,43 +539,10 @@ const StopDetails = ({navigation, route}) => {
           </View>
         </View>
       )}
-      {!showMap && !searchLoading && searchText !== '' && (
-        <AutocompleteResult
-          searchResult={searchResult}
-          sessionToken={sessionToken}
-          setSessionToken={setSessionToken}
-          onLocationSelect={onLocationSelect}
-          setSearchText={setSearchText}
-        />
-      )}
+
       {!showMap && searchResult?.predictions.length == 0 && (
         <FlatList
           data={[]}
-          ListHeaderComponent={() => {
-            return (
-              <>
-                <View
-                  style={{
-                    marginTop: 16,
-                    height: 50,
-
-                    flexDirection: 'row',
-                  }}>
-                  <SearchBar
-                    sessionToken={sessionToken}
-                    placeholder={route.params.searchPlaceholder}
-                    searchText={searchText}
-                    onSearchTextChange={value => setSearchText(value)}
-                    onSearchResultChange={value => setSearchResult(value)}
-                    searchEnabled={!showMap}
-                    onSearchLoadingChange={setSearchLoading}
-                    navigation={navigation}
-                    onClearSearchBar={onClearSearchBar}
-                  />
-                </View>
-              </>
-            );
-          }}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={() => {
             return (

@@ -9,7 +9,7 @@ import {COLOR} from '../../../../../res/variables';
 import {VectorIcon, ICON_SET} from '../../../../../revamp';
 import {ThrottledOpacity} from '../../../../../components_section';
 import BackIcon from '../../../../../assets/icons/arrow-left-icon.png';
-import SearchIcon from '../../../../../assets/icons/Search_White.png';
+import SearchIcon from '../../../../../assets/icons/EraseTextInput.png';
 import CONSTANTS from '../../../../../common/res/constants';
 import DestinationIcon from '../../../../../assets/icons/DestinationIcon.png';
 import FIcons from 'react-native-vector-icons/Fontisto';
@@ -61,9 +61,11 @@ const SearchBarInput = ({searchText, placeholder, onChangeText, onClearSearch, e
           }}
         />
 
-        <TouchableOpacity onPress={onClearSearch} style={styles.clearIcon}>
-          <VectorIcon name="close-circle" iconSet={ICON_SET.MaterialCommunity} color={COLOR.MEDIUM} />
-        </TouchableOpacity>
+        {searchText.length != 0 && (
+          <TouchableOpacity onPress={onClearSearch} style={styles.clearIcon}>
+            <Image source={SearchIcon} resizeMode={'contain'} style={{width: 15, height: 15}} />
+          </TouchableOpacity>
+        )}
       </View>
       <ThrottledOpacity
         onPress={() => executeGetGooglePlaceAutocomplete(searchText)}
