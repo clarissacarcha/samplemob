@@ -383,16 +383,6 @@ const StopDetails = ({navigation, route}) => {
           />
         </View>
       )}
-      {!showMap && !searchLoading && searchText !== '' && (
-        <AutocompleteResult
-          searchResult={searchResult}
-          sessionToken={sessionToken}
-          setSessionToken={setSessionToken}
-          onLocationSelect={onLocationSelect}
-          setSearchText={setSearchText}
-        />
-      )}
-
       {showMap && (
         <View style={{flex: 1}}>
           <View style={{flex: 1}}>
@@ -540,44 +530,62 @@ const StopDetails = ({navigation, route}) => {
         </View>
       )}
 
-      {!showMap && searchResult?.predictions.length == 0 && (
+      {!showMap && (
         <FlatList
           data={[]}
           showsVerticalScrollIndicator={false}
-          ListEmptyComponent={() => {
+          ListHeaderComponent={() => {
             return (
               <>
-                {recentSearchDataList.length > 0 && (
-                  <RecentSearch
-                    recentSearchDataList={recentSearchDataList}
-                    setShowMap={setShowMap}
-                    stopData={stopData}
-                    setStopData={setStopData}
+                {!showMap && !searchLoading && searchText !== '' && (
+                  <AutocompleteResult
+                    searchResult={searchResult}
+                    sessionToken={sessionToken}
+                    setSessionToken={setSessionToken}
+                    onLocationSelect={onLocationSelect}
                     setSearchText={setSearchText}
-                    onPressAddAddress={onPressAddAddress}
                   />
                 )}
-
-                <SavedAddresses
-                  navigation={navigation}
-                  data={savedAddresses}
-                  onSelectSavedAddress={onSelectSavedAddress}
-                  prefGetSavedAddresses={prefGetSavedAddresses}
-                />
-                {GDRRdata?.getDeliveryRecentRecipients.length > 0 && (
-                  <RecentDelivery
-                    data={GDRRdata}
-                    onSelectRecentDelivery={onSelectRecentDelivery}
-                    navigation={navigation}
-                  />
-                )}
+                {!showMap && searchLoading && searchText !== '' && <SearchLoadingIndicator />}
               </>
+            );
+          }}
+          ListEmptyComponent={() => {
+            return (
+              !showMap &&
+              searchResult?.predictions.length == 0 &&
+              !searchLoading && (
+                <>
+                  {recentSearchDataList.length > 0 && (
+                    <RecentSearch
+                      recentSearchDataList={recentSearchDataList}
+                      setShowMap={setShowMap}
+                      stopData={stopData}
+                      setStopData={setStopData}
+                      setSearchText={setSearchText}
+                      onPressAddAddress={onPressAddAddress}
+                    />
+                  )}
+
+                  <SavedAddresses
+                    navigation={navigation}
+                    data={savedAddresses}
+                    onSelectSavedAddress={onSelectSavedAddress}
+                    prefGetSavedAddresses={prefGetSavedAddresses}
+                  />
+                  {GDRRdata?.getDeliveryRecentRecipients.length > 0 && (
+                    <RecentDelivery
+                      data={GDRRdata}
+                      onSelectRecentDelivery={onSelectRecentDelivery}
+                      navigation={navigation}
+                    />
+                  )}
+                </>
+              )
             );
           }}
         />
       )}
-
-      {!showMap && searchLoading && searchText !== '' && <SearchLoadingIndicator />}
     </View>
   );
 };

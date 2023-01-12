@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, ActivityIndicator, TouchableHighlight, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, Platform} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, Overlay} from 'react-native-maps';
 import {HeaderBack, HeaderTitle} from '../../../../../components';
 import {COLOR, DARK, MAP_DELTA} from '../../../../../res/constants';
@@ -13,7 +13,7 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import {ThrottledOpacity} from '../../../../../components_section';
 
 const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
+const screenHeight = Dimensions.get('screen').height;
 const lottieLoading = require('../../../../../assets/JSON/loader.json');
 
 export const SearchMap = ({navigation, route}) => {
@@ -27,6 +27,7 @@ export const SearchMap = ({navigation, route}) => {
   const {data, setData} = route.params;
 
   const [fakeLoading, setFakeLoading] = useState(false);
+  const [dragCounter, setDragCounter] = useState(0);
   const [showConfirmLocButton, setShowConfirmLocButton] = useState(false);
   const [toggleLabelUpdateLocButton, setToggleLabelUpdateLocButton] = useState(true);
   const [mapDraggedData, setMapDraggedData] = useState({});
@@ -35,16 +36,14 @@ export const SearchMap = ({navigation, route}) => {
   });
 
   const onMapScrollEnd = value => {
-    if (
-      value.longitude.toFixed(5) != data.longitude.toFixed(5) &&
-      value.latitude.toFixed(5) != data.latitude.toFixed(5)
-    ) {
+    if (dragCounter > 0) {
       setToggleLabelUpdateLocButton(true);
       setShowConfirmLocButton(true);
     } else {
       setToggleLabelUpdateLocButton(false);
     }
     setMapDraggedData(value);
+    setDragCounter(prevState => prevState + 1);
   };
 
   const onConfirmLoc = async () => {
@@ -87,6 +86,7 @@ export const SearchMap = ({navigation, route}) => {
         }}
         onPanDrag={e => {
           setToggleLabelUpdateLocButton(true);
+          setShowConfirmLocButton(false);
         }}
         onRegionChangeComplete={e => onMapScrollEnd(e)}>
         {/*---------------------------------------- FOR CHECKING FLOATING PIN ACCURACY ----------------------------------------*/}
@@ -112,7 +112,7 @@ export const SearchMap = ({navigation, route}) => {
           {fakeLoading ? (
             <LottieView source={lottieLoading} autoPlay loop style={styles.loader} resizeMode="cover" />
           ) : (
-            <Text style={{color: 'white'}}>{toggleLabelUpdateLocButton ? 'Update Location' : 'Updated!'}</Text>
+            <Text style={styles.btnLabel}>{toggleLabelUpdateLocButton ? 'Update Location' : 'Updated!'}</Text>
           )}
         </ThrottledOpacity>
       )}
@@ -167,17 +167,23 @@ const styles = StyleSheet.create({
   loader: {
     alignSelf: 'center',
     margin: -10,
-    top: 4,
+    top: Platform.OS === 'ios' ? 6 : 4,
     width: 50,
     aspectRatio: 1.5,
   },
   floatingButton: {
     position: 'absolute',
     zIndex: 9999,
-    top: screenHeight * 0.37,
+    top: Platform.OS === 'ios' ? screenHeight * 0.36 : '41%',
     backgroundColor: CONSTANTS.COLOR.ORANGE,
     padding: 7,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, .1)',
     borderRadius: 5,
+  },
+  btnLabel: {
+    color: 'white',
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
   },
   submitBox: {
     position: 'absolute',
