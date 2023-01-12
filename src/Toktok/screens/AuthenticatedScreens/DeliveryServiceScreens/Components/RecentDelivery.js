@@ -41,7 +41,6 @@ const RecentDelivery = ({data, onSelectRecentDelivery, navigation, isOfficeTaken
           }}
         />
       </View>
-      <View style={styles.bottomSeparator} />
     </>
   );
 };

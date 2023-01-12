@@ -362,6 +362,27 @@ const StopDetails = ({navigation, route}) => {
 
   return (
     <View style={styles.screenBox}>
+      {!showMap && (
+        <View
+          style={{
+            marginTop: 16,
+            height: 50,
+
+            flexDirection: 'row',
+          }}>
+          <SearchBar
+            sessionToken={sessionToken}
+            placeholder={route.params.searchPlaceholder}
+            searchText={searchText}
+            onSearchTextChange={value => setSearchText(value)}
+            onSearchResultChange={value => setSearchResult(value)}
+            searchEnabled={!showMap}
+            onSearchLoadingChange={setSearchLoading}
+            navigation={navigation}
+            onClearSearchBar={onClearSearchBar}
+          />
+        </View>
+      )}
       {showMap && (
         <View style={{flex: 1}}>
           <View style={{flex: 1}}>
@@ -508,80 +529,63 @@ const StopDetails = ({navigation, route}) => {
           </View>
         </View>
       )}
-      {!showMap && !searchLoading && searchText !== '' && (
-        <AutocompleteResult
-          searchResult={searchResult}
-          sessionToken={sessionToken}
-          setSessionToken={setSessionToken}
-          onLocationSelect={onLocationSelect}
-          setSearchText={setSearchText}
-        />
-      )}
-      {!showMap && searchResult?.predictions.length == 0 && (
+
+      {!showMap && (
         <FlatList
           data={[]}
+          showsVerticalScrollIndicator={false}
           ListHeaderComponent={() => {
             return (
               <>
-                <View
-                  style={{
-                    marginTop: 16,
-                    height: 50,
-                    backgroundColor: 'white',
-                    borderBottomWidth: 1,
-                    borderColor: COLOR.LIGHT,
-                    flexDirection: 'row',
-                  }}>
-                  <SearchBar
+                {!showMap && !searchLoading && searchText !== '' && (
+                  <AutocompleteResult
+                    searchResult={searchResult}
                     sessionToken={sessionToken}
-                    placeholder={route.params.searchPlaceholder}
-                    searchText={searchText}
-                    onSearchTextChange={value => setSearchText(value)}
-                    onSearchResultChange={value => setSearchResult(value)}
-                    searchEnabled={!showMap}
-                    onSearchLoadingChange={setSearchLoading}
-                    navigation={navigation}
-                    onClearSearchBar={onClearSearchBar}
+                    setSessionToken={setSessionToken}
+                    onLocationSelect={onLocationSelect}
+                    setSearchText={setSearchText}
                   />
-                </View>
+                )}
+                {!showMap && searchLoading && searchText !== '' && <SearchLoadingIndicator />}
               </>
             );
           }}
-          showsVerticalScrollIndicator={false}
           ListEmptyComponent={() => {
             return (
-              <>
-                {recentSearchDataList.length > 0 && (
-                  <RecentSearch
-                    recentSearchDataList={recentSearchDataList}
-                    setShowMap={setShowMap}
-                    stopData={stopData}
-                    setStopData={setStopData}
-                    setSearchText={setSearchText}
-                    onPressAddAddress={onPressAddAddress}
-                  />
-                )}
+              !showMap &&
+              searchResult?.predictions.length == 0 &&
+              !searchLoading && (
+                <>
+                  {recentSearchDataList.length > 0 && (
+                    <RecentSearch
+                      recentSearchDataList={recentSearchDataList}
+                      setShowMap={setShowMap}
+                      stopData={stopData}
+                      setStopData={setStopData}
+                      setSearchText={setSearchText}
+                      onPressAddAddress={onPressAddAddress}
+                    />
+                  )}
 
-                <SavedAddresses
-                  navigation={navigation}
-                  data={savedAddresses}
-                  onSelectSavedAddress={onSelectSavedAddress}
-                  prefGetSavedAddresses={prefGetSavedAddresses}
-                />
-                {GDRRdata?.getDeliveryRecentRecipients.length > 0 && (
-                  <RecentDelivery
-                    data={GDRRdata}
-                    onSelectRecentDelivery={onSelectRecentDelivery}
+                  <SavedAddresses
                     navigation={navigation}
+                    data={savedAddresses}
+                    onSelectSavedAddress={onSelectSavedAddress}
+                    prefGetSavedAddresses={prefGetSavedAddresses}
                   />
-                )}
-              </>
+                  {GDRRdata?.getDeliveryRecentRecipients.length > 0 && (
+                    <RecentDelivery
+                      data={GDRRdata}
+                      onSelectRecentDelivery={onSelectRecentDelivery}
+                      navigation={navigation}
+                    />
+                  )}
+                </>
+              )
             );
           }}
         />
       )}
-
-      {!showMap && searchLoading && searchText !== '' && <SearchLoadingIndicator />}
     </View>
   );
 };
