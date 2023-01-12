@@ -105,8 +105,13 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
             setProcessingVisible(false);
           } else if (code === 'BAD_USER_INPUT') {
             if (errorType == 'VOUCHER_DISABLED') {
-             Alert.alert('Voucher is not active.', '', [{text: 'OK', onPress: () => handleGetData()}], {
-                cancelable: false,
+             toktokAlert({
+                title: 'Voucher Not Active',
+                message: 'Sorry but this voucher is no longer availabe. You may try another voucher.',
+                imageType: 'failed',
+                onPressSingleButton: () => {
+                  handleGetData();
+                },
               });
             }
             else if (errorType == 'VOUCHER_LIFETIME_MAX_COUNT_HIT') {
