@@ -298,6 +298,18 @@ const ToktokPinLocation = ({navigation, route}) => {
     });
   };
 
+  const getSearchedValue = () => {
+    if (searchedText.length >= 40) {
+      if (FULL_WIDTH < 380) {
+        return searchedText.substring(0, 36) + '...';
+      } else {
+        return searchedText.substring(0, 40) + '...';
+      }
+    } else {
+      return searchedText;
+    }
+  };
+
   if (!initialCoord?.latitude) {
     return (
       <View style={styles.container}>
@@ -343,7 +355,7 @@ const ToktokPinLocation = ({navigation, route}) => {
               numberOfLines={1}
               ref={inputRef}
               // editable={!GPLLoading && !disableAddressBox}
-              value={searchedText.length >= 40 ? searchedText.substring(0, 40) + '...' : searchedText}
+              value={getSearchedValue()}
               onChangeText={onChange}
               textAlign={'left'}
               style={styles.input}
@@ -554,6 +566,8 @@ const styles = StyleSheet.create({
     padding: 7,
     borderRadius: 5,
     marginBottom: 100,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, .1)',
   },
   floatinButtonContainer: {
     position: 'absolute',
