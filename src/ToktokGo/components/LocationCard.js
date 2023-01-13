@@ -42,7 +42,9 @@ export const LocationCard = ({navigation, item, image, onPress, lastItem = false
       <TouchableOpacity onPress={navigateToAddSavedAddress} style={{position: 'absolute', right: 25, top: 35}}>
         <Image source={saveIcon} resizeMode={'contain'} style={{width: normalize(15), height: normalize(15)}} />
       </TouchableOpacity>
-      {!lastItem && <View style={{borderBottomWidth: 2, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />}
+      {!lastItem && (
+        <View style={{borderBottomWidth: 2, borderBottomColor: CONSTANTS.COLOR.LIGHT, marginHorizontal: 16}} />
+      )}
     </>
   );
 };
@@ -105,7 +107,9 @@ export const SavedAddressCard = ({navigation, item, image, onPress, lastItem = f
           </TouchableOpacity>
         </View>
       </View>
-      {!lastItem && <View style={{borderBottomWidth: 2, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />}
+      {!lastItem && (
+        <View style={{borderBottomWidth: 2, borderBottomColor: CONSTANTS.COLOR.LIGHT, marginHorizontal: 16}} />
+      )}
     </>
   );
 };

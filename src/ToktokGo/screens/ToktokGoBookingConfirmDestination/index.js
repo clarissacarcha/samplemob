@@ -20,6 +20,7 @@ const screenWidth = Dimensions.get('window').width;
 
 const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
   const {destination, origin} = useSelector(state => state.toktokGo);
+  const [fakeLoading, setFakeLoading] = useState(false);
   const {popTo} = route.params;
   const [initialRegionChange, setInitialRegionChange] = useState(true);
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
     fetchPolicy: 'network-only',
     onCompleted: response => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: data.getPlaceByLocation});
+      setFakeLoading(false);
     },
     onError: onError,
   });
@@ -81,7 +83,17 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </TouchableOpacity>
-      {mapRegion ? <DestinationMap onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} /> : <></>}
+      {mapRegion ? (
+        <DestinationMap
+          fakeLoading={fakeLoading}
+          setFakeLoading={setFakeLoading}
+          onDragEndMarker={onDragEndMarker}
+          mapRegion={mapRegion}
+          loading={loading}
+        />
+      ) : (
+        <></>
+      )}
       <View style={styles.card}>
         <View
           style={{
@@ -97,8 +109,11 @@ const ToktokGoBookingConfirmDestination = ({navigation, route}) => {
             }}>
             <Image source={DestinationIcon} style={{height: 20, width: 25, marginRight: 5}} resizeMode={'contain'} />
             <ShimmerPlaceHolder
-              style={[{width: screenWidth / 1.08, marginBottom: !loading ? 0 : 18}, loading ? {height: 30} : {}]}
-              visible={!loading}>
+              style={[
+                {width: screenWidth / 1.08, marginBottom: !fakeLoading ? 0 : 18},
+                fakeLoading ? {height: 30} : {},
+              ]}
+              visible={!fakeLoading}>
               <Text style={{paddingRight: 30}}>
                 {destination?.place?.formattedAddress
                   ? destination.place.formattedAddress

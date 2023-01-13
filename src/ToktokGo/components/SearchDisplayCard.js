@@ -20,7 +20,9 @@ export const SearchDisplayCard = ({item, onPress, onSelectPlace, lastItem = fals
           </View>
         </View>
       </TouchableOpacity>
-      {!lastItem && <View style={{borderBottomWidth: 2, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />}
+      {!lastItem && (
+        <View style={{borderBottomWidth: 2, borderBottomColor: CONSTANTS.COLOR.LIGHT, marginHorizontal: 16}} />
+      )}
     </>
   );
 };

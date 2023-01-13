@@ -36,6 +36,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const [mapRegion, setMapRegion] = useState(mapDefault);
   const [initialRegionChange, setInitialRegionChange] = useState(!mapRegion.latitude ? false : true);
   const [note, setNote] = useState('');
+  const [fakeLoading, setFakeLoading] = useState(false);
   const [notes, setNotes] = useState({
     text: details?.noteToDriver ? details.noteToDriver : '',
     textLength: 0,
@@ -126,6 +127,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
     fetchPolicy: 'network-only',
     onCompleted: response => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: response.getPlaceByLocation});
+      setFakeLoading(false);
     },
     onError: onError,
   });
@@ -169,7 +171,15 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
       <ThrottledOpacity delay={500} style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </ThrottledOpacity>
-      {origin?.place?.location?.latitude && <Pickup onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />}
+      {origin?.place?.location?.latitude && (
+        <Pickup
+          onDragEndMarker={onDragEndMarker}
+          mapRegion={mapRegion}
+          loading={GPBLloading}
+          fakeLoading={fakeLoading}
+          setFakeLoading={setFakeLoading}
+        />
+      )}
       <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : null} style={styles.card}>
         <NotesToDriver
           dropDownRef={dropDownRef}
@@ -179,7 +189,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
           setNote={setNote}
           notesToDriver={notesToDriver}
           notes={notes}
-          loading={GPBLloading}
+          loading={fakeLoading}
         />
         <ConfirmPickupButton onConfirm={onConfirm} />
       </KeyboardAvoidingView>
