@@ -21,6 +21,7 @@ import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
 import uuid from 'react-native-uuid';
 import {useDebounce} from '../../../../ToktokGo/helpers';
 import {currentLocation} from '../../../../helper';
+import LottieView from 'lottie-react-native';
 
 import GpsDenied from '../../../../assets/images/GpsDenied.png';
 import PinLocationIcon from '../../../../assets/images/locationIcon.png';
@@ -33,6 +34,7 @@ import {SuccesOperationAddressModal} from '../Components';
 import FIcons from 'react-native-vector-icons/Fontisto';
 
 const FULL_WIDTH = Dimensions.get('window').width;
+const lottieLoading = require('../../../../assets/JSON/loader.json');
 
 const ToktokPinLocation = ({navigation, route}) => {
   const mapRef = useRef(null);
@@ -59,6 +61,7 @@ const ToktokPinLocation = ({navigation, route}) => {
   const [showSuccessOperationAddressModal, setShowSuccessOperationAddressModal] = useState(false);
   const [showConfirmLocButton, setShowConfirmLocButton] = useState(false);
   const [toggleLabelUpdateLocButton, setToggleLabelUpdateLocButton] = useState(true);
+  const [counter, setCounter] = useState(0);
   navigation.setOptions({
     headerLeft: () => (
       <HeaderBack
@@ -105,9 +108,7 @@ const ToktokPinLocation = ({navigation, route}) => {
 
       setSearchedText(response.getPlaceByLocation.place.formattedAddress);
       setDisableAddressBox(false);
-      if (formattedAddress) {
-        setConfirmedLocation(response.getPlaceByLocation);
-      }
+      setConfirmedLocation(response.getPlaceByLocation);
     },
     onError: onError,
   });
@@ -166,14 +167,14 @@ const ToktokPinLocation = ({navigation, route}) => {
   };
 
   const onMapDrag = value => {
-    if (
-      value.latitude.toFixed(4) != initialCoord.latitude.toFixed(4) &&
-      value.longitude.toFixed(4) != initialCoord.longitude.toFixed(4)
-    ) {
+    if (counter > 0) {
       setToggleLabelUpdateLocButton(true);
+      setShowConfirmLocButton(true);
     } else {
       setToggleLabelUpdateLocButton(false);
     }
+    setCounter(prev => prev + 1);
+
     setMapDragCoords(value);
   };
 
@@ -248,7 +249,9 @@ const ToktokPinLocation = ({navigation, route}) => {
         },
       });
       setToggleLabelUpdateLocButton(false);
-      return;
+      setTimeout(() => {
+        setShowConfirmLocButton(false);
+      }, 1500);
     }
   };
 
@@ -295,6 +298,18 @@ const ToktokPinLocation = ({navigation, route}) => {
     });
   };
 
+  const getSearchedValue = () => {
+    if (searchedText.length >= 40) {
+      if (FULL_WIDTH < 380) {
+        return searchedText.substring(0, 36) + '...';
+      } else {
+        return searchedText.substring(0, 40) + '...';
+      }
+    } else {
+      return searchedText;
+    }
+  };
+
   if (!initialCoord?.latitude) {
     return (
       <View style={styles.container}>
@@ -324,10 +339,8 @@ const ToktokPinLocation = ({navigation, route}) => {
         provider={PROVIDER_GOOGLE}
         style={{height: '100%', width: '100%'}}
         initialRegion={initialCoord}
-        // showsUserLocation={true}
         onPanDrag={e => {
-          setShowConfirmLocButton(true);
-          setToggleLabelUpdateLocButton(true);
+          setShowConfirmLocButton(false);
         }}
         onRegionChangeComplete={e => {
           onMapDrag(e);
@@ -342,7 +355,7 @@ const ToktokPinLocation = ({navigation, route}) => {
               numberOfLines={1}
               ref={inputRef}
               // editable={!GPLLoading && !disableAddressBox}
-              value={searchedText.length >= 40 ? searchedText.substring(0, 40) + '...' : searchedText}
+              value={getSearchedValue()}
               onChangeText={onChange}
               textAlign={'left'}
               style={styles.input}
@@ -407,7 +420,11 @@ const ToktokPinLocation = ({navigation, route}) => {
               style={styles.floatingButton}
               delay={4000}
               disabled={!toggleLabelUpdateLocButton}>
-              <Text style={{color: 'white'}}>{toggleLabelUpdateLocButton ? 'Update Location' : 'Updated'}</Text>
+              {!GPLLoading ? (
+                <Text style={{color: 'white'}}>{toggleLabelUpdateLocButton ? 'Update Location' : 'Updated!'}</Text>
+              ) : (
+                <LottieView source={lottieLoading} autoPlay loop style={styles.loader} resizeMode="cover" />
+              )}
             </ThrottledOpacity>
           </View>
         )}
@@ -549,9 +566,18 @@ const styles = StyleSheet.create({
     padding: 7,
     borderRadius: 5,
     marginBottom: 100,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, .1)',
   },
   floatinButtonContainer: {
     position: 'absolute',
     zIndex: 999,
+  },
+  loader: {
+    alignSelf: 'center',
+    margin: -10,
+    top: Platform.OS === 'ios' ? 6 : 4,
+    width: 50,
+    aspectRatio: 1.5,
   },
 });
