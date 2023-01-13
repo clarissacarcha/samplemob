@@ -20,6 +20,9 @@ import {PickUpDetails} from './component';
 import {ThrottledOpacity} from '../../../../components_section';
 import {FONT, FONT_SIZE} from '../../../../res/variables';
 import constants from '../../../../common/res/constants';
+import LottieView from 'lottie-react-native';
+
+const lottieLoading = require('../../../../assets/JSON/loader.json');
 
 const PHILIPPINE_REGION = {
   latitude: 11.22309004847093,
@@ -41,7 +44,7 @@ const ToktokFoodMapSearch = () => {
   );
   const [mapMoved, setMapMoved] = useState(false);
   const [movedCoordinates, setMovedCoordinates] = useState(null);
-
+  const [showUpdated, setShowUpdated] = useState(false);
   const [mapInfo, setMapInfo] = useState({});
 
   useEffect(() => {
@@ -99,7 +102,6 @@ const ToktokFoodMapSearch = () => {
 
   const onPressMapUpdate = async () => {
     setAddressLoading(true);
-    setMapMoved(false);
     const {latitude, longitude} = movedCoordinates;
     try {
       const result = await getFormattedAddress(latitude, longitude);
@@ -115,8 +117,15 @@ const ToktokFoodMapSearch = () => {
         fullInfo: payload,
       });
       setAddressLoading(false);
+      setShowUpdated(true);
+
+      setTimeout(() => {
+        setMapMoved(false);
+        setShowUpdated(false);
+      }, 1500);
     } catch (error) {
       setAddressLoading(false);
+      setMapMoved(false);
       console.log(error);
     }
   };
@@ -143,7 +152,13 @@ const ToktokFoodMapSearch = () => {
             {mapMoved && (
               <View style={styles.mapUpdateContainer}>
                 <ThrottledOpacity style={styles.mapUpdate} onPress={onPressMapUpdate}>
-                  <Text style={{color: COLOR.WHITE, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>Confirm Pin</Text>
+                  {addressLoading ? (
+                    <LottieView source={lottieLoading} autoPlay loop style={styles.loader} resizeMode="cover" />
+                  ) : (
+                    <Text style={{color: COLOR.WHITE, fontSize: FONT_SIZE.M, fontFamily: FONT.REGULAR}}>
+                      {showUpdated ? 'Updated!' : 'Update Location'}
+                    </Text>
+                  )}
                 </ThrottledOpacity>
               </View>
             )}
@@ -222,6 +237,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'center',
     paddingBottom: 120,
+  },
+  loader: {
+    alignSelf: 'center',
+    margin: -10,
+    top: Platform.OS === 'ios' ? 6 : 4,
+    width: 50,
+    aspectRatio: 1.5,
   },
 });
 

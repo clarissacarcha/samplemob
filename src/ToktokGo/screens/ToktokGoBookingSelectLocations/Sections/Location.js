@@ -89,7 +89,7 @@ export const Location = ({
       <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 19}}>
         <View style={selectedInput == 'D' ? styles.containerInput : styles.textContainerInput}>
           {/* <FA5Icon name="map-marker-alt" size={18} color={CONSTANTS.COLOR.ORANGE} style={{marginLeft: 16}} /> */}
-          <Image source={DestinationIcon} style={{height: 20, width: 20, marginLeft: 12}} resizeMode={'contain'} />
+          <Image source={DestinationIcon} style={{height: 18, width: 18, marginLeft: 12}} resizeMode={'contain'} />
           {selectedInput == 'D' ? (
             <TextInput
               ref={inputRef}
@@ -117,21 +117,20 @@ export const Location = ({
               </Text>
             </ThrottledOpacity>
           )}
-          {loading == true && selectedInput == 'D' ? (
-            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
-          ) : (
-            !isEmpty(title) &&
-            selectedInput == 'D' && (
-              <ThrottledOpacity
-                delay={500}
-                onPress={() => {
-                  setSearchDestination(null);
-                  dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: null});
-                  setSearchResponse([]);
-                }}>
+          {!isEmpty(title) && selectedInput == 'D' && (
+            <ThrottledOpacity
+              delay={500}
+              onPress={() => {
+                setSearchDestination(null);
+                dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: null});
+                setSearchResponse([]);
+              }}>
+              {loading == true ? (
+                <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+              ) : (
                 <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />
-              </ThrottledOpacity>
-            )
+              )}
+            </ThrottledOpacity>
           )}
         </View>
         {selectedInput == 'D' && (
