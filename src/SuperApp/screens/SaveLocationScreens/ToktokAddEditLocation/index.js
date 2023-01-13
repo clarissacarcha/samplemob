@@ -213,24 +213,6 @@ const AddEditLocation = ({navigation, route, session}) => {
     onError: onError,
   });
 
-  useFocusEffect(
-    useCallback(() => {
-      if (addressObj?.id) {
-        setLocCoordinates({
-          latitude: addressObj?.place?.location?.latitude,
-          longitude: addressObj?.place?.location?.longitude,
-          ...MAP_DELTA_LOW,
-        });
-        return;
-      }
-
-      if (!coordsFromService) {
-        getCurrentLocation();
-        return;
-      }
-    }, []),
-  );
-
   const saveNewAddress = () => {
     if (!isHomeSelected && !isOfficeSelected && !customLabel) {
       setErrorAddressNameField(true);
@@ -500,6 +482,14 @@ const AddEditLocation = ({navigation, route, session}) => {
           },
         },
       });
+    } else if (addressObj?.id) {
+      setLocCoordinates({
+        latitude: addressObj?.place?.location?.latitude,
+        longitude: addressObj?.place?.location?.longitude,
+        ...MAP_DELTA_LOW,
+      });
+    } else {
+      getCurrentLocation();
     }
   }, []);
 

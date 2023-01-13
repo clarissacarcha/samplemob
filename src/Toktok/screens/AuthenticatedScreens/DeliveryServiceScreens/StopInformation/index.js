@@ -16,7 +16,12 @@ import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {throttle, debounce, set} from 'lodash';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import InputScrollView from 'react-native-input-scroll-view';
-import {PREF_GET_SAVED_ADDRESSES, TOKTOK_ADDRESS_CLIENT, GET_DELIVERY_RECENT_RECIPIENTS} from '../../../../../graphql';
+import {
+  PREF_GET_SAVED_ADDRESSES,
+  TOKTOK_ADDRESS_CLIENT,
+  GET_DELIVERY_RECENT_RECIPIENTS,
+  GET_GOOGLE_PLACE_DETAILS,
+} from '../../../../../graphql';
 import {onError} from '../../../../../util/ErrorUtility';
 import uuid from 'react-native-uuid';
 import MapView, {Marker, PROVIDER_GOOGLE, Callout, Overlay} from 'react-native-maps';
@@ -24,8 +29,8 @@ import validator from 'validator';
 import {useAlert} from '../../../../../hooks';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
-import {Shadow, YellowButton, VectorIcon, ICON_SET} from '../../../../../revamp';
-import {MEDIUM, DARK} from '../../../../../res/constants';
+import {Shadow, YellowButton, VectorIcon, ICON_SET, WhiteButton} from '../../../../../revamp';
+import {MEDIUM, DARK, DIRTY_WHITE} from '../../../../../res/constants';
 import {COLOR, FONT, FONT_SIZE, SIZE, MAP_DELTA} from '../../../../../res/variables';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
@@ -34,7 +39,6 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import SavedAddresses from '../Components/SavedAddresses';
 import RecentDelivery from '../Components/RecentDelivery';
 import RecentSearch from './RecentSearch';
-import AutocompleteResult from './AutocompleteResult';
 import SearchBar from './SearchBar';
 import {SearchLoadingIndicator} from './SearchLoadingIndicator';
 import {BackButton} from '../../../../../components_section/Buttons';
@@ -66,7 +70,7 @@ const StopDetails = ({navigation, route}) => {
   const [searchLoading, setSearchLoading] = useState(false);
   const [recentSearchDataList, setRecentSearchDataList] = useState([]);
   const [savedAddresses, setSavedAddresses] = useState([]);
-  const [seeAlltoggle, setsSeeAllToggle] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState({});
 
   navigation.setOptions({
     headerLeft: () => <BackButton navigation={navigation} />,
@@ -295,6 +299,20 @@ const StopDetails = ({navigation, route}) => {
     },
   );
 
+  const [getGooglePlaceDetails, {loading}] = useLazyQuery(GET_GOOGLE_PLACE_DETAILS, {
+    fetchPolicy: 'network-only',
+    onCompleted: data => {
+      console.log({result: data.getGooglePlaceDetails});
+      setSessionToken(uuid.v4()); // Use new sessionToken after Place Details Request
+      onLocationSelect({
+        location: data.getGooglePlaceDetails.location,
+        addressBreakdownHash: data.getGooglePlaceDetails.addressBreakdownHash,
+        formattedAddress: selectedAddress.formattedAddress,
+        placeId: selectedAddress.placeId,
+      });
+    },
+  });
+
   const getSearchList = async () => {
     try {
       const data = await AsyncStorage.getItem('recentSearchDeliveryList');
@@ -359,6 +377,38 @@ const StopDetails = ({navigation, route}) => {
     });
     setSearchText(item.hashedPlace.place.formattedAddress);
   };
+
+  const onResultSelect = ({prediction}) => {
+    setSelectedAddress(prediction);
+    getGooglePlaceDetails({
+      variables: {
+        input: {
+          placeId: prediction.placeId,
+          sessionToken: sessionToken,
+        },
+      },
+    });
+  };
+
+  const renderItem = ({item}) => {
+    const formattedAddressParts = item.formattedAddress.split(',');
+    return (
+      <WhiteButton
+        label={formattedAddressParts[0]}
+        description={item.formattedAddress}
+        suffixSet="Entypo"
+        suffixName="chevron-thin-right"
+        suffixColor={'black'}
+        prefixSize={18}
+        prefixColor={COLOR.ORANGE}
+        borderless
+        onPress={() => onResultSelect({prediction: item})}
+        style={{marginHorizontal: 16}}
+      />
+    );
+  };
+
+  const itemSeparator = () => <View style={styles.separator} />;
 
   return (
     <View style={styles.screenBox}>
@@ -532,24 +582,11 @@ const StopDetails = ({navigation, route}) => {
 
       {!showMap && (
         <FlatList
-          data={[]}
+          data={searchResult.predictions}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={() => {
-            return (
-              <>
-                {!showMap && !searchLoading && searchText !== '' && (
-                  <AutocompleteResult
-                    searchResult={searchResult}
-                    sessionToken={sessionToken}
-                    setSessionToken={setSessionToken}
-                    onLocationSelect={onLocationSelect}
-                    setSearchText={setSearchText}
-                  />
-                )}
-                {!showMap && searchLoading && searchText !== '' && <SearchLoadingIndicator />}
-              </>
-            );
-          }}
+          renderItem={renderItem}
+          ItemSeparatorComponent={itemSeparator}
+          ListHeaderComponent={!showMap && searchLoading && searchText !== '' && <SearchLoadingIndicator />}
           ListEmptyComponent={() => {
             return (
               !showMap &&
@@ -620,5 +657,10 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  separator: {
+    height: 1,
+    borderTopWidth: 1,
+    borderColor: DIRTY_WHITE,
   },
 });
