@@ -445,6 +445,7 @@ const ToktokFoodAddressDetails = ({route}) => {
             navigation={navigation}
             navigateToSavedAddress={navigateToSavedAddress}
             onPressSavedAddress={onSelectPresetAddresses}
+            getSavedAddress={getSavedAddress}
           />
         )}
       </>

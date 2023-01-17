@@ -7,7 +7,7 @@ import Home from '../../../../assets/icons/home-address-icon.png';
 import Office from '../../../../assets/icons/office-address-icon.png';
 import {LocationCard} from '../../../components';
 
-export const SavedLocations = ({recentDestinationList, popTo, navigation, onPressRecentDestination}) => {
+export const SavedLocations = ({recentDestinationList, popTo, navigation, onPressRecentDestination, postback}) => {
   const onPressLocation = () => {
     navigation.push('ToktokGoBookingConfirmPickup', {
       popTo: popTo + 1,
@@ -54,7 +54,7 @@ export const SavedLocations = ({recentDestinationList, popTo, navigation, onPres
         listKey={3}
         // keyExtractor={item => item.id}
         renderItem={({item, index}) => (
-          <LocationCard item={item} onPress={onPressRecentDestination} navigation={navigation} />
+          <LocationCard item={item} onPress={onPressRecentDestination} navigation={navigation} postback={postback} />
         )}
       />
     </>
