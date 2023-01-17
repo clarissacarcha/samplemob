@@ -10,6 +10,7 @@ export const SavedAddress = ({
   navigateToSavedAddress,
   onPressSavedAddress,
   recentSearchDataList,
+  getSavedAddress,
 }) => {
   return (
     <>
@@ -55,7 +56,12 @@ export const SavedAddress = ({
         // keyExtractor={item => item.id}
         listKey={item => item.id}
         renderItem={({item, index}) => (
-          <SavedAddressCard item={item} onPress={onPressSavedAddress} navigation={navigation} />
+          <SavedAddressCard
+            item={item}
+            onPress={onPressSavedAddress}
+            navigation={navigation}
+            postback={getSavedAddress}
+          />
         )}
       />
     </>
