@@ -96,12 +96,12 @@ const SssForm = (props: PropsType): React$Node => {
           <CustomTextInput
             label="Payment Reference Number (PRN)"
             onChangeText={value => {
-              changeData('firstField', value, 1, 14, 1);
+              changeData('firstField', value, 2, 14, 1); // fieldType, fieldValue, fieldFormat, fieldWidth, fieldWidthType
               changeErrorMessages('firstField', '');
             }}
             value={data.firstField}
             errorMessage={errorMessages.firstField}
-            keyboardType={'numeric'}
+            // keyboardType="numeric"
             maxLength={14}
             returnKeyType="done"
             information="Payment Reference Number is a unique number given to SSS members for identification when paying contributions and loan."
