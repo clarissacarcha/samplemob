@@ -1,14 +1,19 @@
 import React from 'react';
-import {Text, View, FlatList, TouchableOpacity, SafeAreaView, Image} from 'react-native';
-import CONSTANTS from '../../../../common/res/constants';
+import {Text, View, FlatList, TouchableOpacity, SafeAreaView} from 'react-native';
+import CONSTANTS from '../../../../../common/res/constants';
 import MIcon from 'react-native-vector-icons/dist/MaterialIcons';
-import Data from '../../../components/BookingDummyData';
-import {SavedAddressCard} from '../../../components';
-import saveIcon from '../../../../assets/toktokgo/editIcon.png';
 import normalize from 'react-native-normalize';
-export const SavedAddress = ({navigation, savedAddressList, navigateToSavedAddress, onPressSavedAddress, postback}) => {
+import {SavedAddressCard} from '../../../../../ToktokGo/components';
+export const SavedAddress = ({
+  navigation,
+  savedAddressList,
+  navigateToSavedAddress,
+  onPressSavedAddress,
+  recentSearchDataList,
+  getSavedAddress,
+}) => {
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <>
       <FlatList
         ListHeaderComponent={
           <View
@@ -18,7 +23,7 @@ export const SavedAddress = ({navigation, savedAddressList, navigateToSavedAddre
               alignItems: 'center',
               paddingHorizontal: 13,
               backgroundColor: CONSTANTS.COLOR.WHITE,
-              //   marginTop: savedAddressList.length == 0 ? 0 : 16,
+              marginTop: recentSearchDataList.length == 0 ? 0 : 16,
               // paddingVertical: 10,
             }}>
             <Text
@@ -51,9 +56,14 @@ export const SavedAddress = ({navigation, savedAddressList, navigateToSavedAddre
         // keyExtractor={item => item.id}
         listKey={item => item.id}
         renderItem={({item, index}) => (
-          <SavedAddressCard item={item} onPress={onPressSavedAddress} navigation={navigation} postback={postback} />
+          <SavedAddressCard
+            item={item}
+            onPress={onPressSavedAddress}
+            navigation={navigation}
+            postback={getSavedAddress}
+          />
         )}
       />
-    </SafeAreaView>
+    </>
   );
 };

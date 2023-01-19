@@ -1,5 +1,5 @@
 import React, {useState, useCallback} from 'react';
-import {StyleSheet, Text, View, Image, Dimensions, ActivityIndicator, ScrollView} from 'react-native';
+import {StyleSheet, Text, View, Image, Dimensions, ActivityIndicator, ScrollView, Alert} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import {onError} from '../../../util/ErrorUtility';
@@ -38,7 +38,37 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
       console.log(response.getVoucher);
       setData(response.getVoucher);
     },
-    onError: onError,
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+
+  if (networkError) {
+    Alert.alert('', 'Network error occurred. Please check your internet connection.');
+  } else if (graphQLErrors.length > 0) {
+    console.log(graphQLErrors);
+    graphQLErrors.map(({message, locations, path, code}) => {
+      if (code === 'INTERNAL_SERVER_ERROR') {
+        Alert.alert('', 'Something went wrong.');
+      } else if (code === 'USER_INPUT_ERROR') {
+        Alert.alert('', message);
+      } else if (code === 'BAD_USER_INPUT') {
+        // Alert.alert('', message);
+        toktokAlert({
+          title: 'Voucher Not Active',
+          message: 'Sorry but this voucher is no longer availabe. You may try another voucher.',
+          imageType: 'failed',
+          onPressSingleButton: () => {
+            handleGetData();
+          },
+        });
+      } else if (code === 'AUTHENTICATION_ERROR') {
+        // Do Nothing. Error handling should be done on the scren
+      } else {
+        console.log('ELSE ERROR:', error);
+        Alert.alert('', 'Something went wrong...');
+      }
+    });
+  }
+    },
   });
 
   const getDataVoucher = () => {
@@ -86,7 +116,17 @@ const ToktokGoBookingSelectedVoucher = ({navigation, route}) => {
             Alert.alert('', message);
             setProcessingVisible(false);
           } else if (code === 'BAD_USER_INPUT') {
-            if (errorType == 'VOUCHER_LIFETIME_MAX_COUNT_HIT') {
+            if (errorType == 'VOUCHER_DISABLED') {
+             toktokAlert({
+                title: 'Voucher Not Active',
+                message: 'Sorry but this voucher is no longer availabe. You may try another voucher.',
+                imageType: 'failed',
+                onPressSingleButton: () => {
+                  handleGetData();
+                },
+              });
+            }
+            else if (errorType == 'VOUCHER_LIFETIME_MAX_COUNT_HIT') {
               toktokAlert({
                 title: 'Voucher Reached Limit',
                 message: 'Sorry but this voucher reached the maximum redemption limit. You may try another voucher.',

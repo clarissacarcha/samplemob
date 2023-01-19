@@ -21,16 +21,22 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   const {popTo, source} = route.params;
   const dispatch = useDispatch();
   const dropDownRef = useRef(null);
-  const INITIAL_REGION = {
-    latitude: 14.584027386653853,
-    longitude: 121.0634614077012,
-    ...MAP_DELTA_LOW,
-  };
+  const {defaultAddress} = useSelector(state => state.superApp);
   const alertGO = useAlertGO();
   const {details, destination, origin} = useSelector(state => state.toktokGo);
-  const [mapRegion, setMapRegion] = useState({...origin?.place?.location, ...MAP_DELTA_LOW});
+  const mapDefault = {
+    latitude: origin?.place?.location?.latitude
+      ? origin?.place?.location.latitude
+      : defaultAddress.place.location.latitude,
+    longitude: origin?.place?.location?.longitude
+      ? origin?.place?.location.longitude
+      : defaultAddress.place.location.longitude,
+    ...MAP_DELTA_LOW,
+  };
+  const [mapRegion, setMapRegion] = useState(mapDefault);
   const [initialRegionChange, setInitialRegionChange] = useState(!mapRegion.latitude ? false : true);
   const [note, setNote] = useState('');
+  const [fakeLoading, setFakeLoading] = useState(false);
   const [notes, setNotes] = useState({
     text: details?.noteToDriver ? details.noteToDriver : '',
     textLength: 0,
@@ -116,11 +122,12 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
     1000,
     {trailing: false},
   );
-  const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
+  const [getPlaceByLocation, {loading: GPBLloading}] = useLazyQuery(GET_PLACE_BY_LOCATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload: response.getPlaceByLocation});
+      setFakeLoading(false);
     },
     onError: onError,
   });
@@ -141,8 +148,13 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
   );
 
   useEffect(() => {
-    if (!mapRegion.latitude) {
-      onDragEndMarker({...INITIAL_REGION});
+    if (!origin?.place?.location.latitude) {
+      const payload = {
+        hash: defaultAddress.placeHash,
+        name: defaultAddress.contactDetails.fullname,
+        place: defaultAddress.place,
+      };
+      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
     }
   }, []);
 
@@ -159,7 +171,15 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
       <ThrottledOpacity delay={500} style={styles.backButton} onPress={() => navigation.pop()}>
         <Image source={ArrowLeftIcon} resizeMode={'contain'} style={styles.iconDimensions} />
       </ThrottledOpacity>
-      {origin?.place?.location?.latitude && <Pickup onDragEndMarker={onDragEndMarker} mapRegion={mapRegion} />}
+      {origin?.place?.location?.latitude && (
+        <Pickup
+          onDragEndMarker={onDragEndMarker}
+          mapRegion={mapRegion}
+          loading={GPBLloading}
+          fakeLoading={fakeLoading}
+          setFakeLoading={setFakeLoading}
+        />
+      )}
       <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : null} style={styles.card}>
         <NotesToDriver
           dropDownRef={dropDownRef}
@@ -169,6 +189,7 @@ const ToktokGoBookingConfirmPickup = ({navigation, route}) => {
           setNote={setNote}
           notesToDriver={notesToDriver}
           notes={notes}
+          loading={fakeLoading}
         />
         <ConfirmPickupButton onConfirm={onConfirm} />
       </KeyboardAvoidingView>

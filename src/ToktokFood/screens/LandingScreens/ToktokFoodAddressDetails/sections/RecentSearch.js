@@ -1,11 +1,10 @@
 import React from 'react';
 import {Text, View, FlatList, TouchableOpacity} from 'react-native';
-import CONSTANTS from '../../../../common/res/constants';
+import CONSTANTS from '../../../../../common/res/constants';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
-import Data from '../../../components/BookingDummyData';
-import {LocationCard} from '../../../components';
 import AsyncStorage from '@react-native-community/async-storage';
-export const FrequentlyUsed = ({navigation, popTo, recentSearchDataList, onPressRecentSearch}) => {
+import {LocationCard} from '../../../../../ToktokGo/components';
+export const RecentSearch = ({navigation, popTo, recentSearchDataList, onPressRecentSearch, getSavedAddress}) => {
   return (
     <>
       <View
@@ -42,10 +41,9 @@ export const FrequentlyUsed = ({navigation, popTo, recentSearchDataList, onPress
       <FlatList
         showsVerticalScrollIndicator={false}
         data={recentSearchDataList}
-        listKey={1}
         // keyExtractor={item => item.id}
         renderItem={({item, index}) => (
-          <LocationCard item={item} onPress={onPressRecentSearch} navigation={navigation} />
+          <LocationCard item={item} onPress={onPressRecentSearch} navigation={navigation} postback={getSavedAddress} />
         )}
       />
     </>

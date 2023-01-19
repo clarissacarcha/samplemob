@@ -9,27 +9,40 @@ import {
   StatusBar,
   Alert,
   Platform,
+  FlatList,
+  ScrollView,
 } from 'react-native';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {throttle, debounce, set} from 'lodash';
-import {useLazyQuery} from '@apollo/react-hooks';
+import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import InputScrollView from 'react-native-input-scroll-view';
+import {
+  PREF_GET_SAVED_ADDRESSES,
+  TOKTOK_ADDRESS_CLIENT,
+  GET_DELIVERY_RECENT_RECIPIENTS,
+  GET_GOOGLE_PLACE_DETAILS,
+} from '../../../../../graphql';
+import {onError} from '../../../../../util/ErrorUtility';
 import uuid from 'react-native-uuid';
 import MapView, {Marker, PROVIDER_GOOGLE, Callout, Overlay} from 'react-native-maps';
 import validator from 'validator';
 import {useAlert} from '../../../../../hooks';
-
-import {HeaderBack, HeaderTitle} from '../../../../../components';
-import {Shadow, YellowButton, VectorIcon, ICON_SET} from '../../../../../revamp';
-import {MEDIUM, DARK} from '../../../../../res/constants';
+import AsyncStorage from '@react-native-community/async-storage';
+import {useFocusEffect} from '@react-navigation/native';
+import {Shadow, YellowButton, VectorIcon, ICON_SET, WhiteButton} from '../../../../../revamp';
+import {MEDIUM, DARK, DIRTY_WHITE} from '../../../../../res/constants';
 import {COLOR, FONT, FONT_SIZE, SIZE, MAP_DELTA} from '../../../../../res/variables';
 
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 
 //SELF IMPORTS
-import AutocompleteResult from './AutocompleteResult';
+import SavedAddresses from '../Components/SavedAddresses';
+import RecentDelivery from '../Components/RecentDelivery';
+import RecentSearch from './RecentSearch';
 import SearchBar from './SearchBar';
 import {SearchLoadingIndicator} from './SearchLoadingIndicator';
+import {BackButton} from '../../../../../components_section/Buttons';
+import {HeaderTitle} from '../../../../../components_section/Texts';
 
 const INITIAL_RESULT = {
   payload: {
@@ -55,8 +68,17 @@ const StopDetails = ({navigation, route}) => {
 
   const [showMap, setShowMap] = useState(stopData.latitude ? true : false);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [recentSearchDataList, setRecentSearchDataList] = useState([]);
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState({});
+
+  navigation.setOptions({
+    headerLeft: () => <BackButton navigation={navigation} />,
+    headerTitle: () => <HeaderTitle label={'Address'} />,
+  });
 
   const onLocationSelect = value => {
+    addItemToList(value);
     console.log({value});
     setShowMap(true);
     setStopData({
@@ -223,29 +245,194 @@ const StopDetails = ({navigation, route}) => {
     navigation.pop();
   };
 
+  const addItemToList = async response => {
+    console.log(response);
+    try {
+      const data = await AsyncStorage.getItem('recentSearchDeliveryList');
+      if (data === null) {
+        const searchList = JSON.stringify([response]);
+
+        await AsyncStorage.setItem('recentSearchDeliveryList', searchList);
+      } else {
+        const recentList = JSON.parse(data);
+        if (recentList.length >= 3) {
+          let obj = recentList.find(o => o.formattedAddress === response.formattedAddress);
+          if (obj != undefined) {
+            console.log('SameAddress');
+          } else {
+            setRecentSearchDataList([]);
+            const removedItem = recentList.slice(0, 2);
+            removedItem.unshift(response);
+            const searchList = JSON.stringify(removedItem);
+            await AsyncStorage.setItem('recentSearchDeliveryList', searchList);
+          }
+        } else {
+          let obj = recentList.find(o => o.formattedAddress === response.formattedAddress);
+          if (obj != undefined) {
+            console.log('SameAddress');
+          } else {
+            recentSearchDataList.push(response);
+            const searchList = JSON.stringify(recentSearchDataList);
+            await AsyncStorage.setItem('recentSearchDeliveryList', searchList);
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const [prefGetSavedAddresses, {loading: PGSALoading}] = useLazyQuery(PREF_GET_SAVED_ADDRESSES, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: res => {
+      setSavedAddresses(res.prefGetSavedAddresses);
+    },
+    onError: onError,
+  });
+
+  const [getDeliveryRecentRecipients, {data: GDRRdata, loading: GDRRLoading}] = useLazyQuery(
+    GET_DELIVERY_RECENT_RECIPIENTS,
+    {
+      fetchPolicy: 'network-only',
+      onError: onError,
+    },
+  );
+
+  const [getGooglePlaceDetails, {loading}] = useLazyQuery(GET_GOOGLE_PLACE_DETAILS, {
+    fetchPolicy: 'network-only',
+    onCompleted: data => {
+      console.log({result: data.getGooglePlaceDetails});
+      setSessionToken(uuid.v4()); // Use new sessionToken after Place Details Request
+      onLocationSelect({
+        location: data.getGooglePlaceDetails.location,
+        addressBreakdownHash: data.getGooglePlaceDetails.addressBreakdownHash,
+        formattedAddress: selectedAddress.formattedAddress,
+        placeId: selectedAddress.placeId,
+      });
+    },
+  });
+
+  const getSearchList = async () => {
+    try {
+      const data = await AsyncStorage.getItem('recentSearchDeliveryList');
+
+      const output = JSON.parse(data);
+      if (output != null) {
+        setRecentSearchDataList(output);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      prefGetSavedAddresses();
+      getDeliveryRecentRecipients();
+    }, []),
+  );
+
+  useEffect(() => {
+    async function tempFunction() {
+      await getSearchList();
+    }
+
+    tempFunction();
+
+    return () => {};
+  }, [showMap]);
+
+  const onPressAddAddress = item => {
+    navigation.push('ToktokAddEditLocation', {coordsFromService: item.location});
+  };
+
+  const onSelectSavedAddress = item => {
+    setShowMap(true);
+    setStopData({
+      ...stopData,
+      latitude: item.place.location.latitude,
+      longitude: item.place.location.longitude,
+      formattedAddress: item.place.formattedAddress,
+    });
+    setSearchText(item.formattedAddress);
+    setMobile(item.contactDetails.mobile_no ? item.contactDetails.mobile_no : '');
+    setPerson(item.contactDetails.fullname ? item.contactDetails.mobile_no : '');
+  };
+
+  const onClearSearchBar = () => {
+    setSearchResult({
+      ...searchResult,
+      predictions: [],
+    });
+  };
+
+  const onSelectRecentDelivery = item => {
+    setShowMap(true);
+    setStopData({
+      ...stopData,
+      latitude: item.hashedPlace.place.location.latitude,
+      longitude: item.hashedPlace.place.location.longitude,
+      formattedAddress: item.hashedPlace.place.formattedAddress,
+    });
+    setSearchText(item.hashedPlace.place.formattedAddress);
+  };
+
+  const onResultSelect = ({prediction}) => {
+    setSelectedAddress(prediction);
+    getGooglePlaceDetails({
+      variables: {
+        input: {
+          placeId: prediction.placeId,
+          sessionToken: sessionToken,
+        },
+      },
+    });
+  };
+
+  const renderItem = ({item}) => {
+    const formattedAddressParts = item.formattedAddress.split(',');
+    return (
+      <WhiteButton
+        label={formattedAddressParts[0]}
+        description={item.formattedAddress}
+        suffixSet="Entypo"
+        suffixName="chevron-thin-right"
+        suffixColor={'black'}
+        prefixSize={18}
+        prefixColor={COLOR.ORANGE}
+        borderless
+        onPress={() => onResultSelect({prediction: item})}
+        style={{marginHorizontal: 16}}
+      />
+    );
+  };
+
+  const itemSeparator = () => <View style={styles.separator} />;
+
   return (
     <View style={styles.screenBox}>
-      <View style={{height: StatusBar.currentHeight}} />
-      <View
-        style={{
-          height: 50,
-          backgroundColor: 'white',
-          borderBottomWidth: 1,
-          borderColor: COLOR.LIGHT,
-          flexDirection: 'row',
-        }}>
-        <SearchBar
-          sessionToken={sessionToken}
-          placeholder={route.params.searchPlaceholder}
-          searchText={searchText}
-          onSearchTextChange={value => setSearchText(value)}
-          onSearchResultChange={value => setSearchResult(value)}
-          searchEnabled={!showMap}
-          onSearchLoadingChange={setSearchLoading}
-          navigation={navigation}
-        />
-      </View>
+      {!showMap && (
+        <View
+          style={{
+            marginTop: 16,
+            height: 50,
 
+            flexDirection: 'row',
+          }}>
+          <SearchBar
+            sessionToken={sessionToken}
+            placeholder={route.params.searchPlaceholder}
+            searchText={searchText}
+            onSearchTextChange={value => setSearchText(value)}
+            onSearchResultChange={value => setSearchResult(value)}
+            searchEnabled={!showMap}
+            onSearchLoadingChange={setSearchLoading}
+            navigation={navigation}
+            onClearSearchBar={onClearSearchBar}
+          />
+        </View>
+      )}
       {showMap && (
         <View style={{flex: 1}}>
           <View style={{flex: 1}}>
@@ -392,16 +579,50 @@ const StopDetails = ({navigation, route}) => {
           </View>
         </View>
       )}
-      {!showMap && !searchLoading && searchText !== '' && (
-        <AutocompleteResult
-          searchResult={searchResult}
-          sessionToken={sessionToken}
-          setSessionToken={setSessionToken}
-          onLocationSelect={onLocationSelect}
-          setSearchText={setSearchText}
+
+      {!showMap && (
+        <FlatList
+          data={searchResult.predictions}
+          showsVerticalScrollIndicator={false}
+          renderItem={renderItem}
+          ItemSeparatorComponent={itemSeparator}
+          ListHeaderComponent={!showMap && searchLoading && searchText !== '' && <SearchLoadingIndicator />}
+          ListEmptyComponent={() => {
+            return (
+              !showMap &&
+              searchResult?.predictions.length == 0 &&
+              !searchLoading && (
+                <>
+                  {recentSearchDataList.length > 0 && (
+                    <RecentSearch
+                      recentSearchDataList={recentSearchDataList}
+                      setShowMap={setShowMap}
+                      stopData={stopData}
+                      setStopData={setStopData}
+                      setSearchText={setSearchText}
+                      onPressAddAddress={onPressAddAddress}
+                    />
+                  )}
+
+                  <SavedAddresses
+                    navigation={navigation}
+                    data={savedAddresses}
+                    onSelectSavedAddress={onSelectSavedAddress}
+                    prefGetSavedAddresses={prefGetSavedAddresses}
+                  />
+                  {GDRRdata?.getDeliveryRecentRecipients.length > 0 && (
+                    <RecentDelivery
+                      data={GDRRdata}
+                      onSelectRecentDelivery={onSelectRecentDelivery}
+                      navigation={navigation}
+                    />
+                  )}
+                </>
+              )
+            );
+          }}
         />
       )}
-      {!showMap && searchLoading && searchText !== '' && <SearchLoadingIndicator />}
     </View>
   );
 };
@@ -436,5 +657,10 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  separator: {
+    height: 1,
+    borderTopWidth: 1,
+    borderColor: DIRTY_WHITE,
   },
 });

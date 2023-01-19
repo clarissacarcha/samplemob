@@ -1,5 +1,5 @@
-import React, {useRef, useEffect, useCallback} from 'react';
-import {TextInput, TouchableOpacity, Image} from 'react-native';
+import React, {useRef, useEffect, useCallback, useState} from 'react';
+import {View, StyleSheet, TextInput, TouchableOpacity, Image} from 'react-native';
 import {debounce} from 'lodash';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -9,6 +9,10 @@ import {COLOR} from '../../../../../res/variables';
 import {VectorIcon, ICON_SET} from '../../../../../revamp';
 import {ThrottledOpacity} from '../../../../../components_section';
 import BackIcon from '../../../../../assets/icons/arrow-left-icon.png';
+import SearchIcon from '../../../../../assets/icons/EraseTextInput.png';
+import CONSTANTS from '../../../../../common/res/constants';
+import DestinationIcon from '../../../../../assets/icons/DestinationIcon.png';
+import FIcons from 'react-native-vector-icons/Fontisto';
 
 const INITIAL_RESULT = {
   payload: {
@@ -24,30 +28,51 @@ const ERROR_RESULT = {
   predictions: [],
 };
 
-const SearchBarInput = ({searchText, placeholder, onChangeText}) => {
+const SearchBarInput = ({searchText, placeholder, onChangeText, onClearSearch, executeGetGooglePlaceAutocomplete}) => {
   const searchRef = useRef(null);
 
-  const focusInput = () => {
-    setTimeout(() => {
-      if (searchRef) {
-        searchRef.current.focus();
-      }
-    }, 0);
-  };
+  // const focusInput = () => {
+  //   setTimeout(() => {
+  //     if (searchRef) {
+  //       searchRef.current.focus();
+  //     }
+  //   }, 0);
+  // };
 
-  useEffect(() => {
-    focusInput();
-  }, []);
+  // useEffect(() => {
+  //   focusInput();
+  // }, []);
 
   return (
-    <TextInput
-      ref={searchRef}
-      value={searchText}
-      placeholder={placeholder}
-      onChangeText={onChangeText}
-      placeholderTextColor={COLOR.MEDIUM}
-      style={{flex: 1, marginRight: 16}}
-    />
+    <View style={styles.container}>
+      <View style={styles.textFieldContainer}>
+        <Image source={DestinationIcon} style={{height: 20, width: 20, marginLeft: 12}} resizeMode={'contain'} />
+        <TextInput
+          ref={searchRef}
+          value={searchText}
+          placeholder={placeholder}
+          onChangeText={onChangeText}
+          placeholderTextColor={COLOR.MEDIUM}
+          style={{
+            marginLeft: 12,
+            color: CONSTANTS.COLOR.BLACK,
+            height: 42,
+            flex: 1,
+          }}
+        />
+
+        {searchText.length != 0 && (
+          <TouchableOpacity onPress={onClearSearch} style={styles.clearIcon}>
+            <Image source={SearchIcon} resizeMode={'contain'} style={{width: 15, height: 15}} />
+          </TouchableOpacity>
+        )}
+      </View>
+      <ThrottledOpacity
+        onPress={() => executeGetGooglePlaceAutocomplete(searchText)}
+        style={{padding: 12, backgroundColor: CONSTANTS.COLOR.ORANGE, borderRadius: 5, marginLeft: 8}}>
+        <FIcons name={'search'} size={18} color={CONSTANTS.COLOR.WHITE} />
+      </ThrottledOpacity>
+    </View>
   );
 };
 
@@ -60,42 +85,9 @@ const SearchBar = ({
   searchEnabled,
   onSearchLoadingChange,
   navigation,
+  onClearSearchBar,
 }) => {
-  const useIsMounted = () => {
-    const isMountedRef = useRef(true);
-    useEffect(() => {
-      return () => {
-        isMountedRef.current = false;
-      };
-    }, []);
-    return () => isMountedRef.current;
-  };
-
-  const useDebounce = (cb, delay) => {
-    const options = {
-      leading: false,
-      trailing: true,
-    };
-    const inputsRef = useRef(cb);
-    const isMounted = useIsMounted();
-    useEffect(() => {
-      inputsRef.current = {cb, delay};
-    });
-
-    return useCallback(
-      debounce(
-        (...args) => {
-          // Don't execute callback, if (1) component in the meanwhile
-          // has been unmounted or (2) delay has changed
-          if (inputsRef.current.delay === delay && isMounted()) inputsRef.current.cb(...args);
-        },
-        delay,
-        options,
-      ),
-      [delay, debounce],
-    );
-  };
-
+  const [enteredText, setEnteredText] = useState('');
   const getGooglePlaceAutocomplete = async ({searchString}) => {
     try {
       onSearchLoadingChange(true);
@@ -138,61 +130,63 @@ const SearchBar = ({
     }
   };
 
-  const debouncedGetGooglePlaceAutocomplete = useDebounce(
-    value => getGooglePlaceAutocomplete({searchString: value}),
-    1000,
-  );
-
-  const onChangeText = async value => {
-    console.log({value});
-
-    onSearchTextChange(value);
-
-    if (value.length < 3) {
-      onSearchResultChange({
-        payload: {
-          success: null, // Means no result yet. Show Loading
-        },
-        predictions: [],
-      });
-
-      return;
-    }
-
-    if (value.length >= 3) {
-      debouncedGetGooglePlaceAutocomplete(value);
-    }
-  };
-
   const onClearSearch = () => {
     onSearchTextChange('');
+    onClearSearchBar();
   };
 
-  // if (!searchEnabled) return <HeaderBack />;
+  const executeGetGooglePlaceAutocomplete = value => {
+    if (value != enteredText) {
+      getGooglePlaceAutocomplete({searchString: value});
+    }
+    setEnteredText(value);
+  };
 
   return (
     <>
-      {/* <HeaderBack /> */}
-      <ThrottledOpacity
-        style={{alignSelf: 'center', paddingHorizontal: 16}}
-        onPress={() => navigation.pop()}
-        delay={4000}>
-        <Image source={BackIcon} resizeMode={'contain'} style={{width: 15, height: 15}} />
-      </ThrottledOpacity>
       {searchEnabled && (
-        <>
-          <SearchBarInput searchText={searchText} placeholder={placeholder} onChangeText={onChangeText} />
-          {searchText !== '' && (
-            <TouchableOpacity
-              onPress={onClearSearch}
-              style={{height: 50, width: 50, justifyContent: 'center', alignItems: 'center'}}>
-              <VectorIcon name="close-circle" iconSet={ICON_SET.MaterialCommunity} color={COLOR.MEDIUM} />
-            </TouchableOpacity>
-          )}
-        </>
+        <View style={{flex: 1, paddingHorizontal: 16}}>
+          <SearchBarInput
+            searchText={searchText}
+            placeholder={placeholder}
+            onChangeText={value => onSearchTextChange(value)}
+            onClearSearch={onClearSearch}
+            executeGetGooglePlaceAutocomplete={executeGetGooglePlaceAutocomplete}
+          />
+        </View>
       )}
     </>
   );
 };
 
 export default SearchBar;
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+  },
+  textFieldContainer: {
+    flex: 1,
+    marginRight: 8,
+    backgroundColor: COLOR.LIGHT,
+    borderRadius: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  searchContainer: {
+    marginRight: 16,
+    backgroundColor: COLOR.ORANGE,
+    width: 50,
+    height: 50,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  clearIcon: {
+    height: 42,
+    width: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

@@ -107,6 +107,7 @@ import PasswordVerification from '../../screens/UnauthenticatedStack/PasswordVer
 import ForgotPasswordReset from '../../screens/UnauthenticatedStack/ForgotPasswordReset';
 import ForgotPasswordRequest from '../../screens/UnauthenticatedStack/ForgotPasswordRequest';
 import ForgotPasswordVerification from '../../screens/UnauthenticatedStack/ForgotPasswordVerification';
+import {headerOptions} from '../../components_section/Texts';
 
 /*-------------------- IMPORT SCREENS END--------------------*/
 
@@ -280,7 +281,7 @@ const AuthenticatedStack = () => (
 
       {/********** Pabili **********/}
       <Authenticated.Screen name="Pabili" component={Pabili} options={{headerShown: false}} />
-      <Authenticated.Screen name="PabiliSearchAddress" component={PabiliSearchAddress} options={{headerShown: false}} />
+      <Authenticated.Screen name="PabiliSearchAddress" component={PabiliSearchAddress} options={headerOptions} />
       <Authenticated.Screen name="PabiliDetails" component={PabiliDetails} />
       <Authenticated.Screen name="NearbyStores" component={NearbyStores} />
       <Authenticated.Screen name="PartnerBranches" component={PartnerBranches} />

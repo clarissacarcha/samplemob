@@ -104,7 +104,17 @@ const ToktokGoBookingVouchers = ({navigation, route}) => {
             Alert.alert('', message);
             setProcessingVisible(false);
           } else if (code === 'BAD_USER_INPUT') {
-            if (errorType == 'VOUCHER_LIFETIME_MAX_COUNT_HIT') {
+            if (errorType == 'VOUCHER_DISABLED') {
+             toktokAlert({
+                title: 'Voucher Not Active',
+                message: 'Sorry but this voucher is no longer availabe. You may try another voucher.',
+                imageType: 'failed',
+                onPressSingleButton: () => {
+                  handleGetData();
+                },
+              });
+            }
+            else if (errorType == 'VOUCHER_LIFETIME_MAX_COUNT_HIT') {
               toktokAlert({
                 title: 'Voucher Reached Limit',
                 message: 'Sorry but this voucher reached the maximum redemption limit. You may try another voucher.',

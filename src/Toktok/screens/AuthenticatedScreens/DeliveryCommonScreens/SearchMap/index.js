@@ -1,14 +1,23 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, ActivityIndicator, TouchableHighlight} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, Platform} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, Overlay} from 'react-native-maps';
 import {HeaderBack, HeaderTitle} from '../../../../../components';
 import {COLOR, DARK, MAP_DELTA} from '../../../../../res/constants';
 import {YellowButton} from '../../../../../revamp/buttons/YellowButton';
-
+import CONSTANTS from '../../../../../common/res/constants';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+import LottieView from 'lottie-react-native';
 import {reverseGeocode} from '../../../../../helper';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import {ThrottledOpacity} from '../../../../../components_section';
+
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('screen').height;
+const lottieLoading = require('../../../../../assets/JSON/loader.json');
 
 export const SearchMap = ({navigation, route}) => {
+  const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['Search', 'Map']} />,
@@ -16,23 +25,49 @@ export const SearchMap = ({navigation, route}) => {
 
   let loading = false;
   const {data, setData} = route.params;
+
+  const [fakeLoading, setFakeLoading] = useState(false);
+  const [dragCounter, setDragCounter] = useState(0);
+  const [showConfirmLocButton, setShowConfirmLocButton] = useState(false);
+  const [toggleLabelUpdateLocButton, setToggleLabelUpdateLocButton] = useState(true);
+  const [mapDraggedData, setMapDraggedData] = useState({});
   const [localData, setLocalData] = useState({
     ...data,
   });
 
-  const onMapScrollEnd = async (data) => {
+  const onMapScrollEnd = value => {
+    if (dragCounter > 0) {
+      setToggleLabelUpdateLocButton(true);
+      setShowConfirmLocButton(true);
+    } else {
+      setToggleLabelUpdateLocButton(false);
+    }
+    setMapDraggedData(value);
+    setDragCounter(prevState => prevState + 1);
+  };
+
+  const onConfirmLoc = async () => {
     if (!loading) {
+      setFakeLoading(true);
+
       loading = true;
-      const result = await reverseGeocode(data);
+      const result = await reverseGeocode(mapDraggedData);
       setLocalData({
         ...localData,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        latitudeDelta: data.latitudeDelta,
-        longitudeDelta: data.longitudeDelta,
+        latitude: mapDraggedData.latitude,
+        longitude: mapDraggedData.longitude,
+        latitudeDelta: mapDraggedData.latitudeDelta,
+        longitudeDelta: mapDraggedData.longitudeDelta,
         formattedAddress: result.formattedAddress,
       });
       loading = false;
+      setToggleLabelUpdateLocButton(false);
+      setTimeout(() => {
+        setFakeLoading(false);
+      }, 500);
+      setTimeout(() => {
+        setShowConfirmLocButton(false);
+      }, 1500);
     }
   };
 
@@ -46,10 +81,14 @@ export const SearchMap = ({navigation, route}) => {
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.container}
-        region={{
+        initialRegion={{
           ...localData,
         }}
-        onRegionChangeComplete={onMapScrollEnd}>
+        onPanDrag={e => {
+          setToggleLabelUpdateLocButton(true);
+          setShowConfirmLocButton(false);
+        }}
+        onRegionChangeComplete={e => onMapScrollEnd(e)}>
         {/*---------------------------------------- FOR CHECKING FLOATING PIN ACCURACY ----------------------------------------*/}
         {/*<Marker coordinate={localData}>*/}
         {/*  <FA5Icon name="map-pin" size={24} color="red" />*/}
@@ -57,13 +96,30 @@ export const SearchMap = ({navigation, route}) => {
       </MapView>
       {/*---------------------------------------- ADDRESS BOX ----------------------------------------*/}
       <View style={styles.addressBox}>
-        <Text>{localData.formattedAddress}</Text>
+        {fakeLoading ? (
+          <ShimmerPlaceHolder style={{width: screenWidth / 1.13, height: 30}} visible={false} />
+        ) : (
+          <Text>{localData.formattedAddress}</Text>
+        )}
       </View>
       {/*---------------------------------------- FLOATING PIN ----------------------------------------*/}
+      {showConfirmLocButton && (
+        <ThrottledOpacity
+          onPress={onConfirmLoc}
+          style={styles.floatingButton}
+          delay={4000}
+          disabled={!toggleLabelUpdateLocButton}>
+          {fakeLoading ? (
+            <LottieView source={lottieLoading} autoPlay loop style={styles.loader} resizeMode="cover" />
+          ) : (
+            <Text style={styles.btnLabel}>{toggleLabelUpdateLocButton ? 'Update Location' : 'Updated!'}</Text>
+          )}
+        </ThrottledOpacity>
+      )}
       <FA5Icon name="map-pin" size={24} color={DARK} style={{marginTop: -26}} />
       {/*---------------------------------------- BUTTON ----------------------------------------*/}
       <View style={styles.submitBox}>
-        <YellowButton onPress={onSubmit} label="Confirm Location" />
+        <YellowButton onPress={onSubmit} label={'Confirm Location'} />
       </View>
 
       {/* <TouchableHighlight onPress={onSubmit} underlayColor={COLOR} style={styles.submitBox}>
@@ -107,6 +163,27 @@ const styles = StyleSheet.create({
     // left: 0,
     // right: 0,
     // top: 0
+  },
+  loader: {
+    alignSelf: 'center',
+    margin: -10,
+    top: Platform.OS === 'ios' ? 6 : 4,
+    width: 50,
+    aspectRatio: 1.5,
+  },
+  floatingButton: {
+    position: 'absolute',
+    zIndex: 9999,
+    top: Platform.OS === 'ios' ? screenHeight * 0.36 : '41%',
+    backgroundColor: CONSTANTS.COLOR.ORANGE,
+    padding: 7,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, .1)',
+    borderRadius: 5,
+  },
+  btnLabel: {
+    color: 'white',
+    fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
   },
   submitBox: {
     position: 'absolute',

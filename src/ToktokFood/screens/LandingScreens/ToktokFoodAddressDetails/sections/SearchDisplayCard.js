@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, FlatList, Image, TouchableOpacity} from 'react-native';
-import CONSTANTS from '../../common/res/constants';
+import CONSTANTS from '../../../../../common/res/constants';
 export const SearchDisplayCard = ({item, onPress, onSelectPlace, lastItem = false}) => {
   return (
     <>
@@ -20,9 +20,7 @@ export const SearchDisplayCard = ({item, onPress, onSelectPlace, lastItem = fals
           </View>
         </View>
       </TouchableOpacity>
-      {!lastItem && (
-        <View style={{borderBottomWidth: 2, borderBottomColor: CONSTANTS.COLOR.LIGHT, marginHorizontal: 16}} />
-      )}
+      {!lastItem && <View style={{borderBottomWidth: 2, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />}
     </>
   );
 };
