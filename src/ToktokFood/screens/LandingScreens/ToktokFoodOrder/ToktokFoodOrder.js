@@ -289,7 +289,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
       buttonText = 'OK';
       onPress = () => {
         setIsAlertVisible(false);
-        setTimeout(() => navigation.navigate('ToktokFoodActivities', {orderStatus: 'c'}), 500);
+        setTimeout(() => navigation.replace('ToktokFoodActivities', {orderStatus: 'c'}), 500);
       };
     } else {
       if (toCancelOrder) {
@@ -320,7 +320,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           buttonText2 = 'OK';
           onPress2 = () => {
             setIsAlertVisible(false);
-            setTimeout(() => navigation.navigate('ToktokFoodActivities', {orderStatus: 'c'}), 500);
+            setTimeout(() => navigation.replace('ToktokFoodActivities', {orderStatus: 'c'}), 500);
           };
         } else {
           title = state?.orderIsfor === 1 ? 'Order Delivered' : 'Order Picked Up';
@@ -329,7 +329,7 @@ const ToktokFoodOrder = (props: PropsType): React$Node => {
           buttonText = 'OK';
           onPress = () => {
             setIsAlertVisible(false);
-            setTimeout(() => navigation.navigate('ToktokFoodActivities', {orderStatus: 's'}), 500);
+            setTimeout(() => navigation.replace('ToktokFoodActivities', {orderStatus: 's'}), 500);
           };
           buttonText2 = '';
         }

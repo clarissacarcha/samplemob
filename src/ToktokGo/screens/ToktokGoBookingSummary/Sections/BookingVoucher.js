@@ -1,16 +1,24 @@
 import React from 'react';
-import {Text, StyleSheet, Image, View, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, Image, View, TouchableOpacity, Dimensions} from 'react-native';
 import CONSTANTS from '../../../../common/res/constants';
 import voucher_image from '../../../../assets/toktokgo/voucher.png';
 import IOIcons from 'react-native-vector-icons/Ionicons';
 import InfoIcon from '../../../../assets/images/info.png';
 
 import ArrowRightIcon from '../../../../assets/icons/arrow-right-icon.png';
+const windowWidth = Dimensions.get('window').width;
 
-export const BookingVoucher = ({navigation, selectedVouchers, setSelectedVouchersNull, isNotVoucherApplicable}) => {
+export const BookingVoucher = ({
+  navigation,
+  selectedVouchers,
+  setSelectedVouchersNull,
+  isNotVoucherApplicable,
+  details,
+}) => {
+  const characterCode = selectedVouchers?.code
   return (
     <>
-      <View style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.push('ToktokGoBookingVouchers')} style={styles.container}>
         <View style={styles.elementWrapper}>
           <Image source={voucher_image} style={{width: 22, height: 16, marginRight: 8}} resizeMode={'contain'} />
           <Text style={styles.textStyle}>Vouchers</Text>
@@ -20,21 +28,27 @@ export const BookingVoucher = ({navigation, selectedVouchers, setSelectedVoucher
           <View style={styles.elementWrapper}>
             <TouchableOpacity onPress={setSelectedVouchersNull}>
               <View style={styles.appliedVoucher}>
-                <Text style={styles.appliedVoucherText}>{selectedVouchers.code}</Text>
+                <View style={{width: characterCode?.length <= 30 ? null : windowWidth * 0.4}}>
+                  <Text numberOfLines={1} style={styles.appliedVoucherText}>
+                    {selectedVouchers.code}
+                  </Text>
+                </View>
                 <IOIcons name={'close'} style={styles.appliedVoucherClose} />
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.push('ToktokGoBookingVouchers')}>
+            <TouchableOpacity onPress={() => navigation.push('ToktokGoBookingVouchers', {details})}>
               <Image source={ArrowRightIcon} resizeMode={'contain'} style={styles.arrowIconStyle} />
             </TouchableOpacity>
           </View>
         ) : (
-          <TouchableOpacity onPress={() => navigation.push('ToktokGoBookingVouchers')} style={styles.elementWrapper}>
+          <TouchableOpacity
+            onPress={() => navigation.push('ToktokGoBookingVouchers', {details})}
+            style={styles.elementWrapper}>
             <Text style={styles.seeAlltextStyle}>Select or Enter Code</Text>
             <Image source={ArrowRightIcon} resizeMode={'contain'} style={styles.arrowIconStyle} />
           </TouchableOpacity>
         )}
-      </View>
+      </TouchableOpacity>
       {isNotVoucherApplicable && (
         <View style={styles.warningContainer}>
           <Image source={InfoIcon} resizeMode={'contain'} style={styles.imgDimensions} />

@@ -59,7 +59,13 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
     headerLeft: () => <HeaderBack onBack={() => {
       
       if(route.params?.onGoBack){
-        route.params?.onGoBack()
+        
+        if(route.params?.fromPlaceOrderScreen){
+          let addressId = findDefaultAddress()
+          route.params?.onGoBack(addressId)          
+        }else{
+          route.params?.onGoBack()
+        }
       }
 
       navigation.goBack()
@@ -69,6 +75,13 @@ const Component = ({route, navigation, reduxStates: {user_address, defaultAddres
     headerRight: () => <HeaderRight hidden={true} />,
   });
 
+  const findDefaultAddress = () => {
+    if(addresses.length > 0){
+      const address = addresses.filter((adrs) => adrs.defaultAdd === 1)
+      return address && address.length > 0 ? address[0]?.id : null
+    }
+    return null
+  }
 
   const [getAddresses, {error, loading}] = useLazyQuery(GET_CUSTOMER_ADDRESSES, {
     client: TOKTOK_MALL_GRAPHQL_CLIENT,

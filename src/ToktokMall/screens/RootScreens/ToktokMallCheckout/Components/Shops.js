@@ -18,6 +18,7 @@ import { useDispatch } from 'react-redux';
 import { ApplyVoucherForm } from './ApplyVoucher';
 import Icons from '../../../../Components/Icons';
 import { EventRegister } from 'react-native-event-listeners';
+import moment from 'moment';
 
 export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve, referral}) => {
 
@@ -62,11 +63,16 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
           total = total + parseFloat(item[i].product.compareAtPrice * item[i].qty)
         }else{
           // total = total + parseFloat(item[i].product.price)
-          let itemsrpprice = parseFloat(item[i].product.compareAtPrice * item[i].qty)
+          let itemsrpprice = parseFloat(item[i].product.price * item[i].qty)
           total = total + itemsrpprice
         }      
       }else{
-        total = total + parseFloat(item[i].amount)
+        if(referral && referral?.franchiseeCode != null){
+          let itemsrpprice = parseFloat(item[i].product.price * item[i].qty)
+          total = total + itemsrpprice
+        }else{
+          total = total + parseFloat(item[i].amount)
+        }
       }      
     }
 
@@ -248,12 +254,23 @@ export const Shops = ({address, customer, raw, shipping, shippingRates, retrieve
         // console.log("Shipping", CheckoutContextData.shippingFeeRates)
         // console.log("Discount", CheckoutContextData.shippingVouchers)
         // console.log("Unserviceable", CheckoutContextData.unserviceableShipping)
+        const getEstimetedDeliveryDate = () => {
+          let result = ""
+          CheckoutContextData.shippingFeeRates?.map((s) => {
+            if(s.shopid == shopid){
+              let from = moment().add(s.shopdts, 'd').format('MMM DD')
+              let to = moment().add(s.shopdts_to, 'd').format('MMM DD')
+              result = `${from} - ${to}`
+            }
+          })
+          return result
+        }
 
         return (
           <>            
             {getDeliveryFee(shopid)}
             <View>
-              <Text style = {styles.receiveText}>{address?.address != "" ? "Receive by " : "Add address to calculate"}{shipping?.deliveryDate || ""} </Text>
+              <Text style = {styles.receiveText}>{address?.address != "" ? "Receive by " : "Add address to calculate"}{getEstimetedDeliveryDate() || ""} </Text>
             </View>
             <View style={styles.orderContainer}>
               <View style={{flex: 0}}>

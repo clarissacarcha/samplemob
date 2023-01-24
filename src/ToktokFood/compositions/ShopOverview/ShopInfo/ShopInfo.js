@@ -51,7 +51,7 @@ const ShopInfo = (props: PropsType): React$Node => {
 
   const copyToClipboard = item => {
     Clipboard.setString(item.voucherCode);
-    Toast.show(item.voucherCode);
+    Toast.show('Voucher Code Copied!');
   };
 
   return (
@@ -62,7 +62,7 @@ const ShopInfo = (props: PropsType): React$Node => {
           <StyledText textProps={{numberOfLines: 2}} mode="semibold" fontSize={18}>
             {shopBranch}
           </StyledText>
-          <Text>{allowPickup ? 'Available for delivery only' : 'Available for pick-up and delivery'}</Text>
+          <Text>{!allowPickup ? 'Available for delivery only' : 'Available for pick-up and delivery'}</Text>
 
           <Row>
             <InfoIcon icon="time-outline" />

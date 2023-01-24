@@ -1,13 +1,10 @@
-import React, {useCallback, useMemo, useRef, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableHighlight, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 import ContentLoader from 'react-native-easy-content-loader';
-import {useLazyQuery} from '@apollo/react-hooks';
 import {COLORS, FONTS, NUMBERS, SIZES} from '../../../../../res/constants';
 import {FONT, FONT_SIZE, COLOR, SIZE} from '../../../../../res/variables';
 import {WhiteButton, VectorIcon, Shadow, ICON_SET} from '../../../../../revamp';
-import {GET_GOOGLE_GEOCODE_REVERSE} from '../../../../../graphql';
-import {GeolocationUtility, GoogleUtility} from '../../../../../util';
 
 const SenderRecipientCard = ({
   senderStop,
@@ -21,52 +18,27 @@ const SenderRecipientCard = ({
 }) => {
   const [userStop, setUserStop] = useState(senderStop);
   const session = useSelector(state => state.session);
+  const superApp = useSelector(state => state.superApp);
 
-  const [getGoogleGeocodeReverse, {loading, error}] = useLazyQuery(GET_GOOGLE_GEOCODE_REVERSE, {
-    fetchPolicy: 'network-only',
-    onCompleted: ({getGoogleGeocodeReverse}) => {
-      console.log(JSON.stringify({USER: userStop}, null, 4));
-      console.log(JSON.stringify({GEOCODED: getGoogleGeocodeReverse}, null, 4));
+  const getDefaultLocation = () => {
+    if (superApp?.defaultAddress) {
+      onLocationDetected({
+        latitude: superApp?.defaultAddress?.place?.location?.latitude,
+        longitude: superApp?.defaultAddress?.place?.location?.longitude,
+      });
 
       const updatedUserStop = {
         ...userStop,
+        latitude: superApp?.defaultAddress?.place?.location?.latitude,
+        longitude: superApp?.defaultAddress?.place?.location?.longitude,
         name: `${session.user.person.firstName} ${session.user.person.lastName}`,
         mobile: session.user.username.replace('+63', ''),
-        formattedAddress: getGoogleGeocodeReverse.formattedAddress,
-        addressBreakdownHash: getGoogleGeocodeReverse.addressBreakdownHash,
+        formattedAddress: superApp?.defaultAddress?.place?.formattedAddress,
+        addressBreakdownHash: superApp?.defaultAddress?.placeHash,
         // addressBreakdown: getGoogleGeocodeReverse.addressBreakdown,
       };
       setSenderStop(updatedUserStop);
       setUserStop(updatedUserStop);
-    },
-    onError: error => console.log({error}),
-  });
-
-  const getLocationHash = async () => {
-    const currentLocation = await GeolocationUtility.getCurrentLocation();
-
-    if (currentLocation) {
-      setUserStop({
-        ...userStop,
-        latitude: currentLocation.coords.latitude,
-        longitude: currentLocation.coords.longitude,
-      });
-
-      onLocationDetected({
-        latitude: currentLocation.coords.latitude,
-        longitude: currentLocation.coords.longitude,
-      });
-
-      getGoogleGeocodeReverse({
-        variables: {
-          input: {
-            coordinates: {
-              latitude: currentLocation.coords.latitude,
-              longitude: currentLocation.coords.longitude,
-            },
-          },
-        },
-      });
     }
   };
 
@@ -76,7 +48,7 @@ const SenderRecipientCard = ({
 
     // }
     if (!hasAddressFromSearch && !hasAddressFromRebook) {
-      getLocationHash();
+      getDefaultLocation();
     }
   }, []);
 
@@ -159,7 +131,7 @@ const SenderRecipientCard = ({
                   style={{
                     fontFamily: FONT.BOLD,
                   }}>
-                  {`May ipapadala? Ipa-toktok mo na yan!`}
+                  {`May ipapadala? I-toktok mo na yan!`}
                 </Text>
               )}
             </View>

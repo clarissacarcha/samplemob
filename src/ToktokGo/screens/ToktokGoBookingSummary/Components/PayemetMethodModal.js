@@ -24,17 +24,23 @@ export const PaymentMethodModal = ({
   tokwaAccount,
   getMyAccountLoading,
   checkPaymentMethod,
+  selectedPaymentMethod,
+  getMyAccount,
 }) => {
   const dispatch = useDispatch();
   const {wallet, id} = tokwaAccount;
   const setSelected = paymentMethod => {
-    dispatch({
-      type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-      payload: {...details, paymentMethod: paymentMethod},
-    });
-    setSelectedPaymentMethod(paymentMethod);
-    setViewSelectPaymentModal(false);
-    checkPaymentMethod();
+    if (selectedPaymentMethod != paymentMethod) {
+      dispatch({
+        type: 'SET_TOKTOKGO_BOOKING_DETAILS',
+        payload: {...details, paymentMethod: paymentMethod},
+      });
+      checkPaymentMethod();
+      setSelectedPaymentMethod(paymentMethod);
+      setViewSelectPaymentModal(false);
+    } else {
+      setViewSelectPaymentModal(false);
+    }
   };
 
   const isDisabled = () => {
@@ -43,6 +49,10 @@ export const PaymentMethodModal = ({
     } else {
       return false;
     }
+  };
+
+  const onCashIn = () => {
+    getMyAccount();
   };
 
   return (
@@ -69,7 +79,11 @@ export const PaymentMethodModal = ({
                 <TouchableOpacity
                   style={styles.cashInWrapper}
                   onPress={() => {
-                    setViewSelectPaymentModal(false), navigation.navigate('ToktokWalletLoginPage');
+                    setViewSelectPaymentModal(false),
+                      navigation.navigate('ToktokWalletPaymentOptions', {
+                        amount: 0,
+                        onCashIn: onCashIn,
+                      });
                   }}>
                   <Text style={styles.cashIntextStyle}>Cash In</Text>
                 </TouchableOpacity>

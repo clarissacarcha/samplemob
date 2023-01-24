@@ -78,13 +78,7 @@ export const HeaderPlain = ({value, animatedValue, cartItems, itemName}) => {
                 containerStyle={{ position: 'absolute', top: -5, right: 5 }}
               />
               }    */}
-             {cartItems == 0 ?
-                <Badge
-                  status="warning"
-                  badgeStyle={{backgroundColor: "#FDBA1C"}}
-                  textStyle={{fontFamily: FONT.REGULAR, fontSize: 10}}
-                  containerStyle={{ position: 'absolute', top: 0, right: 10 }}
-                /> : 
+             {cartItems > 0 &&                 
                 <Badge
                   status="warning"
                   value={cartItems >= 100 ? "99+" : cartItems}

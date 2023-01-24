@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, TouchableHighlight, Text, Image, Alert, ScrollView, SafeAreaView} from 'react-native';
 import CONSTANTS from '../../../common/res/constants';
-import {connect, useDispatch} from 'react-redux';
+import {connect, useDispatch, useSelector} from 'react-redux';
 import {Landing, Header, OutstandingFee} from './Sections';
 import {useFocusEffect} from '@react-navigation/native';
 import {
@@ -49,6 +49,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   const [showNotEnoughBalanceModal, setShowNotEnoughBalanceModal] = useState(false);
   const [savedAddressList, setSavedAddressList] = useState([]);
   const [addressObj, setAddressObj] = useState(null);
+  const {defaultAddress} = useSelector(state => state.superApp);
 
   useEffect(() => {
     const subscribe = navigation.addListener('focus', async () => {
@@ -64,7 +65,12 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     });
   }, [navigation]);
 
-  const setBookingInitialState = payload => {
+  const setBookingInitialState = () => {
+    const payload = {
+      hash: defaultAddress.placeHash,
+      name: defaultAddress.contactDetails.fullname,
+      place: defaultAddress.place,
+    };
     dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
   };
 
@@ -81,16 +87,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setSavedAddressList(response.prefGetSavedAddresses.slice(0, 3));
-    },
-    onError: onError,
-  });
-
-  const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
-    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    onCompleted: response => {
-      setBookingInitialState(response.getPlaceByLocation);
+      setSavedAddressList(response.prefGetSavedAddresses);
     },
     onError: onError,
   });
@@ -217,17 +214,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   };
 
   const setPlaceFunction = async () => {
-    const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
-    getPlaceByLocation({
-      variables: {
-        input: {
-          location: {
-            latitude: latitude,
-            longitude: longitude,
-          },
-        },
-      },
-    });
+    setBookingInitialState();
   };
 
   useFocusEffect(
@@ -267,12 +254,12 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
   const onPressSavedAddress = loc => {
     dispatch({
       type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-      payload: {...route.params.details, noteToDriver: ''},
+      payload: {...route?.params?.details, noteToDriver: ''},
     });
     if (route?.params?.voucherData) {
       dispatch({
         type: 'SET_TOKTOKGO_BOOKING_DETAILS',
-        payload: {...route.params.details, voucher: route.params.voucherData, paymentMethod: 'TOKTOKWALLET'},
+        payload: {...route?.params?.details, voucher: route?.params?.voucherData, paymentMethod: 'TOKTOKWALLET'},
       });
     }
     const addressObject = {
@@ -391,6 +378,7 @@ const ToktokGoBookingStart = ({navigation, constants, session, route}) => {
                             navigateToSavedAddress={navigateToSavedAddress}
                             onPressSavedAddress={onPressSavedAddress}
                             navigation={navigation}
+                            postback={getSavedAddress}
                           />
                         }
                         {recentDestinationList.length == 0 ? null : (

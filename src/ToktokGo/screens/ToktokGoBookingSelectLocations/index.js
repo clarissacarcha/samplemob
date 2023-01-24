@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
-import {Text, View, TouchableHighlight, Image, ScrollView} from 'react-native';
+import {Text, View, TouchableHighlight, Image, ScrollView, FlatList} from 'react-native';
 import {
   Location,
   Header,
@@ -23,7 +23,7 @@ import {useMutation, useLazyQuery} from '@apollo/react-hooks';
 import {throttle, debounce, get} from 'lodash';
 import {connect, useDispatch, useSelector} from 'react-redux';
 import {useDebounce} from '../../helpers';
-import {EmptyRecent, ToktokgoBeta} from '../../components';
+import {EmptyRecent, SearchDisplayCard, ToktokgoBeta} from '../../components';
 import DestinationIcon from '../../../assets/icons/DestinationIcon.png';
 import DestinationBC from '../../../assets/toktokgo/destination4.png';
 import {useFocusEffect} from '@react-navigation/native';
@@ -35,6 +35,8 @@ import {NoRecordFound, ServiceableArea} from './Components';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useAlertGO} from '../../hooks';
 import {PREF_GET_SAVED_ADDRESSES} from '../../../graphql';
+import {BackButton} from '../../../components_section/Buttons';
+import {HeaderTitle} from '../../../components_section/Texts';
 
 const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const alertGO = useAlertGO();
@@ -45,6 +47,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const inputRef = useRef();
   const dispatch = useDispatch();
   const {origin, destination, sessionToken} = useSelector(state => state.toktokGo);
+  const {defaultAddress} = useSelector(state => state.superApp);
 
   const [searchDestination, setSearchDestination] = useState(destination?.place?.formattedAddress);
   const [searchOrigin, setSearchOrigin] = useState(origin?.place?.formattedAddress);
@@ -57,6 +60,11 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   const [serviceableAreaList, setServiceableAreaList] = useState('');
   const [savedAddressList, setSavedAddressList] = useState([]);
   const [addressObj, setAddressObj] = useState(null);
+
+  navigation.setOptions({
+    headerLeft: () => <BackButton navigation={navigation} />,
+    headerTitle: () => <HeaderTitle label={'Address'} />,
+  });
 
   useEffect(() => {
     async function tempFunction() {
@@ -71,18 +79,27 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     return () => {};
   }, []);
 
+  const setBookingInitialState = () => {
+    const payload = {
+      hash: defaultAddress.placeHash,
+      name: defaultAddress.contactDetails.fullname,
+      place: defaultAddress.place,
+    };
+    dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
+    setSearchOrigin(defaultAddress?.place?.formattedAddress);
+  };
+
   const [getSavedAddress] = useLazyQuery(PREF_GET_SAVED_ADDRESSES, {
     client: TOKTOK_ADDRESS_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setSavedAddressList(response.prefGetSavedAddresses.slice(0, 3));
+      setSavedAddressList(response.prefGetSavedAddresses);
     },
     onError: onError,
   });
 
   const [getPlaceAutocomplete, {loading}] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
     onCompleted: response => {
       if (response.getPlaceAutocomplete.length == 0) {
         alertGO({
@@ -162,49 +179,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     },
   });
 
-  const [getPlaceByLocation] = useLazyQuery(GET_PLACE_BY_LOCATION, {
-    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    onCompleted: response => {
-      const payload = response.getPlaceByLocation;
-      dispatch({type: 'SET_TOKTOKGO_BOOKING_ORIGIN', payload});
-      setSearchOrigin(payload?.place?.formattedAddress);
-    },
-    onError: error => {
-      const {graphQLErrors, networkError} = error;
-
-      if (networkError) {
-        alertGO({message: 'Network error occurred. Please check your internet connection.'});
-      } else if (graphQLErrors.length > 0) {
-        graphQLErrors.map(({message, locations, path, code, errorType, serviceableArea}) => {
-          if (code === 'INTERNAL_SERVER_ERROR') {
-            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
-          } else if (code === 'USER_INPUT_ERROR') {
-            alertGO({message});
-          } else if (code === 'BAD_USER_INPUT') {
-            if (errorType === 'AREA_UNSERVICEABLE') {
-              setServiceableAreaScreen(true);
-              setServiceableAreaList(serviceableArea);
-            } else if (errorType === 'PLACE_NOT_FOUND') {
-              alertGO({
-                title: 'Location Not Available',
-                message: 'Location is no longer available. Please select another location.',
-              });
-            } else {
-              alertGO({message});
-              setServiceableAreaScreen(false);
-            }
-          } else if (code === 'AUTHENTICATION_ERROR') {
-            // Do Nothing. Error handling should be done on the scren
-          } else {
-            console.log('ELSE ERROR:', error);
-            alertGO({title: 'Whooops', message: 'May kaunting aberya, ka-toktok. Keep calm and try again.'});
-          }
-        });
-      }
-    },
-  });
-
   const onPressRecentSearch = loc => {
     if (selectedInput == 'D') {
       dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: loc});
@@ -250,17 +224,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
   );
 
   const setPlaceFunction = async () => {
-    const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
-    getPlaceByLocation({
-      variables: {
-        input: {
-          location: {
-            latitude: latitude,
-            longitude: longitude,
-          },
-        },
-      },
-    });
+    setBookingInitialState();
   };
 
   useFocusEffect(
@@ -280,11 +244,14 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
   const onChange = value => {
     setSearchDestination(value);
-    debouncedRequest(value);
   };
   const onChangeOrigin = value => {
     setSearchOrigin(value);
-    debouncedRequest(value);
+  };
+  const onPressSearch = value => {
+    if (value) {
+      debouncedRequest(value);
+    }
   };
 
   const onPressLocation = () => {
@@ -382,11 +349,6 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
 
   const onChangeSelectedInput = value => {
     setSelectedInput(value);
-    if (value == 'D') {
-      debouncedRequest(searchDestination);
-    } else {
-      debouncedRequest(searchOrigin);
-    }
   };
 
   useEffect(() => {
@@ -403,25 +365,9 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
     navigation.push('ToktokSavedLocations', {getAddressObj});
   };
 
-  return (
-    <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, flex: 1, justifyContent: 'space-between'}}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Header navigation={navigation} />
-        <Location
-          onChangeOrigin={onChangeOrigin}
-          onChange={onChange}
-          inputRef={inputRef}
-          selectedInput={selectedInput}
-          onChangeSelectedInput={onChangeSelectedInput}
-          titleOrigin={searchOrigin}
-          title={searchDestination}
-          setSearchDestination={setSearchDestination}
-          setSearchOrigin={setSearchOrigin}
-          loading={loading}
-          setLoadingAutoComplete={setLoadingAutoComplete}
-          loadingAutoComplete={loadingAutoComplete}
-          setSearchResponse={setSearchResponse}
-        />
+  const emptyList = () => {
+    return (
+      <>
         {searchResponse?.length == 0 ? (
           <View>
             {recentSearchDataList.length == 0 && recentDestinationList.length == 0 && savedAddressList.length == 0 ? (
@@ -475,6 +421,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
                               onPressSavedAddress={onPressSavedAddress}
                               recentSearchDataList={recentSearchDataList}
                               navigation={navigation}
+                              postback={getSavedAddress}
                             />
                           </View>
                         )}
@@ -488,6 +435,7 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
                               popTo={popTo}
                               recentDestinationList={recentDestinationList}
                               onPressRecentDestination={onPressRecentDestination}
+                              postback={getSavedAddress}
                             />
                           </View>
                         )}
@@ -500,18 +448,46 @@ const ToktokGoSelectedLocations = ({navigation, route, constants}) => {
           </View>
         ) : (
           <View>
-            {serviceableAreaScreen == true ? (
+            {serviceableAreaScreen == true && (
               <OutsideServiceableArea
                 setServiceableAreVisible={setServiceableAreVisible}
                 serviceableAreVisible={serviceableAreVisible}
                 serviceableAreaList={serviceableAreaList}
               />
-            ) : (
-              <SearchLocation searchResponse={searchResponse} onSelectPlace={onSelectPlace} />
             )}
           </View>
         )}
-      </ScrollView>
+      </>
+    );
+  };
+
+  return (
+    <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, flex: 1, justifyContent: 'space-between'}}>
+      <FlatList
+        ListHeaderComponent={
+          <Location
+            onChangeOrigin={onChangeOrigin}
+            onChange={onChange}
+            inputRef={inputRef}
+            selectedInput={selectedInput}
+            onChangeSelectedInput={onChangeSelectedInput}
+            titleOrigin={searchOrigin}
+            title={searchDestination}
+            setSearchDestination={setSearchDestination}
+            setSearchOrigin={setSearchOrigin}
+            loading={loading}
+            setLoadingAutoComplete={setLoadingAutoComplete}
+            loadingAutoComplete={loadingAutoComplete}
+            setSearchResponse={setSearchResponse}
+            onPressSearch={onPressSearch}
+          />
+        }
+        ListEmptyComponent={emptyList}
+        showsVerticalScrollIndicator={false}
+        data={searchResponse}
+        // keyExtractor={item => item.id}
+        renderItem={({item, index}) => <SearchDisplayCard item={item} onSelectPlace={onSelectPlace} />}
+      />
       <ThrottledHighlight
         delay={500}
         onPress={() => {

@@ -21,6 +21,7 @@ const Delivery = `
   description
   status
   createdAt
+  shareLink
   senderStop {
     name
     mobile
@@ -243,6 +244,35 @@ export const POST_DELIVERY_VERIFY_REQUEST_TAKE_MONEY = gql`
   mutation postDeliveryVerifyRequestTakeMoney($input: PostDeliveryVerifyRequestTakeMoneyInput!) {
     postDeliveryVerifyRequestTakeMoney(input: $input) {
       message
+    }
+  }
+`;
+
+export const GET_DELIVERY_RECENT_RECIPIENTS = gql`
+  query {
+    getDeliveryRecentRecipients {
+      name
+      mobile
+      landmark
+      hashedPlace {
+        hash
+        place {
+          location {
+            latitude
+            longitude
+            lng
+            lat
+          }
+          formattedAddress
+          addressBreakdown {
+            city
+            province
+            region
+            country
+            postal
+          }
+        }
+      }
     }
   }
 `;

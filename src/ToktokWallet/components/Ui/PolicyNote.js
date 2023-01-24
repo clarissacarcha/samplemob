@@ -22,20 +22,22 @@ export const PolicyNote = ({
   endOfNote1,
   subTextNote1Styles,
   noteText1Styles,
+  noteText2Styles,
+  noteTextStyles,
 }) => {
   return (
     <TouchableOpacity style={[styles.note, containerStyle]} onPress={onPress} disabled={disabled}>
       <Image source={info_icon} style={styles.noteLogo} />
       <View>
         {!!title && <Text style={[styles.title, titleStyles]}>{title}</Text>}
-        <Text style={[styles.noteText, noteText1Styles]}>
+        <Text style={[styles.noteText, noteText1Styles, noteTextStyles]}>
           {note1}
           <Text style={[styles.subTextNote1, subTextNote1Styles]} onPress={onPressNote1}>
             {subTextNote1}
           </Text>
           {endOfNote1}
         </Text>
-        {!!note2 && <Text style={styles.noteText}>{note2}</Text>}
+        {!!note2 && <Text style={[styles.noteText, noteText2Styles, noteTextStyles]}>{note2}</Text>}
       </View>
     </TouchableOpacity>
   );

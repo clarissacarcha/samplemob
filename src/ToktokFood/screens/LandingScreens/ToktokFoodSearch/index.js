@@ -80,7 +80,7 @@ const ToktokFoodSearch = ({route}) => {
       setSearch(item.shopname);
       searchFood(item.shopname);
     } else {
-      navigation.navigate('ToktokFoodRestaurantOverview', {item});
+      navigation.navigate('ToktokFoodShopOverview', {item});
     }
   };
 

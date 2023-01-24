@@ -25,6 +25,7 @@ import ExpressForm from './ExpressForm';
 import {ItemForm, ItemSheet} from './ItemForm';
 import NotesForm from './NotesForm';
 import PabiliForm from './PabiliForm';
+import Voucher from './Voucher';
 
 import PromoForm from './PromoForm';
 
@@ -48,10 +49,27 @@ const DeliveryDetails = ({navigation, route, session}) => {
   const [walletBalance, setWalletBalance] = useState(0);
   const [balanceText, setBalanceText] = useState('');
   const [hasWallet, setHasWallet] = useState(null);
+  const [selectedVoucher, setSelectedVoucher] = useState(null);
 
   const [initialPrice, setInitialPrice] = useState(route.params.quotation.pricing.price);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  // todo: data will be provided from API
+  const [topThree, setTopThree] = useState(['Documents', 'Food', 'Medical']);
+  const [arrCopy, setArrCopy] = useState([
+    'Documents',
+    'Food',
+    'Medical',
+    'Animal Accessories',
+    'Automotive Parts',
+    'Beauty Products',
+    'Clothing',
+    'Electronics',
+    'Fragile',
+    'Furniture',
+    'Others',
+  ]);
 
   const quotationHash = route.params.quotation.hash;
   const quotationDirections = route.params.quotation.directions;
@@ -374,38 +392,56 @@ const DeliveryDetails = ({navigation, route, session}) => {
           </View>
         </Modal>
         <View style={{flex: 1}}>
-          <InputScrollView showsVerticalScrollIndicator={false}>
-            <AlertOverlay visible={loading || recomputeLoading} />
-            <View style={{height: 10}} />
-            <PaymentMethodForm
-              value={paymentMethod === 'CASH' ? 'Cash' : 'toktokwallet'}
-              bottomSheetRef={paymentMethodSheetRef}
-            />
-            {paymentMethod === 'CASH' && (
-              <PaymentForm
-                value={collectPaymentFrom === 'SENDER' ? 'Sender' : 'Recipient'}
-                bottomSheetRef={paymentSheetRef}
+          <InputScrollView showsVerticalScrollIndicator={false} style={{marginHorizontal: -16}}>
+            <View style={{marginHorizontal: 16}}>
+              <AlertOverlay visible={loading || recomputeLoading} />
+              <View style={{height: 10}} />
+              <PaymentMethodForm
+                value={paymentMethod === 'CASH' ? 'Cash' : 'toktokwallet'}
+                bottomSheetRef={paymentMethodSheetRef}
               />
-            )}
+              {paymentMethod === 'CASH' && (
+                <PaymentForm
+                  value={collectPaymentFrom === 'SENDER' ? 'Sender' : 'Recipient'}
+                  bottomSheetRef={paymentSheetRef}
+                />
+              )}
 
-            <ItemForm
-              value={itemDescription}
-              bottomSheetRef={itemSheetRef}
-              onOtherItemChange={setOtherItem}
-              otherItem={otherItem}
-            />
+              <ItemForm
+                value={itemDescription}
+                bottomSheetRef={itemSheetRef}
+                onOtherItemChange={setOtherItem}
+                otherItem={otherItem}
+                setItemDescription={setItemDescription}
+                topThree={topThree}
+                setTopThree={setTopThree}
+                arrCopy={arrCopy}
+                setArrCopy={setArrCopy}
+                navigation={navigation}
+              />
 
-            <NotesForm value={notes} onChange={setNotes} />
+              <NotesForm value={notes} onChange={setNotes} />
+            </View>
 
-            <PromoForm />
+            {/* OLD VOUCHER/PROMO COMPONENT */}
+            {/* <PromoForm /> */}
 
-            <ExpressForm value={isExpress} onChange={onIsExpressChange} />
-            <PabiliForm
-              value={isCashOnDelivery}
-              amount={cashOnDelivery}
-              onChange={onIsCashOnDeliveryChange}
-              onAmountChange={setCashOnDelivery}
-            />
+            {/* NEW VOUCHER/PROMO COMPONENT. hidden for the mean time */}
+            {/* <Voucher
+              navigation={navigation}
+              selectedVoucher={selectedVoucher}
+              setSelectedVoucher={setSelectedVoucher}
+            /> */}
+
+            <View style={{marginHorizontal: 16}}>
+              <ExpressForm value={isExpress} onChange={onIsExpressChange} />
+              <PabiliForm
+                value={isCashOnDelivery}
+                amount={cashOnDelivery}
+                onChange={onIsCashOnDeliveryChange}
+                onAmountChange={setCashOnDelivery}
+              />
+            </View>
           </InputScrollView>
         </View>
         <View style={{backgroundColor: 'white', marginHorizontal: -16}}>

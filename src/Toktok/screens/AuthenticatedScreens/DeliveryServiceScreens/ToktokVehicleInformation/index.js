@@ -71,8 +71,8 @@ const Screen = ({navigation, route, session}) => {
           consumerId: session.user.consumer.id,
           vehicleTypeId: selectedVehicleType.id,
           promoCode: '',
-          isExpress: false,
-          isCashOnDelivery: false,
+          isExpress: orderData.isExpress,
+          isCashOnDelivery: orderData.isCashOnDelivery,
 
           origin: {
             latitude: orderData.senderStop.latitude,

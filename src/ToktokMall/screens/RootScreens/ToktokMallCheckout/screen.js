@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Toast from "react-native-simple-toast";
 import axios from "axios";
 import {AlertModal} from '../../../Components/Widgets'
+import { AlertOverlay } from '../../../../components';
 import {emptyPlaceOrder} from "../../../assets"
 import {ApiCall, ShippingApiCall, BuildPostCheckoutBody, BuildTransactionPayload, WalletApiCall, BuildOrderLogsList, ArrayCopy, getRefComAccountType, RoundOffValue} from "../../../helpers"
 
@@ -516,8 +517,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
         // transactionTypeId: "TOKTOKWALLET PAYMENT"
         transactionTypeId: 110
       })
-      setIsLoading(false)
-
+      
+      console.log("REQUEST MONEY PAYLOAD", transactionPayload)
            
       const req = await WalletApiCall("request_money", transactionPayload, true)
 
@@ -525,6 +526,17 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
         let shippingVouchers = CheckoutContextData.shippingVouchers.filter((a) => a.voucherCodeType == "shipping")
         let promotionVouchers = CheckoutContextData.shippingVouchers.filter((a) => a.voucherCodeType == "promotion")
+
+        const getReferral = () => {
+          if(toktokSession.user.consumer.referralCode && franchisee?.franchiseeCode) {
+            return {}
+          } else {
+            return {
+              referralCode: toktokSession.user.consumer.referralCode,
+              referralName: null
+            }
+          }
+        }
         
         const checkoutBody = await BuildPostCheckoutBody({
           walletRequest: req.responseData.data,
@@ -540,7 +552,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
           paymentMethod: "TOKTOKWALLET",
           hashAmount: req.responseData.hash_amount,
           referenceNum: req.responseData.orderRefNum,
-          referral: {},
+          referral: getReferral(),
           franchisee: franchisee    
         })
 
@@ -557,6 +569,8 @@ const Component = ({route, navigation, createMyCartSession}) => {
           enableIdle: false,
           data: checkoutBody, // additional data thats need to be process on your side
         });
+
+        setIsLoading(false)
 
       }else if(req.responseError){
 
@@ -1004,6 +1018,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
         removeClippedSubviews={true}
       >
         {/* LOADING POPUP */}
+        <AlertOverlay visible={isLoading} />
         <PopupModalComponent isVisible={processingCheckout} type="Loading" label='Placing Order' useLottie={true} />
 
         <AlertModal
@@ -1113,7 +1128,7 @@ const Component = ({route, navigation, createMyCartSession}) => {
 
              setIsLoading(true)
          
-             checkItemFromCheckout({
+             await checkItemFromCheckout({
                variables: {
                  input: {
                    productId: ids,

@@ -1,5 +1,7 @@
 import React, {useCallback, useMemo, useRef, useState, useEffect, useLayoutEffect} from 'react';
-import {View, StyleSheet, Text, StatusBar, TouchableOpacity, TouchableHighlight, Image} from 'react-native';
+import {View, StyleSheet, Text, StatusBar, TouchableOpacity, TouchableHighlight, Image, FlatList} from 'react-native';
+import {PREF_GET_SAVED_ADDRESSES, TOKTOK_ADDRESS_CLIENT} from '../../../../../graphql';
+import {onError} from '../../../../../util/ErrorUtility';
 import {useLazyQuery, useQuery} from '@apollo/react-hooks';
 import {connect} from 'react-redux';
 import moment from 'moment-timezone';
@@ -11,7 +13,8 @@ import {useAlert} from '../../../../../hooks';
 import {COLORS} from '../../../../../res/constants';
 import {COLOR, FONT, FONT_SIZE, SIZE} from '../../../../../res/variables';
 import {GeolocationUtility, PermissionUtility} from '../../../../../util';
-import {GET_GOOGLE_GEOCODE_REVERSE, GET_VEHICLE_TYPES} from '../../../../../graphql';
+import {useFocusEffect} from '@react-navigation/native';
+import {GET_GOOGLE_GEOCODE_REVERSE, GET_VEHICLE_TYPES, GET_DELIVERY_RECENT_RECIPIENTS} from '../../../../../graphql';
 
 import {WhiteButton, BlackButton, ImageHeader, Shadow, VectorIcon, ICON_SET, YellowButton} from '../../../../../revamp';
 import ToktokHeader from '../../../../../assets/toktok/images/ToktokHeader.png';
@@ -19,6 +22,8 @@ import ToktokHeader from '../../../../../assets/toktok/images/ToktokHeader.png';
 //SELF IMPORTS
 import Greeting from './Greeting';
 import SenderRecipientCard from './SenderRecipientCard';
+import SavedAddresses from '../Components/SavedAddresses';
+import RecentDelivery from '../Components/RecentDelivery';
 
 const SCHEDULES = [
   {label: 'Anytime', value: '23:59:59'},
@@ -152,8 +157,8 @@ const ToktokDelivery = ({navigation, session, route}) => {
           latitude: rebookDeliveryData.senderStop.latitude,
           longitude: rebookDeliveryData.senderStop.longitude,
           formattedAddress: rebookDeliveryData.senderStop.formattedAddress,
-          name: `${session.user.person.firstName} ${session.user.person.lastName}`,
-          mobile: session.user.username.replace('+63', ''),
+          name: rebookDeliveryData.senderStop?.name,
+          mobile: rebookDeliveryData.senderStop?.mobile.replace('+63', ''),
           landmark: rebookDeliveryData.senderStop.landmark,
           orderType: rebookDeliveryData.senderStop?.orderType === 1 ? 'ASAP' : 'SCHEDULED',
           scheduledFrom:
@@ -182,8 +187,8 @@ const ToktokDelivery = ({navigation, session, route}) => {
             latitude: rebookDeliveryData.recipientStop.latitude,
             longitude: rebookDeliveryData.recipientStop.longitude,
             formattedAddress: rebookDeliveryData.recipientStop.formattedAddress,
-            name: `${session.user.person.firstName} ${session.user.person.lastName}`,
-            mobile: session.user.username.replace('+63', ''),
+            name: rebookDeliveryData.recipientStop?.name,
+            mobile: rebookDeliveryData.recipientStop?.mobile.replace('+63', ''),
             landmark: rebookDeliveryData.recipientStop.landmark,
             orderType: rebookDeliveryData.recipientStop?.orderType === 1 ? 'ASAP' : 'SCHEDULED',
             scheduledFrom:
@@ -222,6 +227,7 @@ const ToktokDelivery = ({navigation, session, route}) => {
   const [scheduleTimeNow, setScheduleTimeNow] = useState(SCHEDULE_TIME_AFTER);
 
   const [userCoordinates, setUserCoordinates] = useState(null);
+  const [savedAddresses, setSavedAddresses] = useState([]);
 
   useLayoutEffect(() => {
     if (rebookDeliveryData.senderStop) {
@@ -287,6 +293,22 @@ const ToktokDelivery = ({navigation, session, route}) => {
     onError: error => console.log({error}),
   });
 
+  const [getDeliveryRecentRecipients, {data: GDRRdata, loading: GDRRLoading}] = useLazyQuery(
+    GET_DELIVERY_RECENT_RECIPIENTS,
+    {
+      fetchPolicy: 'network-only',
+    },
+  );
+
+  const [prefGetSavedAddresses, {loading: PGSALoading}] = useLazyQuery(PREF_GET_SAVED_ADDRESSES, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: res => {
+      setSavedAddresses(res.prefGetSavedAddresses);
+    },
+    onError: onError,
+  });
+
   navigation.setOptions({
     headerLeft: () => <HeaderBack />,
     headerTitle: () => <HeaderTitle label={['toktok', 'Delivery']} />,
@@ -331,6 +353,13 @@ const ToktokDelivery = ({navigation, session, route}) => {
       });
     }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      prefGetSavedAddresses();
+      getDeliveryRecentRecipients();
+    }, []),
+  );
 
   useEffect(() => {
     if (route.params.formattedAddressFromSearch) {
@@ -380,6 +409,48 @@ const ToktokDelivery = ({navigation, session, route}) => {
     );
   };
 
+  const onSelectSavedAddress = item => {
+    const stopData = {
+      ...orderData,
+      recipientStop: [
+        {
+          ...orderData.recipientStop[0],
+          formattedAddress: item.place.formattedAddress,
+          latitude: item.place.location.latitude,
+          longitude: item.place.location.longitude,
+          name: item.contactDetails.fullname ? item.contactDetails.fullname : '',
+          mobile: item.contactDetails.mobile_no ? item.contactDetails.mobile_no : '',
+        },
+      ],
+    };
+
+    navigation.push('StopDetails', {
+      searchPlaceholder: 'Enter drop off location',
+      stopData: stopData.recipientStop[0],
+      onStopConfirm: onRecipientConfirm,
+    });
+  };
+
+  const onSelectRecentDelivery = item => {
+    const stopData = {
+      ...orderData,
+
+      recipientStop: [
+        {
+          ...orderData.recipientStop[0],
+          formattedAddress: item.hashedPlace.place.formattedAddress,
+          latitude: item.hashedPlace.place.location.latitude,
+          longitude: item.hashedPlace.place.location.longitude,
+        },
+      ],
+    };
+
+    navigation.push('StopDetails', {
+      searchPlaceholder: 'Enter drop off location',
+      stopData: stopData.recipientStop[0],
+      onStopConfirm: onRecipientConfirm,
+    });
+  };
   const onPressThrottled = useThrottle(() => navigation.pop(), 1000);
 
   return (
@@ -464,6 +535,30 @@ const ToktokDelivery = ({navigation, session, route}) => {
           }}
           hasAddressFromSearch={route.params.formattedAddressFromSearch ? true : false}
           hasAddressFromRebook={rebookDeliveryData.senderStop ? true : false}
+        />
+        <FlatList
+          data={[]}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => {
+            return (
+              <>
+                <SavedAddresses
+                  navigation={navigation}
+                  data={savedAddresses}
+                  onSelectSavedAddress={onSelectSavedAddress}
+                  prefGetSavedAddresses={prefGetSavedAddresses}
+                />
+
+                {GDRRdata?.getDeliveryRecentRecipients.length > 0 && (
+                  <RecentDelivery
+                    data={GDRRdata}
+                    onSelectRecentDelivery={onSelectRecentDelivery}
+                    navigation={navigation}
+                  />
+                )}
+              </>
+            );
+          }}
         />
 
         <View style={{flex: 1}} />

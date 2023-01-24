@@ -3,7 +3,6 @@ import React, {useEffect, useState} from 'react';
 import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation} from '@react-navigation/native';
 import {FlatList, Image, RefreshControl, View, Text, Platform} from 'react-native';
-import {useQuery} from '@apollo/react-hooks';
 import {useIsFocused} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import Header from 'toktokfood/components/Header';
@@ -20,6 +19,7 @@ import {empty_notification} from 'toktokfood/assets/images';
 // Queries
 import {GET_TOKTOKFOOD_NOTIFICATIONS} from 'toktokfood/graphql/toktokfood';
 import {TOKTOK_FOOD_GRAPHQL_CLIENT} from 'src/graphql';
+import { useLazyQuery } from '@apollo/react-hooks';
 
 const StyledHeader = styled(Header).attrs(props => ({
   ...props,
@@ -29,7 +29,7 @@ const StyledHeader = styled(Header).attrs(props => ({
     fontSize: 17,
   },
   centerContainerStyle: {
-    top: Platform.OS === 'ios' ? 5 : 8,
+    top: Platform.OS === 'ios' ? 5 : 5,
   },
 }))``;
 
@@ -41,7 +41,7 @@ const ToktokFoodNotifications = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [notification, setNotification] = useState([]);
 
-  const {refetch} = useQuery(GET_TOKTOKFOOD_NOTIFICATIONS, {
+  const [getToktokFoodNotifications, {refetch}] = useLazyQuery(GET_TOKTOKFOOD_NOTIFICATIONS, {
     client: TOKTOK_FOOD_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     variables: {
@@ -56,12 +56,11 @@ const ToktokFoodNotifications = () => {
 
   useEffect(() => {
     if (isFocus) {
-      refetch();
+      getToktokFoodNotifications();
     }
   }, [isFocus]);
 
   const getStatus = ({declinedBy, orderStatus, orderIsfor, referenceNum, shopname, refundTotal}) => {
-    // return {title: 'null', desc: 'test'};
     switch (orderStatus) {
       case 'lf':
         return {
@@ -118,12 +117,7 @@ const ToktokFoodNotifications = () => {
         };
       default:
         return {title: '', desc: ''}
- 
     }
-  };
-
-  const onBack = () => {
-    navigation.goBack();
   };
 
   const onRefresh = () => {

@@ -88,7 +88,18 @@ export const ItemSheet = forwardRef(({onChange}, ref) => {
   );
 });
 
-export const ItemForm = ({value, onChange, bottomSheetRef, otherItem, onOtherItemChange}) => {
+export const ItemForm = ({
+  value,
+  setItemDescription,
+  bottomSheetRef,
+  otherItem,
+  onOtherItemChange,
+  topThree,
+  setTopThree,
+  arrCopy,
+  setArrCopy,
+  navigation,
+}) => {
   const placeholder = 'ex. Food, Document, Clothing etc.';
 
   const label = value ? value : placeholder;
@@ -99,9 +110,12 @@ export const ItemForm = ({value, onChange, bottomSheetRef, otherItem, onOtherIte
       <View style={styles.spacing} />
       <TouchableHighlight
         underlayColor={COLOR.WHITE_UNDERLAY}
-        onPress={() => {
-          bottomSheetRef.current.expand();
-        }}
+        onPress={() =>
+          navigation.navigate('ItemDescriptionScreen', {setItemDescription, topThree, setTopThree, arrCopy, setArrCopy})
+        }
+        // onPress={() => {
+        //   bottomSheetRef.current.expand();
+        // }}
         style={{
           borderRadius: 5,
         }}>

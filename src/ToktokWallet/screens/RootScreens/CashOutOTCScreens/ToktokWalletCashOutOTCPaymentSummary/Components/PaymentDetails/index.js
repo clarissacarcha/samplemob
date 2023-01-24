@@ -1,19 +1,19 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, ImageBackground, Platform} from 'react-native';
-import moment from 'moment';
 import {PolicyNote} from 'toktokwallet/components';
 
 //HELPER
-import {moderateScale, currencyCode, numberFormat} from 'toktokwallet/helper';
+import {moderateScale, currencyCode, numberFormat, pendingCashOutNote} from 'toktokwallet/helper';
 
 // COLORS AND FONTS AND IMAGES
-import {banner, info_icon} from 'toktokwallet/assets';
+import {banner} from 'toktokwallet/assets';
 import CONSTANTS from 'common/res/constants';
-const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SHADOW, SIZE} = CONSTANTS;
+const {COLOR, FONT_FAMILY: FONT, FONT_SIZE} = CONSTANTS;
 
 export const PaymentDetails = ({route, navigation}) => {
-  const {recipientName, recipientMobileNo, email, dateOfClaim, amount, purpose, otcPartnerDetails, totalServiceFee} =
+  const {recipientName, recipientMobileNo, email, amount, purpose, otcPartnerDetails, totalServiceFee} =
     route.params.transactionDetails;
+  const notes = pendingCashOutNote(otcPartnerDetails.provider.key);
 
   return (
     <>
@@ -34,7 +34,8 @@ export const PaymentDetails = ({route, navigation}) => {
           </Text>
         </View>
       </ImageBackground>
-      <PolicyNote note1="All transactions made before 01:00 PM will be processed within the day. All transactions after 01:00 PM will be processed the next banking day." />
+      <PolicyNote note1={notes.note1} note2={notes.note2} noteTextStyles={{fontSize: FONT_SIZE.S}} />
+
       <View style={{marginVertical: moderateScale(10)}}>
         <View style={styles.detailsContainer}>
           <Text style={styles.label}>Recipient Name</Text>
