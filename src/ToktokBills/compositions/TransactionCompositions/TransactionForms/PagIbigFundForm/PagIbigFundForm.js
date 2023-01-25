@@ -110,7 +110,7 @@ const PagIbigFundForm = (props: PropsType): React$Node => {
           value={data.firstField}
           errorMessage={errorMessages.firstField}
           keyboardType={'numeric'}
-          maxLength={14}
+          maxLength={20}
           returnKeyType="done"
         />
       </InputContainer>
