@@ -20,9 +20,9 @@ const {Provider} = TransactionVerifyContext;
 const secondFieldValue = (itemCode, user, favoriteDetails) => {
   switch (itemCode) {
     case 'SSS':
-      return `${user.person.firstName} ${user.person.lastName}`;
+      return favoriteDetails ? favoriteDetails.secondFieldValue : `${user.person.firstName} ${user.person.lastName}`;
     case 'PAG_IBIG':
-      const mobNum = favoriteDetails ? favoriteDetails.secondFieldValue : user.person.mobileNumber;
+      const mobNum = favoriteDetails ? favoriteDetails.secondFieldValue : user.username;
       return mobNum.includes('+63') ? mobNum.replace('+63', '') : mobNum.replace('0', '');
     default:
       return '';
