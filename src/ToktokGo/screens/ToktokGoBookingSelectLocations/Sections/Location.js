@@ -9,6 +9,7 @@ import {isEmpty} from 'lodash';
 import {ThrottledOpacity} from '../../../../components_section';
 import {useDispatch} from 'react-redux';
 import {set} from 'react-native-reanimated';
+import FIcons from 'react-native-vector-icons/Fontisto';
 export const Location = ({
   onChange,
   inputRef,
@@ -23,10 +24,11 @@ export const Location = ({
   setLoadingAutoComplete,
   loadingAutoComplete,
   setSearchResponse,
+  onPressSearch,
 }) => {
   const dispatch = useDispatch();
   return (
-    <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, paddingHorizontal: 16, marginBottom: 15}}>
+    <View style={{backgroundColor: CONSTANTS.COLOR.WHITE, paddingHorizontal: 16, marginBottom: 15, paddingTop: 16}}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <View style={selectedInput == 'P' ? styles.containerInput : styles.textContainerInput}>
           <FA5Icon name="map-pin" size={18} color={CONSTANTS.COLOR.YELLOW} style={{marginLeft: 16}} />
@@ -41,8 +43,13 @@ export const Location = ({
           ) : (
             <ThrottledOpacity
               delay={500}
+              style={{
+                width: '100%',
+                paddingVertical: 12,
+              }}
               onPress={() => {
                 onChangeSelectedInput('P'), setLoadingAutoComplete(true);
+                setSearchResponse([]);
               }}>
               <Text
                 numberOfLines={1}
@@ -71,11 +78,18 @@ export const Location = ({
             </ThrottledOpacity>
           )}
         </View>
+        {selectedInput == 'P' && (
+          <ThrottledOpacity
+            onPress={() => onPressSearch(titleOrigin)}
+            style={{padding: 12, backgroundColor: CONSTANTS.COLOR.ORANGE, borderRadius: 5, marginLeft: 8}}>
+            <FIcons name={'search'} size={15} color={CONSTANTS.COLOR.WHITE} />
+          </ThrottledOpacity>
+        )}
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 19}}>
         <View style={selectedInput == 'D' ? styles.containerInput : styles.textContainerInput}>
           {/* <FA5Icon name="map-marker-alt" size={18} color={CONSTANTS.COLOR.ORANGE} style={{marginLeft: 16}} /> */}
-          <Image source={DestinationIcon} style={{height: 20, width: 20, marginLeft: 12}} resizeMode={'contain'} />
+          <Image source={DestinationIcon} style={{height: 18, width: 18, marginLeft: 12}} resizeMode={'contain'} />
           {selectedInput == 'D' ? (
             <TextInput
               ref={inputRef}
@@ -85,7 +99,13 @@ export const Location = ({
               value={title}
             />
           ) : (
-            <ThrottledOpacity delay={500} onPress={() => onChangeSelectedInput('D')}>
+            <ThrottledOpacity
+              delay={500}
+              style={{width: '100%', paddingVertical: 12}}
+              onPress={() => {
+                onChangeSelectedInput('D');
+                setSearchResponse([]);
+              }}>
               <Text
                 numberOfLines={1}
                 style={{
@@ -97,23 +117,29 @@ export const Location = ({
               </Text>
             </ThrottledOpacity>
           )}
-          {loading && selectedInput == 'D' ? (
-            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
-          ) : (
-            !isEmpty(title) &&
-            selectedInput == 'D' && (
-              <ThrottledOpacity
-                delay={500}
-                onPress={() => {
-                  setSearchDestination(null);
-                  dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: null});
-                  setSearchResponse([]);
-                }}>
+          {!isEmpty(title) && selectedInput == 'D' && (
+            <ThrottledOpacity
+              delay={500}
+              onPress={() => {
+                setSearchDestination(null);
+                dispatch({type: 'SET_TOKTOKGO_BOOKING_DESTINATION', payload: null});
+                setSearchResponse([]);
+              }}>
+              {loading == true ? (
+                <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} />
+              ) : (
                 <Image source={ClearTextInput} style={{height: 10, width: 10}} resizeMode={'contain'} />
-              </ThrottledOpacity>
-            )
+              )}
+            </ThrottledOpacity>
           )}
         </View>
+        {selectedInput == 'D' && (
+          <ThrottledOpacity
+            onPress={() => onPressSearch(title)}
+            style={{padding: 12, backgroundColor: CONSTANTS.COLOR.ORANGE, borderRadius: 5, marginLeft: 8}}>
+            <FIcons name={'search'} size={15} color={CONSTANTS.COLOR.WHITE} />
+          </ThrottledOpacity>
+        )}
       </View>
     </View>
   );

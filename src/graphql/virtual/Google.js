@@ -7,6 +7,13 @@ export const GET_GOOGLE_PLACE_DETAILS = gql`
         latitude
         longitude
       }
+      addressBreakdown {
+        city
+        province
+        region
+        country
+        postal
+      }
       addressBreakdownHash
     }
   }

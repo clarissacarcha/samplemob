@@ -18,7 +18,7 @@ const SenderRecipientCard = ({
   onLocationDetected = () => {},
 }) => {
   const [userStop, setUserStop] = useState(senderStop);
-  const session = useSelector((state) => state.session);
+  const session = useSelector(state => state.session);
 
   const [getGoogleGeocodeReverse, {loading, error}] = useLazyQuery(GET_GOOGLE_GEOCODE_REVERSE, {
     fetchPolicy: 'network-only',
@@ -37,7 +37,7 @@ const SenderRecipientCard = ({
       setSenderStop(updatedUserStop);
       setUserStop(updatedUserStop);
     },
-    onError: (error) => console.log({error}),
+    onError: error => console.log({error}),
   });
 
   const getLocationHash = async () => {
@@ -156,7 +156,7 @@ const SenderRecipientCard = ({
                   style={{
                     fontFamily: FONT.BOLD,
                   }}>
-                  {`May ipapadala? Ipa-toktok mo na yan!`}
+                  {`May ipapadala? I-toktok mo na yan!`}
                 </Text>
               )}
             </View>

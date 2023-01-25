@@ -68,7 +68,7 @@ const PabiliDetails = ({navigation, route, session, constants}) => {
   const [itemDescription, setItemDescription] = useState(route.params.orderData.cargo);
   const [otherItem, setOtherItem] = useState('');
   const [notes, setNotes] = useState(route.params.orderData.notes);
-  const [isExpress, setIsExpress] = useState(false);
+  const [isExpress, setIsExpress] = useState(route.params.orderData.isExpress);
   // const [isCashOnDelivery, setIsCashOnDelivery] = useState(route.params.orderData.isCashOnDelivery);
   const [cashOnDelivery, setCashOnDelivery] = useState(route.params.orderData.cashOnDelivery);
   const [itemsToPurchase, setItemsToPurchase] = useState([FORM_DATA]);

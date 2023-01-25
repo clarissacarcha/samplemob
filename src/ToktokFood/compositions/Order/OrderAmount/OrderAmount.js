@@ -123,7 +123,7 @@ const OrderAmount = (props: PropsType): React$Node => {
                 )}
               {shippingFeeAmount() > 0 &&
                 amountComponent('Discount', state?.promoDetails?.shippingDiscountName, shippingFeeAmount(), '-')}
-              {state?.serviceType === 'pabili' &&
+              {state?.serviceType === 'pabili' && serviceFeeDiscount > 0 && 
                 amountComponent('Discount', 'Service Fee (Reseller)', serviceFeeDiscount, '-')}
             </React.Fragment>
           )}
@@ -164,7 +164,7 @@ const OrderAmount = (props: PropsType): React$Node => {
     if (showAmountBreakdown) {
       return (
         <AmountBreakdownContainer>
-          {amountComponent('', 'Subtotal', state?.srpTotal)}
+          {amountComponent('', 'Subtotal', state?.srpTotalamount)}
           {state?.orderIsfor === 1 && amountComponent('', 'Delivery Fee', state?.originalShippingFee)}
           {state?.serviceType === 'pabili' &&
             amountComponent('', 'Service Fee', state?.totalServiceFee || 'WAIVED', '', 'info', () =>

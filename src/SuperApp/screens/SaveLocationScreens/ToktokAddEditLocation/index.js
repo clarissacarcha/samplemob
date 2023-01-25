@@ -10,12 +10,15 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {currentLocation} from '../../../../helper';
 import {useFocusEffect} from '@react-navigation/native';
 import {AddressChip, AddressForm, AddressButtons} from './Sections';
+import {GET_PLACE_BY_LOCATION} from '../../../../ToktokGo/graphql';
+import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
 import {
   PREF_USER_ADDRESS_DELETE,
   PREF_USER_ADDRESS_UPDATE,
   PREF_USER_ADDRESS_CREATE,
   TOKTOK_ADDRESS_CLIENT,
   PREF_GET_SAVED_ADDRESS,
+  PREF_GET_SAVED_ADDRESSES,
 } from '../../../../graphql';
 import {
   ConfirmOperationAddressModal,
@@ -32,11 +35,13 @@ const AddEditLocation = ({navigation, route, session}) => {
 
   const {
     addressIdFromService,
+    formattedAddress = null,
     coordsFromService = null,
     isFromLocationAccess = false,
     addressObj = null,
     isHomeTaken = false,
     isOfficeTaken = false,
+    postback,
   } = route.params;
 
   const [modalOperationType, setModalOperationType] = useState('');
@@ -60,6 +65,9 @@ const AddEditLocation = ({navigation, route, session}) => {
   const [contactNumber, setContactNumber] = useState(addressObj?.id ? addressObj.contactDetails.mobile_no : '');
   const [contactName, setContactName] = useState(addressObj?.id ? addressObj.contactDetails.fullname : '');
 
+  const [isOfficeTakenCheck, setIsOfficeTaken] = useState(isOfficeTaken);
+  const [isHomeTakenCheck, setIsHomeTaken] = useState(isHomeTaken);
+
   const [prefUserAddressDelete] = useMutation(PREF_USER_ADDRESS_DELETE, {
     client: TOKTOK_ADDRESS_CLIENT,
     onError: onError,
@@ -69,15 +77,26 @@ const AddEditLocation = ({navigation, route, session}) => {
     },
   });
 
+  const [prefGetSavedAddresses, {data}] = useLazyQuery(PREF_GET_SAVED_ADDRESSES, {
+    client: TOKTOK_ADDRESS_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: res => {
+      res.prefGetSavedAddresses.find(item => item.isOffice) ? setIsOfficeTaken(true) : setIsOfficeTaken(false);
+      res.prefGetSavedAddresses.find(item => item.isHome) ? setIsHomeTaken(true) : setIsHomeTaken(false);
+    },
+    onError: onError,
+  });
+
   const [prefUserAddressUpdate, {loading: PACLoading}] = useMutation(PREF_USER_ADDRESS_UPDATE, {
     client: TOKTOK_ADDRESS_CLIENT,
     onCompleted: () => {
       setShowConfirmOperationAddressModal(false);
       setShowSuccessOperationAddressModal(true);
+      postback();
     },
     onError: error => {
       const {graphQLErrors, networkError} = error;
-
+      setShowConfirmOperationAddressModal(false);
       if (networkError) {
         Alert.alert('', 'Network error occurred. Please check your internet connection.');
       } else if (graphQLErrors.length > 0) {
@@ -115,7 +134,9 @@ const AddEditLocation = ({navigation, route, session}) => {
       setConfirmedLocation(res.prefGetSavedAddress);
       setIsDefault(res.prefGetSavedAddress.isDefault);
       setIsHomeSelected(res.prefGetSavedAddress.isHome);
+      setIsHomeTaken(!res.prefGetSavedAddress.isHome);
       setIsOfficeSelected(res.prefGetSavedAddress.isOffice);
+      setIsOfficeTaken(!res.prefGetSavedAddress.isOffice);
       setIsCustomSelected(res.prefGetSavedAddress.label ? true : false);
       setCustomLabel(res.prefGetSavedAddress.label);
       setLandMark(res.prefGetSavedAddress.landmark);
@@ -134,6 +155,7 @@ const AddEditLocation = ({navigation, route, session}) => {
     client: TOKTOK_ADDRESS_CLIENT,
     onCompleted: () => {
       setShowSuccessOperationAddressModal(true);
+      postback();
     },
     onError: error => {
       const {graphQLErrors, networkError} = error;
@@ -177,19 +199,19 @@ const AddEditLocation = ({navigation, route, session}) => {
     });
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      if (addressObj?.id) {
-        setLocCoordinates({
-          latitude: addressObj?.place?.location?.latitude,
-          longitude: addressObj?.place?.location?.longitude,
-          ...MAP_DELTA_LOW,
-        });
-      } else {
-        getCurrentLocation();
-      }
-    }, []),
-  );
+  const [getPlaceByLocation, {loading: GPLLoading}] = useLazyQuery(GET_PLACE_BY_LOCATION, {
+    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
+    fetchPolicy: 'network-only',
+    onCompleted: response => {
+      setLocCoordinates({
+        latitude: response.getPlaceByLocation.place.location.latitude,
+        longitude: response.getPlaceByLocation.place.location.longitude,
+        ...MAP_DELTA_LOW,
+      });
+      setConfirmedLocation(response.getPlaceByLocation);
+    },
+    onError: onError,
+  });
 
   const saveNewAddress = () => {
     if (!isHomeSelected && !isOfficeSelected && !customLabel) {
@@ -293,6 +315,8 @@ const AddEditLocation = ({navigation, route, session}) => {
   const onSearchMap = () => {
     navigation.navigate('ToktokPinLocation', {
       locCoordinates,
+      setLocCoordinates,
+      formattedAddress: confirmedLocation?.place?.formattedAddress,
       setConfirmedLocation,
       addressObj,
       setIsEdited,
@@ -351,28 +375,35 @@ const AddEditLocation = ({navigation, route, session}) => {
   };
 
   const showCustomFunc = () => {
-    if (isOfficeTaken && isHomeTaken) {
-      if (addressObj && !addressObj?.label) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      if (!isOfficeTaken || !isHomeTaken) {
-        return true;
-      } else {
-        return false;
-      }
+    if (isHomeSelected) {
+      return true;
     }
+
+    if (isOfficeSelected) {
+      return true;
+    }
+
+    if ((!isHomeTakenCheck || !isOfficeTakenCheck) && isCustomSelected) {
+      return true;
+    }
+
+    if (addressObj && !addressObj?.label) {
+      return true;
+    }
+    return false;
   };
 
   const showHomeFunc = () => {
     if (!addressObj) {
-      return !isHomeTaken;
-    } else {
-      if (isHomeTaken && addressObj?.isHome) {
+      if (isHomeTakenCheck && !isHomeSelected) {
+        return false;
+      } else {
         return true;
-      } else if (!isHomeTaken) {
+      }
+    } else {
+      if (isHomeTakenCheck && addressObj?.isHome) {
+        return true;
+      } else if (!isHomeTakenCheck) {
         return true;
       } else {
         return false;
@@ -382,11 +413,15 @@ const AddEditLocation = ({navigation, route, session}) => {
 
   const showOfficeFunc = () => {
     if (!addressObj) {
-      return !isOfficeTaken;
-    } else {
-      if (isOfficeTaken && addressObj?.isOffice) {
+      if (isOfficeTakenCheck && !isOfficeSelected) {
+        return false;
+      } else {
         return true;
-      } else if (!isOfficeTaken) {
+      }
+    } else {
+      if (isOfficeTakenCheck && addressObj?.isOffice) {
+        return true;
+      } else if (!isOfficeTakenCheck) {
         return true;
       } else {
         return false;
@@ -424,6 +459,7 @@ const AddEditLocation = ({navigation, route, session}) => {
   };
 
   useEffect(() => {
+    prefGetSavedAddresses();
     if (addressIdFromService) {
       prefGetSavedAddress({
         variables: {
@@ -435,38 +471,45 @@ const AddEditLocation = ({navigation, route, session}) => {
     }
 
     if (coordsFromService) {
-      let coordinates = {
-        latitude: coordsFromService?.latitude,
-        longitude: coordsFromService?.longitude,
-        ...MAP_DELTA_LOW,
-      };
-      // onSearchMap();
-      navigation.navigate('ToktokPinLocation', {
-        locCoordinates: coordinates,
-        setConfirmedLocation,
-        addressObj,
-        setIsEdited,
-        setErrorAddressField,
+      getPlaceByLocation({
+        variables: {
+          input: {
+            location: {
+              latitude: coordsFromService?.latitude,
+              longitude: coordsFromService?.longitude,
+            },
+            service: 'PREF',
+          },
+        },
       });
-    }
-
-    if (addressObj) return;
-
-    if (!isHomeTaken && !isOfficeTaken) {
-      setIsHomeSelected(true);
-      setIsCustomSelected(false);
-    } else if (isHomeTaken && !isOfficeTaken) {
-      setIsOfficeSelected(true);
-    } else if (!isHomeTaken && isOfficeTaken) {
-      setIsHomeSelected(true);
+    } else if (addressObj?.id) {
+      setLocCoordinates({
+        latitude: addressObj?.place?.location?.latitude,
+        longitude: addressObj?.place?.location?.longitude,
+        ...MAP_DELTA_LOW,
+      });
     } else {
-      if (!isOfficeTaken || !isHomeTaken) {
-        setIsCustomSelected(false);
-      } else {
-        setIsCustomSelected(true);
-      }
+      getCurrentLocation();
     }
   }, []);
+
+  useEffect(() => {
+    if (addressObj) return;
+
+    if (!isHomeTakenCheck) {
+      setIsHomeSelected(true);
+      setIsOfficeSelected(false);
+      setIsCustomSelected(false);
+    } else if (!isOfficeTakenCheck) {
+      setIsOfficeSelected(true);
+      setIsCustomSelected(false);
+      setIsHomeSelected(false);
+    } else {
+      setIsOfficeSelected(false);
+      setIsHomeSelected(false);
+      setIsCustomSelected(true);
+    }
+  }, [isOfficeTakenCheck, isHomeTakenCheck]);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {

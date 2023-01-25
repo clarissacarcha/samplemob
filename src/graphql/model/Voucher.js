@@ -36,7 +36,16 @@ voucherWallet {
   voucherId
   toktokUserId
   voucherTransactionId
+}
+details {
+  minAmount
 } 
+remainingVoucher {
+    dailyLimit
+    lifetimeLimit
+    dailyMaxCount
+    lifetimeMaxCount
+}
 `;
 
 export const GET_VOUCHERS = gql`
@@ -58,6 +67,14 @@ export const GET_SEARCH_VOUCHER = gql`
 export const GET_VOUCHER = gql`
   query getVoucher($input: GetVoucherInput) {
     getVoucher(input: $input) {
+      ${TokwaVoucher}
+    }
+  }
+`;
+
+export const GET_ENTERPRISE_VOUCHER = gql`
+  query getEnterpriseVoucher($input: GetEnterpriseVoucherInput!) {
+    getEnterpriseVoucher(input: $input) {
       ${TokwaVoucher}
     }
   }

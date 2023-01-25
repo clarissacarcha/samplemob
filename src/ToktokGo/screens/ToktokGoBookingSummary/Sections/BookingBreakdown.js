@@ -48,7 +48,7 @@ export const BookingBreakdown = ({selectedVehicle, loading, details, setViewOuts
 
       {details?.rate?.tripFare?.discount > 0 && (
         <View style={styles.rowContainer}>
-          <View>
+          <View style={{width: screenWidth * 0.7}}>
             <Text style={styles.title}>Voucher</Text>
             <Text style={styles.voucherText}>{details?.voucher?.name}</Text>
           </View>

@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity, Image, Platform, ImageBackgrou
 import {useNavigation} from '@react-navigation/native';
 
 //UTIL
-import {moderateScale} from 'toktokwallet/helper';
+import {moderateScale, pendingCashOutNote} from 'toktokwallet/helper';
 
 //COMPONENTS
 import {LoadingIndicator, PolicyNote} from 'toktokwallet/components';
@@ -17,8 +17,9 @@ import FIcon5 from 'react-native-vector-icons/FontAwesome5';
 export const Header = ({route}) => {
   const navigation = useNavigation();
 
-  const {logo, description} = route.params.otcPartnerDetails;
+  const {logo, description, provider} = route.params.otcPartnerDetails;
   const [imageLoading, setImageLoading] = useState(true);
+  const notes = pendingCashOutNote(provider.key);
 
   return (
     <>
@@ -53,7 +54,7 @@ export const Header = ({route}) => {
           </TouchableOpacity>
         </View>
       </ImageBackground>
-      <PolicyNote note1="All transactions made before 01:00 PM will be processed within the day. All transactions after 01:00 PM will be processed the next banking day." />
+      <PolicyNote note1={notes.note1} note2={notes.note2} noteTextStyles={{fontSize: FONT_SIZE.S}} />
     </>
   );
 };

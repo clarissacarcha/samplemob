@@ -10,9 +10,13 @@ import normalize from 'react-native-normalize';
 
 const windowWidth = Dimensions.get('window').width;
 
-export const LocationCard = ({navigation, item, image, onPress, lastItem = false}) => {
+export const LocationCard = ({navigation, item, image, onPress, lastItem = false, postback}) => {
   const navigateToAddSavedAddress = () => {
-    navigation.push('ToktokAddEditLocation', {coordsFromService: item?.place?.location});
+    navigation.push('ToktokAddEditLocation', {
+      coordsFromService: item?.place?.location,
+      formattedAddress: item?.place?.formattedAddress,
+      postback: postback,
+    });
   };
   return (
     <>
@@ -38,20 +42,22 @@ export const LocationCard = ({navigation, item, image, onPress, lastItem = false
       <TouchableOpacity onPress={navigateToAddSavedAddress} style={{position: 'absolute', right: 25, top: 35}}>
         <Image source={saveIcon} resizeMode={'contain'} style={{width: normalize(15), height: normalize(15)}} />
       </TouchableOpacity>
-      {!lastItem && <View style={{borderBottomWidth: 2, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />}
+      {!lastItem && (
+        <View style={{borderBottomWidth: 2, borderBottomColor: CONSTANTS.COLOR.LIGHT, marginHorizontal: 16}} />
+      )}
     </>
   );
 };
 
-export const SavedAddressCard = ({navigation, item, image, onPress, lastItem = false}) => {
+export const SavedAddressCard = ({navigation, item, image, onPress, lastItem = false, postback}) => {
   const navigateToEditSavedAddress = () => {
     console.log('id', item?.id);
-    navigation.push('ToktokAddEditLocation', {addressIdFromService: item?.id});
+    navigation.push('ToktokAddEditLocation', {addressIdFromService: item?.id, postback});
   };
   return (
     <>
       <View style={{paddingHorizontal: 20, paddingVertical: 16, backgroundColor: 'white'}}>
-        <View style={{flexDirection: 'row', width: windowWidth * 0.9}}>
+        <View style={{flexDirection: 'row'}}>
           {image && <Image source={image} resizeMode={'contain'} style={{height: 15, width: 15, marginRight: 10}} />}
           <TouchableOpacity onPress={() => onPress(item)}>
             {item.isHome && (
@@ -84,7 +90,7 @@ export const SavedAddressCard = ({navigation, item, image, onPress, lastItem = f
                 <Text style={{fontSize: CONSTANTS.FONT_SIZE.M, color: CONSTANTS.COLOR.BLACK}}>{item.label}</Text>
               </View>
             )}
-            <View style={{width: windowWidth * 0.8}}>
+            <View style={{width: windowWidth * 0.8, marginLeft: 18}}>
               <Text
                 style={{
                   fontSize: CONSTANTS.FONT_SIZE.S,
@@ -94,12 +100,16 @@ export const SavedAddressCard = ({navigation, item, image, onPress, lastItem = f
               </Text>
             </View>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={navigateToEditSavedAddress}
+            style={{alignItems: 'center', justifyContent: 'center'}}>
+            <Image source={editIcon} resizeMode={'contain'} style={{width: normalize(15), height: normalize(15)}} />
+          </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity onPress={navigateToEditSavedAddress} style={{position: 'absolute', right: 25, top: 35}}>
-        <Image source={editIcon} resizeMode={'contain'} style={{width: normalize(15), height: normalize(15)}} />
-      </TouchableOpacity>
-      {!lastItem && <View style={{borderBottomWidth: 2, borderBottomColor: CONSTANTS.COLOR.LIGHT}} />}
+      {!lastItem && (
+        <View style={{borderBottomWidth: 2, borderBottomColor: CONSTANTS.COLOR.LIGHT, marginHorizontal: 16}} />
+      )}
     </>
   );
 };

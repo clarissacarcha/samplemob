@@ -77,6 +77,7 @@ const WalletTransactions = `
     isRefund
     isPayment
   }
+  details
   displayInfo
   amount
   note
@@ -93,6 +94,12 @@ const WalletTransactions = `
   externalReferenceNumber
   externalPayload
   externalDetails
+  cashOut {
+    provider {
+      name
+      key
+    }
+  }
 `;
 
 export const GET_TRANSACTIONS = gql`

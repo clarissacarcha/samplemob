@@ -80,8 +80,8 @@ const SavedLocations = ({navigation, session, route}) => {
 
   const onPressAddress = address => {
     if (route?.params?.getAddressObj) {
+      navigation.pop();
       route.params.getAddressObj(address);
-      return navigation.pop();
     } else {
       prefGetSavedAddress({
         variables: {

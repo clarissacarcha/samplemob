@@ -497,31 +497,28 @@ export const orderTypeData = [
   },
 ];
 
-export const SamplePolicy = `These Terms and Conditions govern your use of our platform tokokfood (the “Platform”), an food delivery platform operated by Cloud Panda PH Inc. (Cloud Panda). Please read these Terms and Conditions carefully before using the platform so that you are aware of your rights and obligations with respect to Cloud Panda, including its affiliates and subsidiaries.
+export const SamplePolicy = `These Terms and Conditions govern your use of our platform tokokfood (the “Platform”), a food delivery platform operated by Cloud Panda PH Inc. (Cloud Panda). Please read these Terms and Conditions carefully before using the platform so that you are aware of your rights and obligations with respect to Cloud Panda, including its affiliates and subsidiaries. By accessing or using the Platform, you agree to be bound by these Terms. These Terms govern your use and access of toktokfood. These Terms apply to all visitors, users, and others who access or use the Platform.
 
-By accessing or using the Platform, you agree to be bound by these Terms. These Terms govern your use and access of toktokfood. These Terms apply to all visitors, users, and others who access or use the Platform.
+As a brief background, the toktokfood platform offers two (2) separate services TOKTOKFOOD and TOKTOKFOOD PABILI. Unless otherwise expressly stated or announced by Cloud Panda, vouchers, promotions, and discounts as a general policy are distinct and separate for the two (2) services aforementioned.
 
 The actual contract of sale is directly between the user and our partner merchants. Cloud Panda is not a party to that or any other contract between the aforementioned parties. As such, it has no obligations in connection with any such contract. Parties to the transaction will be entirely responsible for the sales contract between them, the listing of goods, returns, refund, warranty of purchase and the like.
 
 Cloud Panda PH Inc., reserves the right to modify these Terms and Conditions without prior notice. Any changes hereto will be effective immediately upon posting. Continuous access or use of this Platform after any modifications have been made, signifies your consent to the changes.
 
-You agree that you will have no claim against Cloud Panda PH Inc, for any statement which is not explicitly set out in these Terms. In the event that any of the provisions of these Terms are deemed invalid or invalidated subsequently by any rules or regulations, the remaining provisions will not be affected, and the validity or enforceability of any other provision (or the remaining parts of that provision) will remain. If a court holds that we cannot enforce any part of these Terms as drafted, we may replace those terms with similar terms to the extent enforceable under applicable laws and regulations, without changing the remaining terms of these Terms. No delay in enforcing any provision of these Terms will be construed to be a waiver of any rights under that provision.
-
-Cloud Panda reserves the right to refuse access to the Platform for whatever reason.`;
+You agree that you will have no claim against Cloud Panda PH Inc, for any statement which is not explicitly set out in these Terms. In the event that any of the provisions of these Terms are deemed invalid or invalidated subsequently by any rules or regulations, the remaining provisions will not be affected, and the validity or enforceability of any other provision (or the remaining parts of that provision) will remain. If a court holds that we cannot enforce any part of these Terms as drafted, we may replace those terms with similar terms to the extent enforceable under applicable laws and regulations, without changing the remaining terms of these Terms. No delay in enforcing any provision of these Terms will be construed to be a waiver of any rights under that provision. Cloud Panda reserves the right to refuse access to the Platform for whatever reason.`;
 
 export const TermsAndConditions = {
   DEFINITIONS: {
     title: 'DEFINITIONS',
-    content: `toktokfood is a link between you and the merchant for you to order a variety of goods including prepared meals, non-prepared food, and miscellaneous non-food items (hereinafter collectively referred to as "Goods") to be delivered to you. merchants may be owned and operated either by third party merchants or our affiliated companies.`,
+    content: `toktokfood is a link between you and the merchant for you to order a variety of goods including prepared meals, non-prepared food, and miscellaneous non-food items (hereinafter collectively referred to as "Goods") to be delivered to you. Merchants may be owned and operated either by third party merchants or our affiliated companies.`,
   },
   USE_OF_THE_PLATFORM: {
     title: 'USE OF THE PLATFORM',
-    content: `You need to create your own toktokfood account to use the Platform. When you register for a toktokfood account, we will ask you to provide your personal information including a valid email address, an active mobile phone number, a unique password, etc. Depeding on which payment method you opt to use in purchasing your order, you may need to provide us with your credit/debit card details and you are responsible in making sure that your account is safe. Orders that are placed under your toktokfood account are also your sole responsibility. 
-You are obliged to provide information that is complete, accurate and truthful for the proper processing of the order, including your delivery address and contact information. toktokfood shall not be liable for orders that encounter delivery issues due to incomplete, incorrect or missing information provided by you.`,
+    content: `You need to create your own toktokfood account and a verified toktokwallet account to use the Platform. When you register for a toktokfood account, we will ask you to provide your personal information including a valid email address, an active mobile phone number, a unique password, etc. Depending on which payment method you opt to use in purchasing your order, you may need to provide us with your credit/debit card details and you are responsible in making sure that your account is safe. Orders that are placed under your toktokfood account are also your sole responsibility. You are obliged to provide information that is complete, accurate and truthful for the proper processing of the order, including your delivery address and contact information. toktokfood shall not be liable for orders that encounter delivery issues due to incomplete, incorrect or missing information provided by you.`,
   },
   RESTRICTIONS: {
     title: 'RESTRICTIONS',
-    content: `toktokfood is a link between you and the merchant for you to order a variety of goods including prepared meals, non-prepared food, and miscellaneous non-food items (hereinafter collectively referred to as "Goods") to be delivered to you. merchants may be owned and operated either by third party merchants or our affiliated companies.`,
+    content: `In the event of illegal activity of the merchants, users, visitors, and others who visit the platform, Cloud Panda has the right, but is not obligated to conduct an investigation and perform appropriate legal action against anyone who engages in any prohibited activity in accordance with the Philippine law, such as:`,
     listContent: [
       {
         content: `use toktok app to defraud toktok, our affiliates or other members or users, or engage in other unlawful activities (including, without limitation, dealing in products or services prohibited by law)`,
@@ -539,113 +536,112 @@ You are obliged to provide information that is complete, accurate and truthful f
   },
   ORDERS: {
     title: 'ORDERS',
-    content: `Before placing an order, you are required to provide the delivery address in order for the Platform to display the merchants available in your area. Once you select a merchant, you will be taken to that merchant’s menu page and you can start adding food item/s to your cart.
-
-toktokfood and the merchant (as the case may be) reasonably endeavour to comply with your special instructions for an order. However in some cases where this is not possible or commercially reasonable, toktokfood and/or the merchant reserve the right to proceed to prepare the order in accordance with standard operating procedures. Neither toktokfood nor the merchant shall be responsible to replace or refund an order which does not conform to special instructions provided by you.
-
-When an order is placed in the platform, toktokfood will send an email confirmation to your registered email with the order receipt.`,
+    content: `Before placing an order, you are required to provide the delivery address in order for the Platform to display the available merchants in your area. Once you select a merchant, you will be directed to the merchant’s menu page and you can start adding food item/s to your cart. toktokfood and the merchant (as the case may be) reasonably endeavour to comply with your special instructions for an order. However in some cases where this is not possible or commercially reasonable, toktokfood and/or the merchant reserve the right to proceed to prepare the order in accordance with standard operating procedures. Neither toktokfood nor the merchant shall be responsible to replace or refund an order which does not conform to special instructions provided by you. When an order is placed in the platform, toktokfood will send a confirmation to your registered email with the order receipt.`,
   },
   PRODUCT_POLICY: {
     title: 'PRODUCT POLICY',
-    content: `The following conditions should be complied when submitting a product-related request:`,
-    listContent: [
+    multiContent: [
       {
-        content: `The request should be submitted to the merchant within twenty-four (24) hours upon receipt of the product/s`,
+        content: `The following conditions should be complied when submitting a product-related concern:`,
+        listContent: [
+          {
+            content: `The request should be submitted within 24 hours upon receipt of the product/s.`,
+          },
+          {
+            content: `Order Reference Number shall be presented together with the request.`,
+          },
+          {
+            content: `No cancellation of orders shall be made, for whatever grounds, once an order has already been prepared by the merchant.`,
+          },
+          {
+            content: `Approval of requests are subject to the Merchant's approval and is in accordance with the Merchant's existing refund and exchange policy.`,
+          },
+          {
+            content: `Returns, refunds or exchanges shall be settled by the the user, and the merchant partner.`,
+          },
+          {
+            content: `All vouchers or other discounts and promotions offered in the toktokfood platform shall be exclusively used for regular toktokfood orders and purchases only and is not to be applicable for use to toktokfood pabili bookings and orders. toktokfood reserves the right to dishonor any of its vouchers, discounts, and promotions used for toktok pabili.`,
+          },
+        ],
       },
       {
-        content: `Order Reference Number shall be presented together with the request.`,
-      },
-      {
-        content: `The product is not damaged or destroyed in any way. Packaging is unopened, with no markings, and not tattered or destroyed.`,
-      },
-      {
-        content: `All sold products can only be exchanged with the same products/of the same value, and not cash`,
-      },
-      {
-        content: `Request for exchange/ refund shall not be honored if the reason for return is a mere change of mind.`,
-      },
-      {
-        content: `No cancellation of orders shall be made, for whatever grounds, once an order has already been prepared by the merchant`,
-      },
-      {
-        content: `Approval of requests are subject to the Merchant's approval and is in accordance with the Merchant's existing refund and exchange policy.`,
-      },
-      {
-        content: `Returns, refunds or exchanges shall be settled by the the user, and the merchant partner.`,
-      },
-      {
-        content: `In case of cancelled orders, the merchant shall directly communicate with the customer. In the event of a refund, the partner shall take care of the process and refund.`,
-      },
-      {
-        content: `For mishandled food item/s:
-        
-    a.) Upon receiving, immediately check the condition of the food if in case the said item is not sealed properly, spoiled or in any way inedible, and take photos of the item to serve as supporting document.
-
-    b.) Have a copy of payment as a proof, make sure it contains the ff: (value/amount of item, address of the store where the item was bought) this will serve as evidence for further assessment of the store/merchant.
-
-    c.) Contact the merchant and/or ask for assistance to toktokfood for immediate action.
-`,
-      },
+        content: `For mishandled food item/s:`,
+        listContent: [
+          {
+            content: `Upon receiving, immediately check the condition of the food if in case the said item is not sealed properly, spoiled or in any way inedible, and take photos of the item to serve as supporting document.`,
+          },
+          {
+            content: `Have a copy of payment as a proof, make sure it contains the ff: (value/amount of item, name and address of the store where the item was bought) this will serve as evidence for further assessment of the store/merchant.`,
+          },
+          {
+            content: `Contact the merchant and/or ask for assistance to toktokfood for immediate action.`,
+          },
+        ],
+      }
     ],
   },
   DELIVERY: {
     title: 'DELIVERY',
-    content: `You may choose your order to be delivered ASAP or scheduled for a specific time. An estimated delivery time will be provided to your email and will also be reflected in the Platform. The estimated delivery time shall vary, depending on the uncontrollable factors such as long queue (peak hours), weather, traffic conditions, etc.
-
-You are responsible in ensuring that either you or an authorized representative is at the delivery location that you have provided to receive the order. toktokfood and the partner merchants will not be liable for the missed order and customer will not be eligible for a refund of the order's payment should this happen, including but not limited to the following:`,
+    content: `An estimated delivery time will be provided to your email and will also be reflected in the Platform. The estimated delivery time shall vary, depending on the uncontrollable factors such as long queue (peak hours), weather, traffic conditions, etc. You are responsible in ensuring that either you or an authorized representative is at the delivery location that you have provided to receive the order. toktokfood and the partner merchants will not be liable for the missed order and customer will not be eligible for a refund of the order's payment should this happen, including but not limited to the following:`,
     listContent: [
       {
-        content: `No one was present or available to receive the order; or`,
+        content: `No one was present or available to receive the order;`,
       },
       {
-        content: `Customer remained uncontactable despite attempts to reach the customer via the phone number provided for more than ten (10 )minutes from the time of delivery; or`,
+        content: `Customer remained uncontactable despite several attempts (calls and text messages) to reach the customer via the phone number provided for more than five (5) minutes from the time of delivery;`,
       },
       {
-        content: `Lack of a suitable or secure location to leave the order; or`,
+        content: `Lack of a suitable or secure location to leave the order;`,
       },
       {
         content: `In the case of Restricted Goods, customer did not meet the statutory age requirements or delivery did not deem it safe or appropriate for the customer to receive the Restricted Goods.`,
       },
     ],
-    extentedContent: `Upon receipt of your order, if you discover that there are issues with your order (e.g. wrong/ incomplete order, defective order, poor handling, etc) please contact customer support immediately to report the incident. You must provide toktokfood a photographic proof and/or additional information to properly investigate the issue with your order. If we determine that the order and/or Goods you received are not of satisfactory condition or quality, we will compensate you for your order or parts of your order.`,
+    extentedContent: `Upon receipt of your order, if you discover that there are issues with your order (e.g. wrong/ incomplete orde, poor handling, etc) please contact customer support immediately to report the incident. You must provide toktokfood a photographic proof and/or additional information to properly investigate the issue with your order. If we determine that the order and/or Goods you received are not of satisfactory condition or quality, we will compensate you for your order or parts of your order.`,
+  },
+  PICK_UP_ORDER: {
+    title: 'PICK-UP ORDER',
+    content: `You have the option of collecting your order directly from the store. For the pick-up order type, the merchant will prepare your and you will be notified via app once order is ready for pick up. You must pick- up your order immediately and present proof of transaction to the merchant.
+    
+In cases where the customer is unable to pick up the order, the authorized representative should present a screenshot of the order transaction to the merchant. The merchant can only keep the order for a maximum of 30 minutes if the food item falls under “drinks”, “desserts”, “soup” categories. For other categories, merchants can only hold the order for a maximum of one hour. Orders that didn’t meet the holding time requirement will be tagged as COMPLETED and will not be eligible for a refund/ replacement of item.`,
   },
   PAYMENT: {
     title: 'PAYMENT',
     content: `The Platform offers the following modes of payment:`,
     listContent: [
       {
-        content: `Toktokwallet (you may cash in using your credit/debit card, mobile payments, OTC banks and non-banks)`,
+        content: `toktokwallet (you may cash in using your credit/debit card, mobile payments, OTC banks and non- banks)`,
       },
       {
-        content: `COD`,
+        content: `Cash on delivery (provided that customer is a verified toktokwallet user)`,
       },
     ],
-    extentedContent: `The balance in the toktokwallet account cannot be withdrawn as cash, transferred to a bank account or credited to a debit card or credit card. It can only be used to purchase goods and/or services from the partner merchants on the platform.
-
-toktokfood reserves the right to offer additional payment methods and/or remove existing payment methods at anytime in its sole discretion.`,
+    extentedContent: `toktokfood reserves the right to offer additional payment methods and/or remove existing payment methods at anytime in its sole discretion.`,
   },
   CANCELLATION: {
     title: 'CANCELLATION',
     content: `You have the right to cancel an order under the following provisions:
-
-  a.) For transactions made using the toktokwallet, cancellation can only be completed if a merchant has not accepted your order yet. However, for merchants that uses the auto-accept option in their orders, cancellation will no longer be available. 
-      
-  b.) For COD transactions, you may cancel an order/s as long as it is still under the PLACED order status. However, once a rider has accepted the order and the order is already being prepared by the merchant, cancellation is no longer allowed. There is also no option to cancel if the selected merchant is auto accepting orders.
-  
-toktokfood also has the right to cancel any orders as well as suspend or terminate your account in its sole discretion if it detects fraudulent behavior or activity associated with your account and/or with your order.`,
+    
+a.) For transactions made using the toktokwallet, cancellation can only be completed if a merchant has not accepted your order yet.
+b.) For COD transactions, you may cancel an order/s as long as it is still under the PLACED order status. However, once a rider has accepted the order and the order is already being prepared by the merchant, cancellation is no longer allowed.
+    
+There is also no option to cancel if the selected merchant is auto accepting orders. toktokfood also has the right to cancel any orders as well as suspend or terminate your account in its sole discretion if it detects fraudulent behavior or activity associated with your account and/or with your order.`,
   },
   REFUND: {
     title: 'REFUND',
-    content: `Any request for refund must undergo due process of toktokfood and based on the cancellation policies reflected in this terms of use. The following incidents are allowed to process  for a refund, given that request has valid supporting documents (i.e. photos, medical certificate, etc.):`,
+    content: `Any request for refund must undergo due process of toktokfood and based on the refund policy. The following incidents are allowed to process for a refund, given that request has valid supporting documents (i.e. photos, medical certificate, etc.):`,
     listContent: [
       {
-        content: `Food cooked icorrectly or with poor quality (Spoiled or Contaminated)`,
+        content: `Food cooked incorrectly or with poor quality (Spoiled or Contaminated)`,
       },
       {
         content: `Food resulted in poisoning or upset stomach`,
       },
       {
         content: `Incorrect and/or missing orders`,
+      },
+      {
+        content: `Order was not delivered`,
       },
     ],
     extentedContent: `The approved amount for refund will be refunded to your toktokwallet. Once the refunded amount is reflected in your toktokwallet, the refunded amount can be redeemed immediately.`,
@@ -660,19 +656,16 @@ toktokfood also has the right to cancel any orders as well as suspend or termina
   },
   INDEMNIFICATION: {
     title: 'INDEMNIFICATION',
-    content: `By  using the platform, the Services, and/or the toktokfood Account, you agree to all the toktokfood Terms and Condition. You also agree that you shall defend, indemnify and hold toktokfood, its parent company, subsidiaries, affiliates, harmless from and against any and all claims, costs, damages, losses, liabilities and expenses arising out of or in connection with:`,
+    content: `By using the platform, the Services, and/or the toktokfood Account, you agree to all the toktokfood Terms and Condition. You also agree that you shall defend, indemnify and hold toktokfood, its parent company, subsidiaries, affiliates, harmless from and against any and all claims, costs, damages, losses, liabilities and expenses arising out of or in connection with:`,
     listContent: [
       {
         content: `your use of the Services, the Paypanda Account, and/or the toktokfood Platform in your dealings with any third parties, including, but not limited to, the merchants, delivery agents and other users of the toktokfood Platform;`,
       },
       {
-        content: `your violation or breach of any of the toktokfood Pay Terms or any applicable law or regulation;`,
+        content: `your violation or breach of any of the toktokfood Terms or any applicable law or regulation;`,
       },
       {
-        content: `your violation of any rights of any third party;`,
-      },
-      {
-        content: `your misuse of the Services and/or the toktokfood Platform.`,
+        content: `your violation of any rights of any third party; your misuse of the Services and/or the toktokfood Platform.`,
       },
     ],
   },

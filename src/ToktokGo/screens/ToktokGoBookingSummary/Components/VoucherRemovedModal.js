@@ -12,6 +12,7 @@ export const VoucherRemovedModal = ({
   handleVoucherRemoved,
   voucherTextMessage,
   onProceedToBooking,
+  voucherTitleMessage,
 }) => {
   return (
     <Modal animationType="fade" transparent={true} visible={voucherRemovedVisible} style={StyleSheet.absoluteFill}>
@@ -19,7 +20,14 @@ export const VoucherRemovedModal = ({
         <View style={styles.card}>
           <View style={styles.container}>
             <Image source={Warning} resizeMode={'contain'} style={styles.imageDimensions} />
-            <Text style={styles.modalTitle}>Voucher Removed</Text>
+            {voucherTextMessage == 'WrongPaymentMethod' ? (
+              <Text style={styles.modalTitle}>Voucher Not Applicable</Text>
+            ) : voucherTitleMessage == 'Voucher Expired' ? (
+              <Text style={styles.modalTitle}>Voucher Expired</Text>
+            ) : (
+              <Text style={styles.modalTitle}>Voucher Reached Limit</Text>
+            )}
+
             {voucherTextMessage == 'Promo Voucher Expired.' ? (
               <View style={styles.modalTitleContainer}>
                 <Text style={styles.modalDescription}>
@@ -29,20 +37,34 @@ export const VoucherRemovedModal = ({
               </View>
             ) : voucherTextMessage == 'Daily limit is reached.' ? (
               <Text style={styles.modalDescription}>
+                Hello, ka-toktok! The voucher reached the maximum redemption limit today. You may try other voucher
+                naman lods! Would you like to proceed and remove the voucher?
+              </Text>
+            ) : voucherTextMessage == 'Daily Max Count is reached.' ? (
+              <Text style={styles.modalDescription}>
+                Hello, ka-toktok! The voucher reached the maximum redemption limit. You may try other voucher naman
+                lods! Would you like to proceed and remove the voucher?
+              </Text>
+            ) : voucherTextMessage == 'Lifetime Max Count is reached.' ? (
+              <Text style={styles.modalDescription}>
                 Hello, ka-toktok! The voucher reached the maximum redemption limit. You may try other voucher naman
                 lods! Would you like to proceed and remove the voucher?
               </Text>
             ) : voucherTextMessage == 'WrongPaymentMethod' ? (
               <Text style={styles.modalDescription}>
                 Pasensya ka na, ka-toktok, but the voucher you used is not applicable to your selected payment method.
-                Gusto mo ba tanggalin or magswitch nalang ng payment method?
+                Would you like to proceed and remove the voucher?
               </Text>
             ) : null}
             <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity style={styles.buttonContainerNo} onPress={() => setvoucherRemovedVisible(false)}>
+              <TouchableOpacity
+                style={styles.buttonContainerNo}
+                onPress={() => {
+                  setvoucherRemovedVisible(false);
+                }}>
                 <Text style={styles.buttonTextNo}>No</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonContainerYes} onPress={() => onProceedToBooking()}>
+              <TouchableOpacity style={styles.buttonContainerYes} onPress={onProceedToBooking}>
                 <Text style={styles.buttonTextYes}>Yes</Text>
               </TouchableOpacity>
             </View>

@@ -414,7 +414,7 @@ const ToktokGoOnTheWayRoute = ({navigation, route, session}) => {
         type: 'SET_TOKTOKGO_BOOKING_INITIAL_STATE',
       });
       navigation.replace('ToktokGoBookingStart', {
-        popTo: popTo + 1,
+        popTo: popTo,
       });
       setmodal(false);
     }

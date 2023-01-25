@@ -19,8 +19,6 @@ import MapView, {Marker, PROVIDER_GOOGLE, Callout, Overlay} from 'react-native-m
 
 import validator from 'validator';
 import {useAlert} from '../../../../../hooks';
-
-import {HeaderBack, HeaderTitle} from '../../../../../components';
 import {WhiteButton, BlackButton, YellowButton, TouchableIcon, VectorIcon, ICON_SET} from '../../../../../revamp';
 import {DARK} from '../../../../../res/constants';
 import {COLOR, FONT, FONT_SIZE, SIZE, MAP_DELTA} from '../../../../../res/variables';
@@ -31,6 +29,8 @@ import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import AutocompleteResult from './AutocompleteResult';
 import SearchBar from './SearchBar';
 import {SearchLoadingIndicator} from './SearchLoadingIndicator';
+import {BackButton} from '../../../../../components_section/Buttons';
+import {HeaderTitle} from '../../../../../components_section/Texts';
 
 const INITIAL_RESULT = {
   payload: {
@@ -54,6 +54,11 @@ const StopDetails = ({navigation, route}) => {
 
   const [showMap, setShowMap] = useState(stopData.latitude ? true : false);
   const [searchLoading, setSearchLoading] = useState(false);
+
+  navigation.setOptions({
+    headerLeft: () => <BackButton navigation={navigation} />,
+    headerTitle: () => <HeaderTitle label={'Address'} />,
+  });
 
   const AlertHook = useAlert();
 
@@ -236,27 +241,40 @@ const StopDetails = ({navigation, route}) => {
     );
   };
 
+  const onClearSearchBar = () => {
+    setSearchResult({
+      ...searchResult,
+      predictions: [],
+    });
+  };
+
   return (
     <View style={styles.screenBox}>
-      <View style={{height: StatusBar.currentHeight}} />
-      <View
-        style={{
-          height: 50,
-          backgroundColor: 'white',
-          borderBottomWidth: 1,
-          borderColor: COLOR.LIGHT,
-          flexDirection: 'row',
-        }}>
-        <SearchBar
-          sessionToken={sessionToken}
-          placeholder={route.params.searchPlaceholder}
-          searchText={searchText}
-          onSearchTextChange={value => setSearchText(value)}
-          onSearchResultChange={value => setSearchResult(value)}
-          searchEnabled={!showMap}
-          onSearchLoadingChange={setSearchLoading}
-        />
-      </View>
+      {!showMap && (
+        <>
+          <View style={{height: StatusBar.currentHeight}} />
+          <View
+            style={{
+              height: 50,
+              backgroundColor: 'white',
+              borderBottomWidth: 1,
+              borderColor: COLOR.LIGHT,
+              flexDirection: 'row',
+            }}>
+            <SearchBar
+              sessionToken={sessionToken}
+              placeholder={route.params.searchPlaceholder}
+              searchText={searchText}
+              onSearchTextChange={value => setSearchText(value)}
+              onSearchResultChange={value => setSearchResult(value)}
+              searchEnabled={!showMap}
+              onSearchLoadingChange={setSearchLoading}
+              navigation={navigation}
+              onClearSearchBar={onClearSearchBar}
+            />
+          </View>
+        </>
+      )}
 
       {showMap && (
         <View style={{flex: 1}}>
