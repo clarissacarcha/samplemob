@@ -146,7 +146,7 @@ const SssForm = (props: PropsType): React$Node => {
           />
         </InputContainer>
         <CustomAmountInput
-          label={'Enter Amount'}
+          label={'Payment Amount'}
           value={data.amount}
           onChangeText={value => {
             changeAmount(value);
