@@ -27,7 +27,7 @@ export const RecentQrCodes = ({data}) => {
             logo={tokwaLogo}
             logoSize={moderateScale(10)}
             logoBackgroundColor="transparent"
-            size={moderateScale(50)}
+            size={moderateScale(48)}
             color="black"
             backgroundColor="transparent"
           />
@@ -87,10 +87,10 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(10),
   },
   qrContainer: {
-    padding: moderateScale(10),
+    padding: moderateScale(5),
     justifyContent: 'center',
     alignItems: 'center',
-    width: moderateScale(100),
-    height: moderateScale(100),
+    width: moderateScale(90),
+    height: moderateScale(93),
   },
 });
