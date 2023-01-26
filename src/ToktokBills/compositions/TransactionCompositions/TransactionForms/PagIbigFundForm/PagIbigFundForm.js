@@ -140,9 +140,7 @@ const PagIbigFundForm = (props: PropsType): React$Node => {
           }}
           selectedValue={data.periodCoveredFrom}
           displaySelectedValue={
-            data.periodCoveredFrom !== ''
-              ? moment(data.periodCoveredFrom).format('MM YYYY').replace(' ', '')
-              : data.periodCoveredFrom
+            data.periodCoveredFrom !== '' ? moment(data.periodCoveredFrom).format('MM/YYYY') : data.periodCoveredFrom
           }
           errorMessage={errorMessages.periodCoveredFrom}
           placeholder="mm yyyy"
@@ -158,9 +156,7 @@ const PagIbigFundForm = (props: PropsType): React$Node => {
           }}
           selectedValue={data.periodCoveredTo}
           displaySelectedValue={
-            data.periodCoveredTo !== ''
-              ? moment(data.periodCoveredTo).format('MM YYYY').replace(' ', '')
-              : data.periodCoveredTo
+            data.periodCoveredTo !== '' ? moment(data.periodCoveredTo).format('MM/YYYY') : data.periodCoveredTo
           }
           errorMessage={errorMessages.periodCoveredTo}
           placeholder="mm yyyy"
