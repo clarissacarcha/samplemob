@@ -31,7 +31,10 @@ import ClearTextInput from '../../../../assets/icons/EraseTextInput.png';
 import {MAP_DELTA_LOW} from '../../../../res/constants';
 import {onError} from '../../../../util/ErrorUtility';
 import {SuccesOperationAddressModal} from '../Components';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import FIcons from 'react-native-vector-icons/Fontisto';
+import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
+import LinearGradient from 'react-native-linear-gradient';
 
 const FULL_WIDTH = Dimensions.get('window').width;
 const lottieLoading = require('../../../../assets/JSON/loader.json');
@@ -40,6 +43,7 @@ const ToktokPinLocation = ({navigation, route}) => {
   const mapRef = useRef(null);
   const inputRef = useRef();
   const sessionToken = uuid.v4();
+  const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
   const {
     initialCoordinates,
     searchedLocationFromPrevScreen,
@@ -63,6 +67,7 @@ const ToktokPinLocation = ({navigation, route}) => {
   const [showSuccessOperationAddressModal, setShowSuccessOperationAddressModal] = useState(false);
   const [showConfirmLocButton, setShowConfirmLocButton] = useState(false);
   const [toggleLabelUpdateLocButton, setToggleLabelUpdateLocButton] = useState(true);
+  const [fakeLoading, setFakeLoading] = useState(false);
   const [counter, setCounter] = useState(0);
   navigation.setOptions({
     headerLeft: () => (
@@ -110,7 +115,7 @@ const ToktokPinLocation = ({navigation, route}) => {
 
       // setSearchedText(response.getPlaceByLocation.place.formattedAddress);
       // setDisableAddressBox(false);
-      setConfirmedLocation(response.getPlaceByLocation);
+      // setConfirmedLocation(response.getPlaceByLocation);
     },
     onError: onError,
   });
@@ -219,6 +224,7 @@ const ToktokPinLocation = ({navigation, route}) => {
 
   const onConfirmLoc = () => {
     if (toggleLabelUpdateLocButton) {
+      setFakeLoading(true);
       getPlaceByLocation({
         variables: {
           input: {
@@ -233,6 +239,7 @@ const ToktokPinLocation = ({navigation, route}) => {
       setToggleLabelUpdateLocButton(false);
       setTimeout(() => {
         setShowConfirmLocButton(false);
+        setFakeLoading(false);
       }, 1500);
     }
   };
@@ -309,6 +316,12 @@ const ToktokPinLocation = ({navigation, route}) => {
     );
   }
 
+  const getBottomAddress = () => {
+    const addressSplit = searchedLocation?.place?.formattedAddress.split(',');
+    addressSplit.splice(0, 1).join('');
+    return addressSplit.join(',').trim();
+  };
+
   return (
     <View style={styles.container}>
       <SuccesOperationAddressModal
@@ -355,12 +368,59 @@ const ToktokPinLocation = ({navigation, route}) => {
       </>
       {/*---------------------------------------- BUTTON ----------------------------------------*/}
 
-      <View style={styles.submitContainer}>
+      {/* <View style={styles.submitContainer}>
         <ThrottledOpacity disabled={false} delay={4000} onPress={onSubmit} style={{borderRadius: 5}}>
           <View style={styles.submit}>
             <Text style={styles.submitText}>Confirm</Text>
           </View>
         </ThrottledOpacity>
+      </View> */}
+      <View style={styles.card}>
+        <View
+          style={{
+            borderRadius: 5,
+            backgroundColor: CONSTANTS.COLOR.LIGHT,
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginHorizontal: 10,
+              marginVertical: 10,
+              textAlign: 'center',
+            }}>
+            <Image source={DestinationIcon} style={{height: 20, width: 25, marginRight: 5}} resizeMode={'contain'} />
+            <ShimmerPlaceHolder
+              style={[{width: '90%', marginBottom: !fakeLoading ? 0 : 18}, fakeLoading ? {height: 30} : {}]}
+              visible={!fakeLoading}>
+              <Text
+                style={{
+                  fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+                  fontSize: CONSTANTS.FONT_SIZE.M,
+                  color: CONSTANTS.COLOR.BLACK,
+                }}>
+                {searchedLocation?.place?.formattedAddress
+                  ? `${searchedLocation?.place?.formattedAddress.split(',')[0].trim()}`
+                  : ''}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+                  fontSize: CONSTANTS.FONT_SIZE.M,
+                  color: CONSTANTS.COLOR.ALMOST_BLACK,
+                  paddingRight: 30,
+                }}>
+                {searchedLocation?.place?.formattedAddress ? getBottomAddress() : ''}
+              </Text>
+            </ShimmerPlaceHolder>
+          </View>
+        </View>
+        <View style={styles.submitContainer}>
+          <ThrottledOpacity disabled={false} delay={4000} onPress={onSubmit} style={{borderRadius: 5}}>
+            <View style={styles.submit}>
+              <Text style={styles.submitText}>Confirm</Text>
+            </View>
+          </ThrottledOpacity>
+        </View>
       </View>
     </View>
   );
@@ -369,6 +429,24 @@ const ToktokPinLocation = ({navigation, route}) => {
 export default ToktokPinLocation;
 
 const styles = StyleSheet.create({
+  card: {
+    right: -4.5,
+    width: '102%',
+    borderWidth: 4,
+    borderTopColor: CONSTANTS.COLOR.ORANGE,
+    borderLeftColor: CONSTANTS.COLOR.ORANGE,
+    borderRightColor: CONSTANTS.COLOR.ORANGE,
+    borderBottomColor: CONSTANTS.COLOR.WHITE,
+    position: 'absolute',
+    paddingTop: 13,
+    paddingHorizontal: 16,
+    bottom: 0,
+    // zIndex: 999,
+    backgroundColor: CONSTANTS.COLOR.WHITE,
+    // marginTop: 8,
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
+  },
   container: {
     backgroundColor: 'white',
     ...StyleSheet.absoluteFillObject,
@@ -423,20 +501,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 5,
   },
   submitContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    // height: 50,
-    margin: 16,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
-    elevation: 24,
+    marginVertical: 16,
   },
   submitText: {
     color: CONSTANTS.COLOR.WHITE,

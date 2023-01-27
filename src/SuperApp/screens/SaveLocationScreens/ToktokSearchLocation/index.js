@@ -23,9 +23,12 @@ import ClearTextInput from '../../../../assets/icons/EraseTextInput.png';
 import FIcons from 'react-native-vector-icons/Fontisto';
 import uuid from 'react-native-uuid';
 import {onError} from '../../../../util/ErrorUtility';
-import {ThrottledOpacity} from '../../../../components_section';
+import {ThrottledHighlight, ThrottledOpacity} from '../../../../components_section';
+import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
+import EmptySearch from '../../../../assets/images/empty-search.png';
 
 import CONSTANTS from '../../../../common/res/constants';
+import {currentLocation} from '../../../../helper';
 
 const FULL_WIDTH = Dimensions.get('window').width;
 const lottieLoading = require('../../../../assets/JSON/loader.json');
@@ -116,18 +119,6 @@ const ToktokSearchLocation = ({navigation, route}) => {
     });
   };
 
-  const getSearchedValue = () => {
-    if (searchedText.length >= 40) {
-      if (FULL_WIDTH < 380) {
-        return searchedText.substring(0, 36) + '...';
-      } else {
-        return searchedText.substring(0, 40) + '...';
-      }
-    } else {
-      return searchedText;
-    }
-  };
-
   const onChange = value => {
     // if (value.length >= 3) {
     //   debouncedRequest(value);
@@ -165,73 +156,159 @@ const ToktokSearchLocation = ({navigation, route}) => {
     };
   }, []);
 
+  const onClickSelectViaMap = async () => {
+    const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
+    return navigation.navigate('ToktokPinLocation', {
+      initialCoordinates: {
+        latitude,
+        longitude,
+        ...MAP_DELTA_LOW,
+      },
+      locCoordinates,
+      setLocCoordinates,
+      setConfirmedLocation,
+      addressObj,
+      setIsEdited,
+      setErrorAddressField,
+      isFromLocationAccess,
+    });
+  };
+
+  const emptyList = () => {
+    return (
+      <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 110}}>
+        <Image source={EmptySearch} resizeMode={'contain'} style={{height: 200, width: 200}} />
+        <Text
+          style={{
+            fontSize: CONSTANTS.FONT_SIZE.L,
+            color: CONSTANTS.COLOR.ORANGE,
+            fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
+          }}>
+          Search Location
+        </Text>
+        <Text
+          style={{
+            marginTop: 8,
+            fontSize: CONSTANTS.FONT_SIZE.M,
+            width: 200,
+            textAlign: 'center',
+          }}>
+          Search a location or address that you want to save.
+        </Text>
+      </View>
+    );
+  };
+
+  const listHeader = () => {
+    return (
+      <View style={styles.addressBox}>
+        <View style={styles.searchContainer}>
+          <Image source={SearchICN} resizeMode={'contain'} style={{width: 17, height: 17, marginLeft: 16}} />
+          <TextInput
+            numberOfLines={1}
+            ref={inputRef}
+            // editable={!GPLLoading && !disableAddressBox}
+            placeholder={'Search'}
+            value={searchedText}
+            onChangeText={onChange}
+            textAlign={'left'}
+            style={styles.input}
+            returnKeyType="done"
+            onSubmitEditing={initiategetPlaceAutocomplete}
+          />
+          {loading ? (
+            <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{height: 17, width: 17, marginRight: 16}} />
+          ) : searchedText ? (
+            <ThrottledOpacity delay={4000} onPress={clearSearhedData}>
+              <Image source={ClearTextInput} style={{height: 17, width: 17, marginRight: 16}} resizeMode={'contain'} />
+            </ThrottledOpacity>
+          ) : (
+            <View style={{height: 17, width: 17, marginRight: 16}} />
+          )}
+        </View>
+        <View>
+          <ThrottledOpacity
+            onPress={initiategetPlaceAutocomplete}
+            style={{padding: 12, backgroundColor: CONSTANTS.COLOR.ORANGE, borderRadius: 5, marginLeft: 8}}>
+            <FIcons name={'search'} size={18} color={CONSTANTS.COLOR.WHITE} />
+          </ThrottledOpacity>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <View style={{position: 'absolute', flex: 1, top: 16}}>
-        <View style={styles.addressBox}>
-          <View style={styles.searchContainer}>
-            <Image source={SearchICN} resizeMode={'contain'} style={{width: 17, height: 17, marginLeft: 16}} />
-            <TextInput
-              numberOfLines={1}
-              ref={inputRef}
-              // editable={!GPLLoading && !disableAddressBox}
-              value={getSearchedValue()}
-              onChangeText={onChange}
-              textAlign={'left'}
-              style={styles.input}
-              returnKeyType="done"
-              onSubmitEditing={initiategetPlaceAutocomplete}
-            />
-            {loading ? (
-              <ActivityIndicator color={CONSTANTS.COLOR.ORANGE} style={{height: 17, width: 17, marginRight: 16}} />
-            ) : searchedText ? (
-              <ThrottledOpacity delay={4000} onPress={clearSearhedData}>
-                <Image
-                  source={ClearTextInput}
-                  style={{height: 17, width: 17, marginRight: 16}}
-                  resizeMode={'contain'}
-                />
+      <FlatList
+        style={{
+          marginHorizontal: 16,
+          borderBottomLeftRadius: 5,
+        }}
+        showsVerticalScrollIndicator={false}
+        data={searchedData}
+        keyExtractor={item => item.id}
+        ListHeaderComponent={listHeader()}
+        ListEmptyComponent={emptyList()}
+        renderItem={({item, index}) => {
+          const lastItem = index == searchedData.length - 1 ? true : false;
+          const addressParts = item.formattedAddress.split(',');
+          return (
+            <View style={styles.lastSearchedItem}>
+              <ThrottledOpacity delay={4000} onPress={() => getPlace(item)}>
+                <View style={[styles.searchedAddresses, lastItem && styles.lastSearchedItem]}>
+                  <Text
+                    style={{
+                      color: CONSTANTS.COLOR.BLACK,
+                      fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+                      fontSize: CONSTANTS.FONT_SIZE.M,
+                    }}>{`${addressParts[0].trim()}, ${addressParts[1].trim()}`}</Text>
+                  <Text
+                    style={{
+                      color: CONSTANTS.COLOR.ALMOST_BLACK,
+                      fontFamily: CONSTANTS.FONT_FAMILY.REGULAR,
+                      fontSize: CONSTANTS.FONT_SIZE.S,
+                    }}>
+                    {item.formattedAddress}
+                  </Text>
+                </View>
+                {!lastItem && (
+                  <View style={{borderBottomColor: CONSTANTS.COLOR.LIGHT, borderBottomWidth: 1, marginHorizontal: 0}} />
+                )}
               </ThrottledOpacity>
-            ) : (
-              <View style={{height: 17, width: 17, marginRight: 16}} />
-            )}
-          </View>
-          <View>
-            <ThrottledOpacity
-              onPress={initiategetPlaceAutocomplete}
-              style={{padding: 12, backgroundColor: CONSTANTS.COLOR.ORANGE, borderRadius: 5, marginLeft: 8}}>
-              <FIcons name={'search'} size={18} color={CONSTANTS.COLOR.WHITE} />
-            </ThrottledOpacity>
+            </View>
+          );
+        }}
+      />
+      <ThrottledHighlight delay={500} onPress={onClickSelectViaMap}>
+        <View
+          style={{
+            paddingHorizontal: CONSTANTS.SIZE.MARGIN,
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingVertical: 16,
+            shadowColor: '#000000',
+            shadowOffset: {
+              width: 0,
+              height: 0,
+            },
+            shadowRadius: 5,
+            shadowOpacity: 0.3,
+            elevation: 10,
+          }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Image source={DestinationIcon} style={{height: 20, width: 35, marginRight: 5}} resizeMode={'contain'} />
+            <Text
+              style={{
+                color: CONSTANTS.COLOR.ORANGE,
+                fontFamily: CONSTANTS.FONT_FAMILY.SEMI_BOLD,
+                fontSize: CONSTANTS.FONT_SIZE.M,
+              }}>
+              Select via Map
+            </Text>
           </View>
         </View>
-
-        <FlatList
-          style={{
-            marginHorizontal: 16,
-            borderBottomLeftRadius: 5,
-          }}
-          showsVerticalScrollIndicator={false}
-          data={searchedData}
-          keyExtractor={item => item.id}
-          renderItem={({item, index}) => {
-            const lastItem = index == searchedData.length - 1 ? true : false;
-            return (
-              <View style={styles.lastSearchedItem}>
-                <ThrottledOpacity delay={4000} onPress={() => getPlace(item)}>
-                  <View style={[styles.searchedAddresses, lastItem && styles.lastSearchedItem]}>
-                    <Text style={{color: CONSTANTS.COLOR.GRAY}}>{item.formattedAddress}</Text>
-                  </View>
-                  {!lastItem && (
-                    <View
-                      style={{borderBottomColor: CONSTANTS.COLOR.LIGHT, borderBottomWidth: 1, marginHorizontal: 0}}
-                    />
-                  )}
-                </ThrottledOpacity>
-              </View>
-            );
-          }}
-        />
-      </View>
+      </ThrottledHighlight>
     </View>
   );
 };
@@ -241,46 +318,29 @@ export default ToktokSearchLocation;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
   },
   addressBox: {
     flex: 1,
     flexDirection: 'row',
-    marginHorizontal: 8,
     alignItems: 'center',
-    paddingHorizontal: 8,
-  },
-  submitBox: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 50,
-    margin: 16,
-    borderRadius: 5,
+    marginBottom: 15,
+    paddingTop: 16,
   },
   searchContainer: {
-    width: '86%',
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: CONSTANTS.COLOR.MEDIUM_DARK,
     borderRadius: 5,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-    elevation: 10,
   },
   input: {
-    width: '80%',
-    paddingLeft: 16,
-    height: 42,
-    color: DARK,
+    marginLeft: 12,
+    color: CONSTANTS.COLOR.BLACK,
+    width: '75%',
+    paddingVertical: 12,
   },
   searchedAddresses: {
     paddingLeft: 8,
