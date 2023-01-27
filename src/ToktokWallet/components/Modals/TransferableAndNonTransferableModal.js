@@ -17,7 +17,7 @@ export const TransferableAndNonTransferableModal = ({visible, setVisible}) => {
         <View style={styles.content}>
           <View style={styles.closePrompt}>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={{fontFamily: FONT.BOLD}}>Transferrable Amount</Text>
+              <Text style={{fontFamily: FONT.BOLD}}>Transferable Amount</Text>
               <Text style={{fontFamily: FONT.BOLD}}>
                 {currencyCode}
                 {numberFormat(tokwaAccount.wallet.transferableBalance)}
@@ -29,7 +29,7 @@ export const TransferableAndNonTransferableModal = ({visible, setVisible}) => {
             </Text>
             <View style={{height: 1, backgroundColor: '#F4F4F4', marginVertical: moderateScale(16)}} />
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={{fontFamily: FONT.BOLD}}>Non-Transferrable Amount</Text>
+              <Text style={{fontFamily: FONT.BOLD}}>Non-Transferable Amount</Text>
               <Text style={{fontFamily: FONT.BOLD}}>
                 {currencyCode}
                 {numberFormat(tokwaAccount.wallet.creditCardBalance)}
