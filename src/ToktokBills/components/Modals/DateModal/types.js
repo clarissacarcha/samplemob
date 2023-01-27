@@ -1,0 +1,17 @@
+/**
+ * @flow
+ */
+
+export type PropsType = {
+  testID?: string,
+  accessibilityLabel?: string,
+  theme?: Object,
+  visible: boolean,
+  setVisible: any,
+  value: string,
+  onDateChange: any,
+  isCurrentDate?: boolean,
+  minDate?: Date,
+  maxDate?: Date,
+  isMinDateToday?: boolean,
+};

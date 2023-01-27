@@ -14,6 +14,7 @@ const transaction = `
     descriptions
     firstFieldName
     secondFieldName
+    itemCode
   }
   loadDetails {
     id
@@ -46,6 +47,21 @@ const transaction = `
   providerComRate
   comType
   createdAt
+  transactionPagibigBill{
+    accountNumber
+    contactNumber
+    perCov1
+    perCov2
+    billsPagibigPaymentType {
+      description
+    }
+  }
+  transactionSSSBill {
+    prn
+    billsSSSMembershipType {
+      description
+    }
+  }
 `;
 
 export const GET_TRANSACTIONS_BY_STATUS = gql`
@@ -114,6 +130,28 @@ export const POST_BILLS_VALIDATE_TRANSACTION = gql`
         SecondField
         Amount
         BillerTag
+      }
+    }
+  }
+`;
+
+export const POST_BILLS_SSS = gql`
+  mutation postBillsSSS($input: PostBillsSSSInput!) {
+    postBillsSSS(input: $input) {
+      status
+      data {
+        ${transaction}
+      }
+    }
+  }
+`;
+
+export const POST_BILLS_PAGIBIG = gql`
+  mutation postBillsPagibig($input: PostBillsPagibigInput!) {
+    postBillsPagibig(input: $input) {
+      status
+      data {
+        ${transaction}
       }
     }
   }

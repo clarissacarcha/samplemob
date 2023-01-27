@@ -4,6 +4,7 @@ import {moderateScale} from 'toktokbills/helper';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useThrottle} from 'src/hooks';
 import FIcon5 from 'react-native-vector-icons/FontAwesome';
+import FastImage from 'react-native-fast-image';
 
 import {LoadingIndicator} from 'toktokbills/components';
 import {heart_fill_icon, heart_selected_fill_icon} from 'src/ToktokLoad/assets/icons';
@@ -16,10 +17,22 @@ export const FavoriteDetails = ({item, index, onPressFavorite, onRefreshFavorite
   const route = useRoute();
   const [imageLoading, setImageLoading] = useState(true);
   const {billItemId, billItem, id, firstFieldValue, secondFieldValue} = item.node;
-  const {descriptions, logo, billType} = billItem;
+  const {descriptions, logo, billType, itemCode} = billItem;
 
   const onPress = () => {
-    navigation.navigate('ToktokBillsPaymentProcess', {
+    let screen = '';
+    switch (itemCode) {
+      case 'SSS':
+        screen = 'ToktokBillsSssTransaction';
+        break;
+      case 'PAG_IBIG':
+        screen = 'ToktokBillsPagIbigFundTransaction';
+        break;
+      default:
+        screen = 'ToktokBillsTransaction';
+    }
+
+    navigation.navigate(screen, {
       billItemId: billItemId,
       billType: billItem.billType,
       favoriteDetails: {
@@ -28,6 +41,7 @@ export const FavoriteDetails = ({item, index, onPressFavorite, onRefreshFavorite
         secondFieldValue: secondFieldValue,
       },
       onRefreshFavorite,
+      itemCode,
     });
   };
 
@@ -41,8 +55,8 @@ export const FavoriteDetails = ({item, index, onPressFavorite, onRefreshFavorite
             <LoadingIndicator isLoading={true} size="small" />
           </View>
         )}
-        <Image
-          source={{uri: billItem.logo}}
+        <FastImage
+          source={{uri: billItem.logo, priority: FastImage.priority.high}}
           style={styles.itemLogo}
           onLoadStart={() => setImageLoading(true)}
           onLoadEnd={() => setImageLoading(false)}
@@ -69,7 +83,7 @@ export const FavoriteDetails = ({item, index, onPressFavorite, onRefreshFavorite
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: moderateScale(18),
-    paddingVertical: moderateScale(5),
+    paddingVertical: moderateScale(10),
     flexDirection: 'row',
     alignItems: 'center',
   },

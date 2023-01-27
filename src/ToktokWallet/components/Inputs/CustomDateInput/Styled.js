@@ -25,9 +25,9 @@ export const Button: ComponentType<any> = styled(TouchableOpacity).attrs(props =
   ${({hasError, theme}) =>
     hasError &&
     `
-     border-width: 1px;
-     border-color: ${theme.color.red};
-   `}
+      border-width: 1px;
+      border-color: ${theme.color.red};
+    `}
 `;
 
 export const ButtonText: ComponentType<any> = styled(Text).attrs(props => ({

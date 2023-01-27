@@ -34,7 +34,7 @@ const BillerTypeItem = (props: PropsType): React$Node => {
           </LoadingContainer>
         )}
         <LogoImage
-          source={{uri: icon}}
+          source={{uri: icon, priority: FastImage.priority.high}}
           resizeMode={FastImage.resizeMode.contain}
           onLoadStart={() => setImageLoading(true)}
           onLoadEnd={() => setImageLoading(false)}

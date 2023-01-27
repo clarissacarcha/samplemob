@@ -27,17 +27,30 @@ const FavoriteItems = (props: PropsType): React$Node => {
 
   const {item} = props;
   const {billItemId, billItem, id, firstFieldValue, secondFieldValue} = item.node;
-  const {descriptions, logo, billType} = billItem;
+  const {descriptions, logo, billType, itemCode} = billItem;
 
   const onPress = () => {
-    navigation.navigate('ToktokBillsPaymentProcess', {
+    let screen = '';
+    switch (itemCode) {
+      case 'SSS':
+        screen = 'ToktokBillsSssTransaction';
+        break;
+      case 'PAG_IBIG':
+        screen = 'ToktokBillsPagIbigFundTransaction';
+        break;
+      default:
+        screen = 'ToktokBillsTransaction';
+    }
+
+    navigation.navigate(screen, {
       billItemId: billItemId,
-      billType: billType,
+      billType: billItem.billType,
       favoriteDetails: {
-        id,
-        firstFieldValue,
-        secondFieldValue,
+        id: id,
+        firstFieldValue: firstFieldValue,
+        secondFieldValue: secondFieldValue,
       },
+      itemCode,
     });
   };
 
@@ -53,7 +66,7 @@ const FavoriteItems = (props: PropsType): React$Node => {
             </LoadingContainer>
           )}
           <LogoImage
-            source={{uri: logo}}
+            source={{uri: logo, priority: FastImage.priority.high}}
             resizeMode={FastImage.resizeMode.contain}
             onLoadStart={() => setImageLoading(true)}
             onLoadEnd={() => setImageLoading(false)}
