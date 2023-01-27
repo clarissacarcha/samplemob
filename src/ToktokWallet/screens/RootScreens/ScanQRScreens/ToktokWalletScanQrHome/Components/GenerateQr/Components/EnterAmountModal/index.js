@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {Modal, StyleSheet, View, Dimensions, Text, TouchableOpacity} from 'react-native';
-import {moderateScale} from 'toktokwallet/helper';
+import {moderateScale, currencyCode} from 'toktokwallet/helper';
 import {CustomAmountInput} from 'toktokwallet/components';
 import {VerifyContext} from '../../../VerifyContextProvider';
 import CONSTANTS from 'common/res/constants';
@@ -18,10 +18,23 @@ export const EnterAmountModal = ({
 }) => {
   const {setAmount, amount} = useContext(VerifyContext);
   const [tempAmount, setTempAmount] = useState(amount);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleGenerateQR = () => {
-    onPressGenerateQr(tempAmount);
-    setAmount(tempAmount);
+    let errorM = '';
+    if (tempAmount === '') {
+      errorM = 'This is a required field';
+    } else if (+tempAmount < 1) {
+      errorM = `The minimum amount allowed is ${currencyCode}1`;
+    } else {
+      errorM = '';
+    }
+    setErrorMessage(errorM);
+    if (errorM === '') {
+      setVisible(false);
+      onPressGenerateQr(tempAmount);
+      setAmount(tempAmount);
+    }
   };
 
   return (
@@ -36,12 +49,13 @@ export const EnterAmountModal = ({
                 onChangeText={val => {
                   setTempAmount(val);
                 }}
+                errorMessage={errorMessage}
               />
             </View>
-
             <View style={styles.actions}>
               <TouchableOpacity
                 onPress={() => {
+                  setErrorMessage('');
                   setVisible(false);
                   onPressNo();
                 }}
@@ -50,7 +64,6 @@ export const EnterAmountModal = ({
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  setVisible(false);
                   handleGenerateQR();
                 }}
                 style={styles.yesContainer}>
