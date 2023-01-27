@@ -68,13 +68,13 @@ const WalletMethods = () => {
       icon: require('toktokwallet/assets/icons/services/send-money.png'),
       onPress: () => {
         SheetManager.hide('walletMenu_Services');
-        onPressThrottled('ToktokWalletSendMoney');
+        onPressThrottled('ToktokWalletSendMoneyTransaction');
       },
       isEnabled: true,
       identifier: 'sendMoney',
     },
     {
-      label: 'Scan QR',
+      label: 'QR',
       icon: require('toktokwallet/assets/icons/services/qr-code-scan.png'),
       onPress: () => {
         SheetManager.hide('walletMenu_Services');

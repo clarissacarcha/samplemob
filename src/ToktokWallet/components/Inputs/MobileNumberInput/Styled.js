@@ -40,9 +40,9 @@ export const Container: ComponentType<any> = styled(View).attrs(props => ({
   ${({errorMessage, theme}) =>
     errorMessage !== '' &&
     `
-       border-color: ${theme.color.red};
-       border-width: 1px;
-     `}
+      border-color: ${theme.color.red};
+      border-width: 1px;
+    `}
 `;
 
 export const CountryCodeContainer: ComponentType<any> = styled(View).attrs(props => ({

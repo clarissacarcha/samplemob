@@ -59,6 +59,7 @@ export const ToktokWalletSendMoneyLogs = ({navigation, route}) => {
       variables: {
         input: {
           afterCursorId: null,
+          isScanQr: 'NO',
         },
       },
     });
@@ -70,6 +71,7 @@ export const ToktokWalletSendMoneyLogs = ({navigation, route}) => {
         variables: {
           input: {
             afterCursorId: pageInfo.endCursorId,
+            isScanQr: 'NO',
           },
         },
         updateQuery: (previousResult, {fetchMoreResult}) => {

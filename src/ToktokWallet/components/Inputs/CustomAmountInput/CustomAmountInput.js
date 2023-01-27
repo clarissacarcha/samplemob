@@ -29,13 +29,27 @@ const CustomAmountInput = (props: PropsType): React$Node => {
     onChangeText,
     onSubmitEditing,
     returnKeyType = 'done',
-    maxLength = 10,
+    maxLength = 6,
     editable = true,
     errorMessage = '',
     label = '',
     onBlur,
   } = props;
   const [isFocus, setIsFocus] = useState(false);
+
+  const changeAmount = val => {
+    const num = val.replace(/[^0-9.]/g, '');
+    const checkFormat = /^(\d*[.]?[0-9]{0,2})$/.test(num);
+    if (!checkFormat) {
+      return;
+    }
+    let decimalValueArray = num.split('.');
+    if (decimalValueArray[0].length > maxLength) {
+      return;
+    }
+    let amount = num[0] === '.' ? '0.' : num;
+    onChangeText(amount);
+  };
 
   return (
     <>
@@ -47,7 +61,7 @@ const CustomAmountInput = (props: PropsType): React$Node => {
         <Input
           style={style}
           value={value}
-          onChangeText={onChangeText}
+          onChangeText={changeAmount}
           placeholder={placeholder}
           placeholderTextColor={placeholderTextColor}
           returnKeyType={returnKeyType}

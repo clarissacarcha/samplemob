@@ -27,14 +27,20 @@ const renderDetails = ({details}) => {
 };
 
 const Details = ({transaction, visible, setVisible}) => {
-  const {name, phrase, details, amount, refNo, refDate, refTime, requestNo, externalReferenceNo} = transaction;
-
+  const {name, phrase, details, amount, refNo, refDate, refTime, requestNo, externalReferenceNo, sourceAccountId, transactionType} = transaction;
+  let action = "Paid";
+  if (transactionType?.isIncome) {
+    action = "Earned";
+  }
+  if (transactionType?.isRefund) {
+    action = "Refunded"
+  }
   return (
     <TransactionModal visible={visible} setVisible={setVisible}>
       <Text style={{fontFamily: FONT.BOLD,fontSize: moderateScale(18)}}>Bills</Text>
       <View style={{marginTop: 15}}>
         <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Status:</Text> Success</Text>
-        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Amount Paid:</Text> {amount}</Text>
+        <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Amount {action}:</Text> {amount}</Text>
         <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Service Reference Number:</Text> {externalReferenceNo}</Text>
         <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Toktokwallet Reference Number:</Text> {refNo}</Text>
         <Text style={styles.labelText}><Text style={{fontFamily:FONT.BOLD}}>Transaction Date:</Text> {refDate} {refTime}</Text>

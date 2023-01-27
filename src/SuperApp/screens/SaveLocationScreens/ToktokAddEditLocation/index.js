@@ -313,7 +313,18 @@ const AddEditLocation = ({navigation, route, session}) => {
   };
 
   const onSearchMap = () => {
-    navigation.navigate('ToktokPinLocation', {
+    navigation.navigate('ToktokSearchLocation');
+    // navigation.navigate('ToktokPinLocation', {
+    //   locCoordinates,
+    //   setLocCoordinates,
+    //   formattedAddress: confirmedLocation?.place?.formattedAddress,
+    //   setConfirmedLocation,
+    //   addressObj,
+    //   setIsEdited,
+    //   setErrorAddressField,
+    //   isFromLocationAccess,
+    // });
+    navigation.navigate('ToktokSearchLocation', {
       locCoordinates,
       setLocCoordinates,
       formattedAddress: confirmedLocation?.place?.formattedAddress,
