@@ -92,13 +92,6 @@ export const ConfirmButton = ({route}) => {
   return (
     <>
       <AlertOverlay visible={requestLoading || sendMoneyLoading} />
-      <TouchableOpacity onPress={() => navigation.navigate('ToktokWalletTermsConditions')} style={styles.container}>
-        <Text style={styles.terms}>
-          <Text style={styles.footerText}>Please review the accuracy of the details provided and read our </Text>
-          <Text style={[styles.footerText, styles.tnc]}>Terms and Conditions </Text>
-          <Text style={styles.footerText}>before you proceed with your transaction.</Text>
-        </Text>
-      </TouchableOpacity>
       <View style={styles.buttonContainer}>
         <OrangeButton label="Confirm" onPress={onPressConfirm} />
       </View>
@@ -121,23 +114,5 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.WHITE,
     borderTopColor: '#F8F8F8',
     borderTopWidth: 2,
-  },
-  container: {
-    justifyContent: 'flex-end',
-    backgroundColor: 'white',
-    paddingHorizontal: moderateScale(16),
-    paddingTop: moderateScale(10),
-  },
-  terms: {
-    textAlign: 'left',
-    marginBottom: moderateScale(15),
-    fontSize: FONT_SIZE.S,
-  },
-  tnc: {
-    color: '#F6841F',
-  },
-  footerText: {
-    fontSize: FONT_SIZE.S,
-    color: '#525252',
   },
 });

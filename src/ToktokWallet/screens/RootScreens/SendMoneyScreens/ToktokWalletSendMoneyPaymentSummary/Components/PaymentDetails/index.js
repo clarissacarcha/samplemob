@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, ImageBackground, Platform} from 'react-native';
+import {View, Text, StyleSheet, ImageBackground, Platform, TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
 
 //HELPER
@@ -60,6 +60,13 @@ export const PaymentDetails = ({route, navigation}) => {
           {numberFormat(parseFloat(amount))}
         </Text>
       </View>
+      <TouchableOpacity onPress={() => navigation.navigate('ToktokWalletTermsConditions')} style={styles.container}>
+        <Text style={styles.terms}>
+          <Text style={styles.footerText}>Please review the accuracy of the details provided and read our </Text>
+          <Text style={[styles.footerText, styles.tnc]}>Terms and Conditions </Text>
+          <Text style={styles.footerText}>before you proceed with your transaction.</Text>
+        </Text>
+      </TouchableOpacity>
     </>
   );
 };
@@ -146,5 +153,21 @@ const styles = StyleSheet.create({
   nologo: {
     paddingVertical: moderateScale(20),
     fontSize: FONT_SIZE.M,
+  },
+  container: {
+    paddingHorizontal: moderateScale(16),
+    paddingTop: moderateScale(10),
+  },
+  terms: {
+    textAlign: 'left',
+    marginBottom: moderateScale(15),
+    fontSize: FONT_SIZE.S,
+  },
+  tnc: {
+    color: '#F6841F',
+  },
+  footerText: {
+    fontSize: FONT_SIZE.S,
+    color: '#525252',
   },
 });
