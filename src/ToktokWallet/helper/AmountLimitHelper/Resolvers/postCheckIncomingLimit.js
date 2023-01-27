@@ -1,7 +1,7 @@
 import {TOKTOK_WALLET_GRAPHQL_CLIENT} from 'src/graphql';
 import {POST_CHECK_INCOMING_WALLET_LIMIT} from 'toktokwallet/graphql';
 
-const resolver = async ({amount, mobileNumber = null, setErrorMessage}) => {
+const resolver = async ({amount, mobileNumber = null, setErrorMessage, action = null}) => {
   try {
     let responseData = null;
     let responseError = null;
@@ -13,6 +13,7 @@ const resolver = async ({amount, mobileNumber = null, setErrorMessage}) => {
         input: {
           amount: +amount,
           mobileNumber,
+          action,
         },
       },
     })
@@ -26,7 +27,7 @@ const resolver = async ({amount, mobileNumber = null, setErrorMessage}) => {
     if (responseData) return true;
 
     const {code, message} = responseError.graphQLErrors[0].payload;
-
+    console.log(responseError.graphQLErrors);
     if (code == 'WALLET_LIMIT_REACHED') {
       console.log('MESSAGE', message);
       promptMessage = message;

@@ -49,7 +49,9 @@ export const LogItem = ({
       amount: transactionAmount,
       details: item.details,
       requestNo,
-      externalReferenceNo: item.externalReferenceNumber
+      externalReferenceNo: item.externalReferenceNumber,
+      sourceAccountId: item.sourceAccountId,
+      transactionType: item.transactionType
     })
     setOpenModal(true);
   }

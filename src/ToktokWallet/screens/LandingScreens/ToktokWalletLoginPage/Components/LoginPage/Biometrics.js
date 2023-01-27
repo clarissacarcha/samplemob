@@ -20,7 +20,8 @@ const { FONT_FAMILY: FONT , FONT_SIZE , COLOR } = CONSTANTS
 const Biometrics = ({setErrorMessage , setPinCode})=> {
     const alert = useAlert();
     const navigation = useNavigation();
-    const [isSensorAvailable,setIsSensorAvailable] = useState(null)
+    const [isSensorAvailable, setIsSensorAvailable] = useState(null)
+    const [sensorType, setSensorType] = useState(null);
     const [showPrompt,setShowPrompt] = useState(false)
     const [bioRecord,setBioRecord] = useState(null)
     const [postRegisterBiometrics , {loading: postPublicKeyLoading}] = useMutation(POST_REGISTER_BIOMETRICS,{
@@ -34,10 +35,13 @@ const Biometrics = ({setErrorMessage , setPinCode})=> {
     const checkSensor = async ()=> {
         const { available, biometryType } = await ReactNativeBiometrics.isSensorAvailable()
         if (available && biometryType === ReactNativeBiometrics.TouchID) {
+            setSensorType("TouchID")
             setIsSensorAvailable(true)
         } else if (available && biometryType === ReactNativeBiometrics.FaceID) {
+            setSensorType("FaceID")
             setIsSensorAvailable(true)
         } else if (available && biometryType === ReactNativeBiometrics.Biometrics) {
+            setSensorType("Biometrics")
             setIsSensorAvailable(true)
         } else {
             setIsSensorAvailable(false)
@@ -57,6 +61,7 @@ const Biometrics = ({setErrorMessage , setPinCode})=> {
                         ios: "I"
                     }),
                     publicKey: publicKey,
+                    biometryType: sensorType
                 }
             }
         })

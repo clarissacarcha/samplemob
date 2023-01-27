@@ -82,6 +82,7 @@ export const DragonPayCashIn = ({navigation, route, transactionType, remainingCa
       checkLimit = await AmountLimitHelper.postCheckIncomingLimit({
         amount,
         setErrorMessage: setMessage,
+        action: 'CASH_IN',
       });
     }
 

@@ -3,7 +3,8 @@ import {StyleSheet, View, ActivityIndicator, Dimensions} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import WebView from 'react-native-webview';
 import {useSelector} from 'react-redux';
-import {CheckIdleState, FlagSecureScreen, HeaderBack, HeaderTitleRevamp} from 'toktokwallet/components';
+import { CheckIdleState, FlagSecureScreen, HeaderBack, HeaderTitleRevamp } from 'toktokwallet/components';
+import { AlertOverlay } from 'src/components';
 import CONSTANTS from 'common/res/constants';
 
 const {COLOR, FONT_FAMILY: FONT, FONT_SIZE, SIZE} = CONSTANTS;
@@ -28,6 +29,7 @@ export const ToktokWalletPayPandaWebView = ({navigation, route}) => {
   const [cashInLogParams, setCashInLogParams] = useState(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const session = useSelector(state => state.session);
   const constants = useSelector(state => state.constants);
@@ -92,6 +94,7 @@ export const ToktokWalletPayPandaWebView = ({navigation, route}) => {
 
   return (
     <FlagSecureScreen>
+      <AlertOverlay visible={loading} label="Loading"/>
       <CheckIdleState>
         <View style={styles.container}>
           {mounted && !donetransaction && (
@@ -129,8 +132,13 @@ export const ToktokWalletPayPandaWebView = ({navigation, route}) => {
                   setCanGoBack(canGoBack);
                   setCanGoForward(canGoForward);
 
-                  // console.log("PAYPANDA: ",event.url)
-                  // return;
+                  console.log("PAYPANDA: ", event.url)
+                  const checkLoadingLandingUrl = event.url.search("paypanda.ph");
+                  if (route.params.paymentMethodKey === "jcWallet") {
+                    setLoading(event.url == "about:blank");
+                  } else {
+                    setLoading(checkLoadingLandingUrl > 0 || event.url == "about:blank");
+                  }
 
                   const checkreturnurl = event.url.search(route.params.paypandaReturnUrl);
                   if (checkreturnurl != -1) {

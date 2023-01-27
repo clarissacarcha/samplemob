@@ -1,6 +1,10 @@
-export const numberFormat = (value, decimallNum = 2) => {
+export const numberFormat = (value, decimallNum = 2, noDecimal = false) => {
   if (isNaN(value)) {
     return 'isNaN';
+  }
+
+  if (noDecimal && !value.toString().includes('.')) {
+    return value.toLocaleString();
   }
   return parseFloat(value)
     .toFixed(decimallNum)

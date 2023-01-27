@@ -11,5 +11,6 @@ export * from './PepRequestVideoCallModal';
 export * from './PromptModal';
 export * from './QuestionModal';
 export * from './SuccessfulModal';
+export * from './TransferableAndNonTransferableModal';
 
 export {DateModal, ListModal};

@@ -59,5 +59,4 @@ export const ArrowDown: ComponentType<any> = styled(FIcon5).attrs(props => ({
 export const ErrorText: ComponentType<any> = styled.Text`
   color: ${props => props.theme.color.red};
   font-size: ${FONT_SIZE.S}px;
-  margin-top: 5px;
 `;

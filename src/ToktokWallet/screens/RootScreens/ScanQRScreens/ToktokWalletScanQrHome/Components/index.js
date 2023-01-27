@@ -1,3 +1,4 @@
-export * from "./Header";
-export * from"./MyQrCode";
-export * from "./ScanQrOption";
+export * from './GenerateQr';
+export * from './ScanQr';
+export * from './ScanQrOption';
+export * from './VerifyContextProvider';

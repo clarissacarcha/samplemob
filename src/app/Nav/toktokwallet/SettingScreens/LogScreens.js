@@ -13,6 +13,7 @@ import {
   ToktokWalletPabiliDeliveryLogs,
   ToktokWalletReceiveMoneyLogs,
   ToktokWalletRequestMoneyLogs,
+  ToktokWalletScanQRLogs,
   ToktokWalletSendMoneyLogs,
 } from 'toktokwallet/screens';
 
@@ -44,6 +45,7 @@ export default ({Navigator}) => (
     />
     <Navigator.Screen name="ToktokWalletReceiveMoneyLogs" component={ToktokWalletReceiveMoneyLogs} options={options} />
     <Navigator.Screen name="ToktokWalletRequestMoneyLogs" component={ToktokWalletRequestMoneyLogs} options={options} />
+    <Navigator.Screen name="ToktokWalletScanQRLogs" component={ToktokWalletScanQRLogs} options={options} />
     <Navigator.Screen name="ToktokWalletSendMoneyLogs" component={ToktokWalletSendMoneyLogs} options={options} />
   </>
 );

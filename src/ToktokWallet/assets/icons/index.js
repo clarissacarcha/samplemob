@@ -10,3 +10,4 @@ export const contact_us = {
   email: require('./contact-us/email.png'),
   phone: require('./contact-us/phone.png'),
 };
+export const no_profile_contact = require('./no-profile-contact.png');
