@@ -99,7 +99,7 @@ export const ProceedButton = ({
       setLoading(false);
       setFormData(prev => ({...prev, note: formData.note.trim()}));
       return navigation.navigate('ToktokWalletSendMoneyPaymentSummary', {
-        formData: {...formData, note: formData.note.trim()},
+        formData: {...formData, note: formData.note.trim(), recipientMobileNo: `+63${formData.recipientMobileNo}`},
         recipientInfo,
       });
     } else {
