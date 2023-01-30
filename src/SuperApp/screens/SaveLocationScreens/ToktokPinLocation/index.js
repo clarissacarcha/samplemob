@@ -15,24 +15,19 @@ import {HeaderBack, HeaderTitle} from '../../../../components';
 import {DARK} from '../../../../res/constants';
 import CONSTANTS from '../../../../common/res/constants';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
-import {GET_PLACE_AUTOCOMPLETE, GET_PLACE_BY_ID, GET_PLACE_BY_LOCATION} from '../../../../ToktokGo/graphql';
+import {GET_PLACE_BY_LOCATION} from '../../../../ToktokGo/graphql';
 import {PREF_GET_SAVED_ADDRESSES, PREF_USER_ADDRESS_CREATE, TOKTOK_ADDRESS_CLIENT} from '../../../../graphql';
 import {TOKTOK_QUOTATION_GRAPHQL_CLIENT} from 'src/graphql';
-import uuid from 'react-native-uuid';
-import {useDebounce} from '../../../../ToktokGo/helpers';
 import {currentLocation} from '../../../../helper';
 import LottieView from 'lottie-react-native';
 
 import GpsDenied from '../../../../assets/images/GpsDenied.png';
 import PinLocationIcon from '../../../../assets/images/locationIcon.png';
 import {ThrottledOpacity} from '../../../../components_section';
-import SearchICN from '../../../../assets/images/SearchIcon.png';
-import ClearTextInput from '../../../../assets/icons/EraseTextInput.png';
 import {MAP_DELTA_LOW} from '../../../../res/constants';
 import {onError} from '../../../../util/ErrorUtility';
 import {SuccesOperationAddressModal} from '../Components';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-import FIcons from 'react-native-vector-icons/Fontisto';
 import DestinationIcon from '../../../../assets/icons/DestinationIcon.png';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -41,16 +36,11 @@ const lottieLoading = require('../../../../assets/JSON/loader.json');
 
 const ToktokPinLocation = ({navigation, route}) => {
   const mapRef = useRef(null);
-  const inputRef = useRef();
-  const sessionToken = uuid.v4();
   const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
   const {
     initialCoordinates,
     searchedLocationFromPrevScreen,
     isFromLocationAccess = false,
-    locCoordinates,
-    setLocCoordinates,
-    formattedAddress,
     setConfirmedLocation = () => {},
     addressObj,
     setIsEdited,
@@ -59,9 +49,6 @@ const ToktokPinLocation = ({navigation, route}) => {
   } = route.params;
 
   const [initialCoord, setInitialCoord] = useState(initialCoordinates);
-  // const [searchedText, setSearchedText] = useState(formattedAddress ? formattedAddress : '');
-  // const [disableAddressBox, setDisableAddressBox] = useState(true);
-  // const [searchedData, setSearchedData] = useState('');
   const [searchedLocation, setSearchedLocation] = useState(searchedLocationFromPrevScreen);
   const [mapDragCoords, setMapDragCoords] = useState(initialCoordinates);
   const [showSuccessOperationAddressModal, setShowSuccessOperationAddressModal] = useState(false);
@@ -80,42 +67,11 @@ const ToktokPinLocation = ({navigation, route}) => {
     headerTitle: () => <HeaderTitle label={['Address']} />,
   });
 
-  const [getPlaceAutocomplete, {loading}] = useLazyQuery(GET_PLACE_AUTOCOMPLETE, {
-    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
-    onCompleted: response => {
-      setSearchedData(response.getPlaceAutocomplete);
-    },
-    onError: onError,
-  });
-
-  const [getPlaceById] = useLazyQuery(GET_PLACE_BY_ID, {
-    client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
-    fetchPolicy: 'network-only',
-    onCompleted: response => {
-      mapRef.current.animateToRegion(
-        {
-          latitude: response.getPlaceById.place.location.latitude,
-          longitude: response.getPlaceById.place.location.longitude,
-          ...MAP_DELTA_LOW,
-        },
-        350,
-      );
-      setSearchedLocation(response.getPlaceById);
-      setSearchedData(null);
-    },
-    onError: onError,
-  });
-
   const [getPlaceByLocation, {data, loading: GPLLoading}] = useLazyQuery(GET_PLACE_BY_LOCATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      // setInitialCoord(response.getPlaceByLocation);
       setSearchedLocation(response.getPlaceByLocation);
-
-      // setSearchedText(response.getPlaceByLocation.place.formattedAddress);
-      // setDisableAddressBox(false);
-      // setConfirmedLocation(response.getPlaceByLocation);
     },
     onError: onError,
   });
@@ -133,45 +89,6 @@ const ToktokPinLocation = ({navigation, route}) => {
     fetchPolicy: 'network-only',
     onError: onError,
   });
-
-  // const debouncedRequest = useDebounce(
-  //   value =>
-  //     getPlaceAutocomplete({
-  //       variables: {
-  //         input: {
-  //           searchString: value,
-  //           sessionToken: sessionToken,
-  //         },
-  //       },
-  //     }),
-  //   1000,
-  // );
-
-  const initiategetPlaceAutocomplete = () => {
-    getPlaceAutocomplete({
-      variables: {
-        input: {
-          searchString: searchedText,
-          sessionToken: sessionToken,
-        },
-      },
-    });
-  };
-
-  const getPlace = item => {
-    setSearchedText(item.formattedAddress);
-
-    getPlaceById({
-      variables: {
-        input: {
-          sessionToken: sessionToken,
-          placeId: item.placeId,
-          formattedAddress: item.formattedAddress,
-          service: 'PREF',
-        },
-      },
-    });
-  };
 
   const onMapDrag = value => {
     if (counter > 0) {
@@ -199,12 +116,25 @@ const ToktokPinLocation = ({navigation, route}) => {
             fullname: '',
             mobile_no: '',
           },
+          // temporary fixed data
+          isFirstAddress: false,
+          addressComponents: {
+            regCode: '1561',
+            regDesc: 'waxcxzc',
+            provCode: '5461',
+            provDesc: 'daszxczxczxc',
+            citymunCode: '321654',
+            citymunDesc: 'cvvxvcxvc',
+          },
         },
       },
     });
   };
 
   useEffect(() => {
+    if (!searchedLocation) {
+      getCurrentLocation();
+    }
     prefGetSavedAddresses();
 
     BackHandler.addEventListener('hardwareBackPress', () => {
@@ -253,11 +183,6 @@ const ToktokPinLocation = ({navigation, route}) => {
       setIsEdited(true);
     }
     setConfirmedLocation(searchedLocation);
-    setLocCoordinates({
-      latitude: searchedLocation.place.location.latitude,
-      longitude: searchedLocation.place.location.longitude,
-      ...MAP_DELTA_LOW,
-    });
     setErrorAddressField(false);
     navigation.pop(2);
   };
@@ -368,13 +293,6 @@ const ToktokPinLocation = ({navigation, route}) => {
       </>
       {/*---------------------------------------- BUTTON ----------------------------------------*/}
 
-      {/* <View style={styles.submitContainer}>
-        <ThrottledOpacity disabled={false} delay={4000} onPress={onSubmit} style={{borderRadius: 5}}>
-          <View style={styles.submit}>
-            <Text style={styles.submitText}>Confirm</Text>
-          </View>
-        </ThrottledOpacity>
-      </View> */}
       <View style={styles.card}>
         <View
           style={{
@@ -415,7 +333,7 @@ const ToktokPinLocation = ({navigation, route}) => {
           </View>
         </View>
         <View style={styles.submitContainer}>
-          <ThrottledOpacity disabled={false} delay={4000} onPress={onSubmit} style={{borderRadius: 5}}>
+          <ThrottledOpacity disabled={GPLLoading} delay={4000} onPress={onSubmit} style={{borderRadius: 5}}>
             <View style={styles.submit}>
               <Text style={styles.submitText}>Confirm</Text>
             </View>

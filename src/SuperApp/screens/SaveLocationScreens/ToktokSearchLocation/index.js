@@ -45,7 +45,6 @@ const ToktokSearchLocation = ({navigation, route}) => {
     isFromLocationAccess = false,
     locCoordinates,
     setLocCoordinates,
-    formattedAddress,
     setConfirmedLocation,
     addressObj,
     setIsEdited,
@@ -119,13 +118,6 @@ const ToktokSearchLocation = ({navigation, route}) => {
     });
   };
 
-  const onChange = value => {
-    // if (value.length >= 3) {
-    //   debouncedRequest(value);
-    // }
-    setSearchedText(value);
-  };
-
   const clearSearhedData = () => {
     setSearchedText('');
     setSearchedData(null);
@@ -133,19 +125,6 @@ const ToktokSearchLocation = ({navigation, route}) => {
 
   useEffect(() => {
     prefGetSavedAddresses();
-    // if (mapDragCoords.latitude) {
-    //   getPlaceByLocation({
-    //     variables: {
-    //       input: {
-    //         location: {
-    //           latitude: mapDragCoords.latitude,
-    //           longitude: mapDragCoords.longitude,
-    //         },
-    //         service: 'PREF',
-    //       },
-    //     },
-    //   });
-    // }
 
     BackHandler.addEventListener('hardwareBackPress', () => {
       navigation.pop(popTo ? popTo : 1);
@@ -210,7 +189,7 @@ const ToktokSearchLocation = ({navigation, route}) => {
             // editable={!GPLLoading && !disableAddressBox}
             placeholder={'Search'}
             value={searchedText}
-            onChangeText={onChange}
+            onChangeText={value => setSearchedText(value)}
             textAlign={'left'}
             style={styles.input}
             returnKeyType="done"
