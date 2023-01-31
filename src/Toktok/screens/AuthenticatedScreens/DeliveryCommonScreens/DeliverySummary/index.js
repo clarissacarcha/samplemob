@@ -192,14 +192,13 @@ const StopDetails = ({navigation, route}) => {
             </Marker>
           </>
         )}
-        {/* to be consulted */}
-        {/* {orderData.directions.legs && (
+        {orderData.directions.legs && (
           <Polyline
             coordinates={orderData.directions.legs[0].polyline}
             strokeColor="#FF0000" // fallback for when `strokeColors` is not supported by the map-provider
             strokeWidth={3}
           />
-        )} */}
+        )}
       </MapView>
       <Shadow style={styles.back}>
         <TouchableOpacity onPress={() => navigation.pop()}>

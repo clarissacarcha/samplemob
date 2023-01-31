@@ -221,16 +221,6 @@ const AddEditLocation = ({navigation, route, session}) => {
             fullname: detachedContactName,
             mobile_no: contactNumber,
           },
-          // temporary fixed data
-          isFirstAddress: false,
-          addressComponents: {
-            regCode: '1561',
-            regDesc: 'waxcxzc',
-            provCode: '5461',
-            provDesc: 'daszxczxczxc',
-            citymunCode: '321654',
-            citymunDesc: 'cvvxvcxvc',
-          },
         },
       },
     });
@@ -254,15 +244,6 @@ const AddEditLocation = ({navigation, route, session}) => {
           contactDetails: {
             fullname: detachedContactName,
             mobile_no: contactNumber,
-          },
-          // temporary fixed data
-          addressComponents: {
-            regCode: '1561',
-            regDesc: 'waxcxzc',
-            provCode: '5461',
-            provDesc: 'daszxczxczxc',
-            citymunCode: '321654',
-            citymunDesc: 'cvvxvcxvc',
           },
         },
       },

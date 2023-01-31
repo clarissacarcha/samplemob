@@ -116,16 +116,6 @@ const ToktokPinLocation = ({navigation, route}) => {
             fullname: '',
             mobile_no: '',
           },
-          // temporary fixed data
-          isFirstAddress: false,
-          addressComponents: {
-            regCode: '1561',
-            regDesc: 'waxcxzc',
-            provCode: '5461',
-            provDesc: 'daszxczxczxc',
-            citymunCode: '321654',
-            citymunDesc: 'cvvxvcxvc',
-          },
         },
       },
     });
