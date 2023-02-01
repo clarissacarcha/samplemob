@@ -189,17 +189,6 @@ const ToktokPinLocation = ({navigation, route}) => {
       longitude: longitude,
       ...MAP_DELTA_LOW,
     });
-    getPlaceByLocation({
-      variables: {
-        input: {
-          location: {
-            latitude: latitude,
-            longitude: longitude,
-          },
-          service: 'PREF',
-        },
-      },
-    });
   };
 
   const getSearchedValue = () => {
