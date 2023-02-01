@@ -136,11 +136,11 @@ const ToktokSearchLocation = ({navigation, route}) => {
   }, []);
 
   const onClickSelectViaMap = async () => {
-    const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
+    const location = await currentLocation({showsReverseGeocode: false});
     return navigation.navigate('ToktokPinLocation', {
       initialCoordinates: {
-        latitude,
-        longitude,
+        latitude: location?.latitude,
+        longitude: location?.longitude,
         ...MAP_DELTA_LOW,
       },
       locCoordinates,
