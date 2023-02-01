@@ -163,7 +163,7 @@ const ToktokSearchLocation = ({navigation, route}) => {
             color: CONSTANTS.COLOR.ORANGE,
             fontFamily: CONSTANTS.FONT_FAMILY.BOLD,
           }}>
-          Search Location
+          {searchedText !== '' ? 'No Results Found' : 'Search Location'}
         </Text>
         <Text
           style={{
@@ -172,7 +172,9 @@ const ToktokSearchLocation = ({navigation, route}) => {
             width: 200,
             textAlign: 'center',
           }}>
-          Search a location or address that you want to save.
+          {searchedText !== ''
+            ? 'Try to search something similar.'
+            : 'Search a location or address that you want to save.'}
         </Text>
       </View>
     );
