@@ -104,22 +104,9 @@ const Screen = ({navigation, constants, session, createSession}) => {
   const handleDynamicLinks = link => {
     // DYNAMIC LINK SHOULD BE
     // https://toktok.page.link/?apn=sample.ph&ibi=sample.ph&afl=https://site.com&link=https://site.com/refer/ABC123
-
     const decomposeLink = link?.url.split('/');
-    console.log(decomposeLink[decomposeLink.length - 1]); // RETURNS ABC123
-  };
-
-  const handleOpenReferral = async () => {
-    if (Platform.OS === 'android') {
-      dynamicLinks().getInitialLink().then(handleDynamicLinks);
-    } else if (Platform.OS === 'ios') {
-      const openedFromLink = await Linking.getInitialURL();
-      if (openedFromLink) {
-        const decomposeLink = openedFromLink.split('/');
-        console.log(decomposeLink[decomposeLink.length - 1]); // RETURNS ABC123
-      }
-    } else {
-      console.log('Opened on new device OS!');
+    if (decomposeLink) {
+      console.log(decomposeLink[decomposeLink.length - 1]); // RETURNS ABC123
     }
   };
 
@@ -127,11 +114,21 @@ const Screen = ({navigation, constants, session, createSession}) => {
     OneSignal.setNotificationOpenedHandler(onNotificationOpened);
     getUserHash();
     handleOpenWallet();
-    handleOpenReferral();
+    // GET DYNAMIC URL ON NEW INSTALL
+    dynamicLinks().getInitialLink().then(handleDynamicLinks);
+
+    // GET DYNAMIC URL WHILE APP OPENED
+    const subscribeDynamicLinks = dynamicLinks().onLink(link => {
+      const decomposeLink = link?.url.split('/');
+      if (decomposeLink) {
+        console.log(decomposeLink[decomposeLink.length - 1]); // RETURNS ABC123
+      }
+    });
     // const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
     //   return true;
     // });
     return () => {
+      subscribeDynamicLinks();
       // backHandler.remove();
     };
   }, []);

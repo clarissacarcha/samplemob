@@ -1,4 +1,4 @@
-#import <Firebase.h> // <--- add this
+#import <Firebase/Firebase.h> // <--- add this
 #import "AppDelegate.h"
 
 #import <React/RCTBridge.h>
@@ -32,7 +32,9 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [FIRApp configure];
+  if([FIRApp defaultApp] == nil) {
+    [FIRApp configure];  
+  }
   [GMSServices provideAPIKey:@"AIzaSyDhlw6pbriuwr_Mb6KYkVlBar7KD1KTrOs"];
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
