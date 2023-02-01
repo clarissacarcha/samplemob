@@ -35,7 +35,6 @@ const AddEditLocation = ({navigation, route, session}) => {
 
   const {
     addressIdFromService,
-    formattedAddress = null,
     coordsFromService = null,
     isFromLocationAccess = false,
     addressObj = null,
@@ -45,7 +44,6 @@ const AddEditLocation = ({navigation, route, session}) => {
   } = route.params;
 
   const [modalOperationType, setModalOperationType] = useState('');
-  const [locCoordinates, setLocCoordinates] = useState({});
   const [isEdited, setIsEdited] = useState(false);
   const [showConfirmOperationAddressModal, setShowConfirmOperationAddressModal] = useState(false);
   const [showSuccessOperationAddressModal, setShowSuccessOperationAddressModal] = useState(false);
@@ -142,11 +140,6 @@ const AddEditLocation = ({navigation, route, session}) => {
       setLandMark(res.prefGetSavedAddress.landmark);
       setContactNumber(res.prefGetSavedAddress.contactDetails.mobile_no);
       setContactName(res.prefGetSavedAddress.contactDetails.fullname);
-      setLocCoordinates({
-        latitude: res.prefGetSavedAddress.place.location.latitude,
-        longitude: res.prefGetSavedAddress.place.location.longitude,
-        ...MAP_DELTA_LOW,
-      });
     },
     onError: onError,
   });
@@ -190,24 +183,10 @@ const AddEditLocation = ({navigation, route, session}) => {
     },
   });
 
-  const getCurrentLocation = async () => {
-    const {latitude, longitude} = await currentLocation({showsReverseGeocode: false});
-    setLocCoordinates({
-      latitude: latitude,
-      longitude: longitude,
-      ...MAP_DELTA_LOW,
-    });
-  };
-
   const [getPlaceByLocation, {loading: GPLLoading}] = useLazyQuery(GET_PLACE_BY_LOCATION, {
     client: TOKTOK_QUOTATION_GRAPHQL_CLIENT,
     fetchPolicy: 'network-only',
     onCompleted: response => {
-      setLocCoordinates({
-        latitude: response.getPlaceByLocation.place.location.latitude,
-        longitude: response.getPlaceByLocation.place.location.longitude,
-        ...MAP_DELTA_LOW,
-      });
       setConfirmedLocation(response.getPlaceByLocation);
     },
     onError: onError,
@@ -313,20 +292,7 @@ const AddEditLocation = ({navigation, route, session}) => {
   };
 
   const onSearchMap = () => {
-    navigation.navigate('ToktokSearchLocation');
-    // navigation.navigate('ToktokPinLocation', {
-    //   locCoordinates,
-    //   setLocCoordinates,
-    //   formattedAddress: confirmedLocation?.place?.formattedAddress,
-    //   setConfirmedLocation,
-    //   addressObj,
-    //   setIsEdited,
-    //   setErrorAddressField,
-    //   isFromLocationAccess,
-    // });
     navigation.navigate('ToktokSearchLocation', {
-      locCoordinates,
-      setLocCoordinates,
       formattedAddress: confirmedLocation?.place?.formattedAddress,
       setConfirmedLocation,
       addressObj,
@@ -493,14 +459,6 @@ const AddEditLocation = ({navigation, route, session}) => {
           },
         },
       });
-    } else if (addressObj?.id) {
-      setLocCoordinates({
-        latitude: addressObj?.place?.location?.latitude,
-        longitude: addressObj?.place?.location?.longitude,
-        ...MAP_DELTA_LOW,
-      });
-    } else {
-      getCurrentLocation();
     }
   }, []);
 
