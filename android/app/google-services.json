@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "524028558670",
+    "project_id": "toktok-gcp",
+    "storage_bucket": "toktok-gcp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:524028558670:android:7401153af2b6f4c6a2b21f",
+        "android_client_info": {
+          "package_name": "ph.cloudpanda.toktok"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "524028558670-8lpcfoabbi4e5pl27tn67sj52l4m76ta.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMxmSC7UpxoHXGV8-sUpwcEwkzBux0MJM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "524028558670-8lpcfoabbi4e5pl27tn67sj52l4m76ta.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "524028558670-f623sa8cb19m40lsv52lflon5hpe9179.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ph.cloudpanda.toktok",
+                "app_store_id": "1522988322"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

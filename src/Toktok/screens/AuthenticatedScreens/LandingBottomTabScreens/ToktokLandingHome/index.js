@@ -11,7 +11,7 @@ import {Header, HeaderSearchField, Menu, Advertisements} from './Components';
 import {GET_USER_HASH} from '../../../../../graphql';
 import {onError} from '../../../../../util/ErrorUtility';
 import {useLazyQuery} from '@apollo/react-hooks';
-
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 const Screen = ({navigation, constants, session, createSession}) => {
   // const userLocation = {
   //   latitude,
@@ -101,10 +101,33 @@ const Screen = ({navigation, constants, session, createSession}) => {
     }
   };
 
+  const handleDynamicLinks = link => {
+    // DYNAMIC LINK SHOULD BE
+    // https://toktok.page.link/?apn=sample.ph&ibi=sample.ph&afl=https://site.com&link=https://site.com/refer/ABC123
+
+    const decomposeLink = link?.url.split('/');
+    console.log(decomposeLink[decomposeLink.length - 1]); // RETURNS ABC123
+  };
+
+  const handleOpenReferral = async () => {
+    if (Platform.OS === 'android') {
+      dynamicLinks().getInitialLink().then(handleDynamicLinks);
+    } else if (Platform.OS === 'ios') {
+      const openedFromLink = await Linking.getInitialURL();
+      if (openedFromLink) {
+        const decomposeLink = openedFromLink.split('/');
+        console.log(decomposeLink[decomposeLink.length - 1]); // RETURNS ABC123
+      }
+    } else {
+      console.log('Opened on new device OS!');
+    }
+  };
+
   useEffect(() => {
     OneSignal.setNotificationOpenedHandler(onNotificationOpened);
     getUserHash();
     handleOpenWallet();
+    handleOpenReferral();
     // const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
     //   return true;
     // });
