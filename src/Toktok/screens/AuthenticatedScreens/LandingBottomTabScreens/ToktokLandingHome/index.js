@@ -116,12 +116,15 @@ const Screen = ({navigation, constants, session, createSession}) => {
         }
         saveReferralCodeFromLinkAsync(handleUniversalLinks);
       });
-
+    let isDone = false;
     // GET DYNAMIC URL WHILE APP OPENED
-    const subscribeDynamicLinks = dynamicLinks().onLink(link =>
-      saveReferralCodeFromLink(handleSubscriptionLinking(link)),
-    );
-    Linking.addEventListener('url', event => saveReferralCodeFromLink(handleSubscriptionLinking(event)));
+    const subscribeDynamicLinks = dynamicLinks().onLink(link => {
+      isDone = saveReferralCodeFromLink(handleSubscriptionLinking(link));
+    });
+
+    if (!isDone) {
+      Linking.addEventListener('url', event => saveReferralCodeFromLink(handleSubscriptionLinking(event)));
+    }
     // const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
     //   return true;
     // });
@@ -133,7 +136,7 @@ const Screen = ({navigation, constants, session, createSession}) => {
 
   const saveReferralCodeFromLink = getReferral => {
     const referral = getReferral;
-    if (referral) {
+    if (referral.length < 10) {
       consumerSetReferralCode({
         variables: {
           input: {
@@ -143,7 +146,7 @@ const Screen = ({navigation, constants, session, createSession}) => {
       });
       return true;
     } else {
-      console.log('[Referral err]: No referral code.', referral);
+      console.log('[Referral err]: No referral code.');
       return false;
     }
   };

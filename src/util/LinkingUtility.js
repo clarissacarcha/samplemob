@@ -27,18 +27,6 @@ export const handleUniversalLinks = async () => {
 export const handleSubscriptionLinking = link => {
   const decomposeLink = link?.url.split('/');
   if (decomposeLink) {
-    const urlReferral = decomposeLink[decomposeLink.length - 1];
-    if (Platform.OS === 'ios') {
-      let finalUrl;
-      const urlSplit = urlReferral.split('&');
-      if (urlSplit.length > 1) {
-        finalUrl = urlSplit[0];
-      } else {
-        urlReferral;
-      }
-      console.log('[linking Subscription]', finalUrl); // RETURNS ABC123
-      return finalUrl;
-    }
     return decomposeLink[decomposeLink.length - 1];
   } else {
     console.log('[linking Subscription]');
