@@ -72,6 +72,8 @@
 	<string>Used to auto fill location in sender details.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Used to auto fill location in sender details.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Used to auto fill location in sender details.</string>
 	<key>NSMainNibFile</key>
 	<string>LaunchScreen</string>
 	<key>NSPhotoLibraryUsageDescription</key>

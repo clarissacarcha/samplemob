@@ -8,10 +8,11 @@ import {COLOR} from '../../../../../res/variables';
 
 //SELF IMPORTS
 import {Header, HeaderSearchField, Menu, Advertisements} from './Components';
-import {GET_USER_HASH} from '../../../../../graphql';
-import {onError} from '../../../../../util/ErrorUtility';
-import {useLazyQuery} from '@apollo/react-hooks';
+import {CONSUMER_SET_REFERRAL_CODE, GET_USER_HASH} from '../../../../../graphql';
+import {onError, onErrorAlert} from '../../../../../util/ErrorUtility';
+import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
+import {handleDynamicLinks, handleSubscriptionLinking, handleUniversalLinks} from '../../../../../util';
 const Screen = ({navigation, constants, session, createSession}) => {
   // const userLocation = {
   //   latitude,
@@ -101,29 +102,26 @@ const Screen = ({navigation, constants, session, createSession}) => {
     }
   };
 
-  const handleDynamicLinks = link => {
-    // DYNAMIC LINK SHOULD BE
-    // https://toktok.page.link/?apn=sample.ph&ibi=sample.ph&afl=https://site.com&link=https://site.com/refer/ABC123
-    const decomposeLink = link?.url.split('/');
-    if (decomposeLink) {
-      console.log(decomposeLink[decomposeLink.length - 1]); // RETURNS ABC123
-    }
-  };
-
   useEffect(() => {
     OneSignal.setNotificationOpenedHandler(onNotificationOpened);
     getUserHash();
     handleOpenWallet();
     // GET DYNAMIC URL ON NEW INSTALL
-    dynamicLinks().getInitialLink().then(handleDynamicLinks);
+    dynamicLinks()
+      .getInitialLink()
+      .then(link => {
+        const saveReferral = saveReferralCodeFromLink(handleDynamicLinks(link));
+        if (saveReferral) {
+          return;
+        }
+        saveReferralCodeFromLinkAsync(handleUniversalLinks);
+      });
 
     // GET DYNAMIC URL WHILE APP OPENED
-    const subscribeDynamicLinks = dynamicLinks().onLink(link => {
-      const decomposeLink = link?.url.split('/');
-      if (decomposeLink) {
-        console.log(decomposeLink[decomposeLink.length - 1]); // RETURNS ABC123
-      }
-    });
+    const subscribeDynamicLinks = dynamicLinks().onLink(link =>
+      saveReferralCodeFromLink(handleSubscriptionLinking(link)),
+    );
+    Linking.addEventListener('url', event => saveReferralCodeFromLink(handleSubscriptionLinking(event)));
     // const backHandler = BackHandler.addEventListener('hardwareBackPress', function() {
     //   return true;
     // });
@@ -132,6 +130,48 @@ const Screen = ({navigation, constants, session, createSession}) => {
       // backHandler.remove();
     };
   }, []);
+
+  const saveReferralCodeFromLink = getReferral => {
+    const referral = getReferral;
+    if (referral) {
+      consumerSetReferralCode({
+        variables: {
+          input: {
+            referralCode: referral,
+          },
+        },
+      });
+      return true;
+    } else {
+      console.log('[Referral err]: No referral code.', referral);
+      return false;
+    }
+  };
+
+  const saveReferralCodeFromLinkAsync = async getReferral => {
+    const referral = await getReferral();
+    if (referral) {
+      consumerSetReferralCode({
+        variables: {
+          input: {
+            referralCode: referral,
+          },
+        },
+      });
+      return true;
+    } else {
+      console.log('[Referral err]: No referral code.', referral);
+    }
+  };
+
+  const [consumerSetReferralCode, {loading}] = useMutation(CONSUMER_SET_REFERRAL_CODE, {
+    onCompleted: () => {
+      console.log('Referral code saved!');
+    },
+    onError: err => {
+      console.log('Referral code not saved!', err);
+    },
+  });
 
   const [getUserHash] = useLazyQuery(GET_USER_HASH, {
     fetchPolicy: 'network-only',

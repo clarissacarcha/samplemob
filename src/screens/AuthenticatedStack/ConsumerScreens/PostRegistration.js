@@ -25,7 +25,9 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
 
   const alert = useAlert();
 
-  const [referralCode, setReferralCode] = useState('');
+  const [referralCode, setReferralCode] = useState(
+    session.user.consumer.referralCode ? session.user.consumer.referralCode : '',
+  );
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
@@ -132,6 +134,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
           style={styles.input}
           placeholder="Referral Code"
           placeholderTextColor={LIGHT}
+          disabled={session.user.consumer.referralCode ? true : false}
         />
 
         <Text style={styles.label}>First Name</Text>

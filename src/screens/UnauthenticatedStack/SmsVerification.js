@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react';
-import {View, StyleSheet, Text, TextInput, TouchableHighlight, Image, Platform} from 'react-native';
+import {View, StyleSheet, Text, TextInput, TouchableHighlight, Image, Platform, Linking} from 'react-native';
 import SmsRetriever from 'react-native-sms-retriever';
 import {COLOR, DARK, APP_FLAVOR} from '../../res/constants';
 import {getUniqueId} from 'react-native-device-info';
@@ -11,8 +11,10 @@ import AsyncStorage from '@react-native-community/async-storage';
 import OneSignal from 'react-native-onesignal';
 import {onError, onErrorAlert} from '../../util/ErrorUtility';
 import {useAlert} from '../../hooks';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 import timer from 'react-native-timer';
+import {handleDynamicLinks, handleSubscriptionLinking, handleUniversalLinks} from '../../util';
 
 const VerificationBanner = require('../../assets/images/VerificationBanner.png');
 
@@ -45,6 +47,49 @@ const Verification = ({navigation, route, createSession}) => {
 
   const [verificationCode, setVerificationCode] = useState('');
   const [count, setCount] = useState(30);
+  const [referralCode, setReferralCode] = useState('');
+
+  useEffect(() => {
+    dynamicLinks()
+      .getInitialLink()
+      .then(link => {
+        const saveReferral = saveReferralCodeFromLink(handleDynamicLinks(link));
+        if (saveReferral) {
+          return;
+        }
+        saveReferralCodeFromLinkAsync(handleUniversalLinks);
+      });
+
+    // GET DYNAMIC URL WHILE APP OPENED
+    const subscribeDynamicLinks = dynamicLinks().onLink(link =>
+      saveReferralCodeFromLink(handleSubscriptionLinking(link)),
+    );
+    Linking.addEventListener('url', event => saveReferralCodeFromLink(handleSubscriptionLinking(event)));
+    return () => {
+      subscribeDynamicLinks();
+      // backHandler.remove();
+    };
+  }, []);
+
+  const saveReferralCodeFromLink = getReferral => {
+    const referral = getReferral;
+    if (referral) {
+      setReferralCode(referral);
+      return true;
+    } else {
+      console.log('[Referral err]: No referral code.', referral);
+      return false;
+    }
+  };
+
+  const saveReferralCodeFromLinkAsync = async getReferral => {
+    const referral = await getReferral();
+    if (referral) {
+      setReferralCode(referral);
+    } else {
+      console.log('[Referral err]: No referral code.', referral);
+    }
+  };
 
   const [verifyRegistration, {loading}] = useMutation(VERIFY_REGISTRATION, {
     client: AUTH_CLIENT,
@@ -55,6 +100,7 @@ const Verification = ({navigation, route, createSession}) => {
         appFlavor: APP_FLAVOR,
         deviceId: getUniqueId(),
         deviceType: Platform.select({ios: 'I', android: 'A'}),
+        // referralCode: referralCode,
       },
     },
 
