@@ -134,7 +134,7 @@ const PostRegistration = ({navigation, route, session, createSession, destroySes
           style={styles.input}
           placeholder="Referral Code"
           placeholderTextColor={LIGHT}
-          disabled={session.user.consumer.referralCode ? true : false}
+          editable={session.user.consumer.referralCode ? false : true}
         />
 
         <Text style={styles.label}>First Name</Text>

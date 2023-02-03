@@ -100,7 +100,7 @@ const Verification = ({navigation, route, createSession}) => {
         appFlavor: APP_FLAVOR,
         deviceId: getUniqueId(),
         deviceType: Platform.select({ios: 'I', android: 'A'}),
-        // referralCode: referralCode,
+        referralCode: referralCode,
       },
     },
 
