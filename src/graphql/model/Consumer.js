@@ -23,3 +23,11 @@ export const PATCH_GO_REFERRAL_USER_ID = gql`
     }
   }
 `;
+
+export const CONSUMER_SET_REFERRAL_CODE = gql`
+  mutation consumerSetReferralCode($input: ConsumerSetReferralCodeInput!) {
+    consumerSetReferralCode(input: $input) {
+      message
+    }
+  }
+`;
