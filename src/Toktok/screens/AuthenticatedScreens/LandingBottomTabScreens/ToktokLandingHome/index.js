@@ -8,7 +8,7 @@ import {COLOR} from '../../../../../res/variables';
 
 //SELF IMPORTS
 import {Header, HeaderSearchField, Menu, Advertisements} from './Components';
-import {CONSUMER_SET_REFERRAL_CODE, GET_USER_HASH} from '../../../../../graphql';
+import {AUTH_CLIENT, CONSUMER_SET_REFERRAL_CODE, GET_USER_HASH, GET_USER_SESSION} from '../../../../../graphql';
 import {onError, onErrorAlert} from '../../../../../util/ErrorUtility';
 import {useLazyQuery, useMutation} from '@apollo/react-hooks';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
@@ -136,7 +136,7 @@ const Screen = ({navigation, constants, session, createSession}) => {
 
   const saveReferralCodeFromLink = getReferral => {
     const referral = getReferral;
-    if (referral.length < 10) {
+    if (referral?.length < 10) {
       consumerSetReferralCode({
         variables: {
           input: {
@@ -170,9 +170,58 @@ const Screen = ({navigation, constants, session, createSession}) => {
   const [consumerSetReferralCode, {loading}] = useMutation(CONSUMER_SET_REFERRAL_CODE, {
     onCompleted: () => {
       console.log('Referral code saved!');
+      const storedUserId = session.user.id;
+      getUserSession({
+        variables: {
+          input: {
+            userId: storedUserId,
+          },
+        },
+      });
     },
     onError: err => {
       console.log('Referral code not saved!', err);
+    },
+  });
+
+  const [getUserSession] = useLazyQuery(GET_USER_SESSION, {
+    client: AUTH_CLIENT,
+    fetchPolicy: 'network-only',
+    onError: error => {
+      const {graphQLErrors, networkError} = error;
+      // console.log(error);
+      if (networkError) {
+        Alert.alert('', 'Network error occurred. Please check your internet connection.');
+      } else if (graphQLErrors.length > 0) {
+        graphQLErrors.map(({message, locations, path, code}) => {
+          if (message === 'Session expired. Please log in again.') {
+            Alert.alert('', message);
+            AsyncStorage.removeItem('accessToken');
+            destroySession();
+            navigation.replace('UnauthenticatedStack');
+          } else if (code === 'INTERNAL_SERVER_ERROR') {
+            Alert.alert('', 'Something went wrong.');
+          } else if (code === 'USER_INPUT_ERROR') {
+            Alert.alert('', message);
+          } else if (code === 'BAD_USER_INPUT') {
+            Alert.alert('', message);
+          } else if (code === 'AUTHENTICATION_ERROR') {
+            navigation.push('UnauthenticatedStack', {
+              screen: 'AccountBlocked',
+            });
+          } else {
+            console.log('ELSE ERROR:', error);
+            Alert.alert('', 'Something went wrong...');
+          }
+        });
+      }
+    },
+    onCompleted: ({getUserSession}) => {
+      try {
+        createSession(getUserSession);
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
