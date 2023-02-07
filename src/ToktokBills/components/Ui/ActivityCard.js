@@ -26,11 +26,21 @@ const getStatus = status => {
   }
 };
 export const ActivityCard = React.memo(({item, onPress, isLastItem = false}) => {
-  let {amount, convenienceFee, createdAt, billerDetails, referenceNumber, destinationIdentifier, status} = item;
+  let {
+    amount,
+    convenienceFee,
+    createdAt,
+    billerDetails,
+    referenceNumber,
+    destinationIdentifier,
+    destinationNumber,
+    status,
+  } = item;
 
   let transactionDateTime = moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A');
   let totalAmount = numberFormat(parseFloat(amount) + parseFloat(convenienceFee));
   const statusData = getStatus(status);
+  const account = billerDetails.itemCode ? destinationNumber : destinationIdentifier;
 
   return (
     <TouchableOpacity
@@ -65,7 +75,7 @@ export const ActivityCard = React.memo(({item, onPress, isLastItem = false}) => 
           <Image source={{uri: billerDetails?.logo}} style={styles.networkIcon} />
           <View style={styles.billerContainer}>
             <Text>{billerDetails?.descriptions}</Text>
-            <Text style={styles.subText}>{destinationIdentifier}</Text>
+            <Text style={styles.subText}>{account}</Text>
           </View>
         </View>
         <View style={styles.divider} />

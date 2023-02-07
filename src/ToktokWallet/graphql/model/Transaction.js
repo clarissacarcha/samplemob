@@ -30,6 +30,7 @@ export const POST_SEND_MONEY = gql`
     postSendMoney(input: $input) {
       id
       amount
+      refNo
       status
       sourceWalletId
       destinationWalletId
@@ -72,6 +73,9 @@ const WalletTransactions = `
     name
     key
     type
+    isIncome
+    isRefund
+    isPayment
   }
   details
   displayInfo
@@ -79,7 +83,9 @@ const WalletTransactions = `
   note
   status
   sourceWalletId
+  sourceAccountId
   destinationWalletId
+  destinationAccountId
   cashInId
   cashOutId
   createdAt
@@ -142,6 +148,65 @@ export const POST_VERIFY_TRANSACTION_QR_CODE = gql`
         }
       }
       QRInfo
+    }
+  }
+`;
+
+const MERCHANT = `
+  id
+  merchantCode
+  merchantName
+  logo
+  serviceFee
+  paymentType
+  wTax
+`;
+
+const BRANCH = `
+  id
+  merchantId
+  merchant {
+    ${MERCHANT}
+  }
+  branchCode
+  branchName
+  serviceFee
+  wTax
+`;
+
+export const POST_VALIDATE_QR_CODE = gql`
+  mutation postValidateQRCode($input: PostValidateQRCodeInput) {
+    postValidateQRCode(input: $input) {
+      terminal {
+        id
+        branchId
+        terminalCode
+        terminalName
+        mobileNumber
+        email
+        qrCode
+      }
+      merchant {
+        ${MERCHANT}
+      }
+      branch {
+        ${BRANCH}
+      }
+      account {
+        id
+        mobileNumber
+        status
+        motherId
+        person {
+          id
+          firstName
+          middleName
+          lastName
+          selfieImage
+        }
+      }
+      QRInfo
+      action
     }
   }
 `;

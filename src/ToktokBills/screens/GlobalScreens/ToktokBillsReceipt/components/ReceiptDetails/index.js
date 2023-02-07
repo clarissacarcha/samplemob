@@ -29,12 +29,29 @@ export const ReceiptDetails = ({route}) => {
     providerServiceFee,
     systemServiceFee,
   } = receipt;
-  const {email, billItemSettings} = paymentData;
-  const {firstFieldName, secondFieldName} = billItemSettings;
+  const {emailAddress, billItemSettings, paymentType, payorType, itemCode, periodCoveredFrom, periodCoveredTo} =
+    paymentData;
   const totalAmount = parseFloat(amount) + parseFloat(convenienceFee);
   const [logo, setLogo] = useState({height: 0, width: 0});
   const [imageLoading, setImageLoading] = useState(true);
   const [footerHeight, setFooterHeight] = useState(80);
+  let firstFieldName = '';
+  let secondFieldName = '';
+
+  switch (itemCode) {
+    case 'SSS':
+      firstFieldName = 'Payment Reference Number (PRN)';
+      secondFieldName = 'Customer Name';
+      break;
+    case 'PAG_IBIG':
+      firstFieldName = 'Account Number';
+      secondFieldName = 'Contact Number';
+      break;
+    default:
+      firstFieldName = billItemSettings.firstFieldName;
+      secondFieldName = billItemSettings.secondFieldName;
+      break;
+  }
 
   useEffect(() => {
     Image.getSize(billerDetails.logo, (width, height) => {
@@ -60,27 +77,49 @@ export const ReceiptDetails = ({route}) => {
           <Text style={[styles.description, {color: COLOR.ORANGE, fontFamily: FONT.BOLD}]}>{referenceNumber}</Text>
         </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
-          <Text style={styles.title}>Transaction Date and Time </Text>
+          <Text style={styles.title}>Transaction Date </Text>
           <Text style={styles.description}>{moment(createdAt).tz('Asia/Manila').format('MMM D, YYYY hh:mm A')}</Text>
         </View>
+        {!!paymentType?.description && (
+          <View style={[styles.bodyContainer, styles.marginBottom15]}>
+            <Text style={styles.title}>Payment Type</Text>
+            <Text style={styles.description}>{paymentType.description}</Text>
+          </View>
+        )}
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
           <Text style={styles.title}>{firstFieldName}</Text>
           <Text style={styles.description}>{destinationNumber}</Text>
         </View>
+        {!!payorType?.description && (
+          <View style={[styles.bodyContainer, styles.marginBottom15]}>
+            <Text style={styles.title}>Payor Type</Text>
+            <Text style={styles.description}>{payorType.description}</Text>
+          </View>
+        )}
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
           <Text style={styles.title}>{secondFieldName} </Text>
           <Text style={styles.description}>{destinationIdentifier}</Text>
         </View>
+        {periodCoveredFrom != '' && (
+          <View style={[styles.bodyContainer, styles.marginBottom15]}>
+            <Text style={styles.title}>Period Covered From</Text>
+            <Text style={styles.description}>{moment(periodCoveredFrom).format('MM YYYY').replace(' ', '')}</Text>
+          </View>
+        )}
+        {periodCoveredTo != '' && (
+          <View style={[styles.bodyContainer, styles.marginBottom15]}>
+            <Text style={styles.title}>Period Covered To</Text>
+            <Text style={styles.description}>{moment(periodCoveredTo).format('MM YYYY').replace(' ', '')}</Text>
+          </View>
+        )}
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
           <Text style={styles.title}>Toktokwallet Account Number </Text>
           <Text style={styles.description}>{senderMobileNumber}</Text>
         </View>
-        {!!email && (
-          <View style={[styles.bodyContainer, styles.marginBottom15]}>
-            <Text style={styles.title}>Email Address </Text>
-            <Text style={styles.description}>{email}</Text>
-          </View>
-        )}
+        <View style={[styles.bodyContainer, styles.marginBottom15]}>
+          <Text style={styles.title}>Email Address </Text>
+          <Text style={styles.description}>{emailAddress}</Text>
+        </View>
         <View style={[styles.bodyContainer, styles.marginBottom15]}>
           <Text style={styles.title}>Payment Amount </Text>
           <Text style={styles.description}>
@@ -157,7 +196,6 @@ const styles = StyleSheet.create({
   bodyContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
   },
   marginBottom15: {
     marginBottom: moderateScale(15),
@@ -171,10 +209,5 @@ const styles = StyleSheet.create({
   brokenLine: {
     marginVertical: moderateScale(20),
     marginHorizontal: moderateScale(16),
-  },
-  logo: {
-    width: moderateScale(110),
-    height: moderateScale(80),
-    resizeMode: 'contain',
   },
 });

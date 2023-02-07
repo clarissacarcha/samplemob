@@ -20,6 +20,8 @@ export const HeaderDownloadReceipt = ({
   refNo,
   format,
   onPressDownloadReceipt,
+  promptTitle = 'Receipt Downloaded',
+  promptMessage = 'Your transaction receipt has been saved to your gallery.',
 }) => {
   const navigation = useNavigation();
   const prompt = usePrompt();
@@ -102,7 +104,6 @@ export const HeaderDownloadReceipt = ({
     const result = await checkAndRequest();
 
     const pathCache = RNFS.CachesDirectoryPath;
-    console.log(pathCache);
     setTimeout(() => {
       viewshotRef.current.capture().then(async uri => {
         const timestamp = +moment();
@@ -113,12 +114,15 @@ export const HeaderDownloadReceipt = ({
 
         await CameraRoll.save(newFileUri, {type: 'photo', album: 'toktok'});
 
-        prompt({
-          type: 'success',
-          title: 'Receipt Downloaded',
-          message: 'Your transaction receipt has been saved to your gallery.',
-          event: 'TOKTOKBILLSLOAD',
-        });
+        setTimeout(() => {
+          prompt({
+            type: 'success',
+            title: promptTitle,
+            message: promptMessage,
+            event: 'TOKTOKBILLSLOAD',
+          });
+        }, 100);
+
         onPressDownloadReceipt(false);
       });
     }, 1000);

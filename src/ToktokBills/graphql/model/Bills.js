@@ -18,6 +18,7 @@ export const GET_ALL_BILL_ITEMS = gql`
           name
           descriptions
           logo
+          itemCode
         }
       }
       pageInfo {
@@ -39,6 +40,7 @@ export const GET_BILL_ITEMS = gql`
           name
           descriptions
           logo
+          itemCode
         }
       }
       pageInfo {
@@ -60,6 +62,7 @@ export const GET_SEARCH_ALL_BILL_ITEMS = gql`
           name
           descriptions
           logo
+          itemCode
         }
       }
       pageInfo {
@@ -81,6 +84,7 @@ export const GET_SEARCH_BILL_ITEMS = gql`
           name
           descriptions
           logo
+          itemCode
         }
       }
       pageInfo {

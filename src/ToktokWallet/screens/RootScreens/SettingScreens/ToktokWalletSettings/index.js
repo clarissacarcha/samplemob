@@ -73,6 +73,13 @@ export const ToktokWalletSettings = ({navigation, route}) => {
       service: 'internal',
     },
     {
+      label: 'Scan QR',
+      route: 'ToktokWalletScanQRLogs',
+      identifier: 'logScanQr',
+      checkIfMerchantLinked: false,
+      service: 'internal',
+    },
+    {
       label: 'Load',
       route: 'ToktokWalletLoadLogs',
       identifier: 'logToktokLoad',

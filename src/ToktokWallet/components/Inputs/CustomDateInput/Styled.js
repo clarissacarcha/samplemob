@@ -25,9 +25,9 @@ export const Button: ComponentType<any> = styled(TouchableOpacity).attrs(props =
   ${({hasError, theme}) =>
     hasError &&
     `
-     border-width: 1px;
-     border-color: ${theme.color.red};
-   `}
+      border-width: 1px;
+      border-color: ${theme.color.red};
+    `}
 `;
 
 export const ButtonText: ComponentType<any> = styled(Text).attrs(props => ({
@@ -49,7 +49,6 @@ export const ButtonImage: ComponentType<any> = styled(Image).attrs(props => ({
 export const ErrorText: ComponentType<any> = styled.Text`
   color: ${props => props.theme.color.red};
   font-size: ${FONT_SIZE.S}px;
-  margin-top: 5px;
 `;
 
 export const Label: ComponentType<any> = styled(Text).attrs(props => ({

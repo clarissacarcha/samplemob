@@ -1,2 +1,5 @@
-export * from "./ToktokWalletContacts";
-export * from "./ToktokWalletSendMoney";
+export * from './ToktokWalletSendMoney';
+export * from './ToktokWalletSendMoneyFavorites';
+export * from './ToktokWalletSendMoneyPaymentSummary';
+export * from './ToktokWalletSendMoneyReceipt';
+export * from './ToktokWalletSendMoneyTransaction';

@@ -192,7 +192,6 @@ const StopDetails = ({navigation, route}) => {
             </Marker>
           </>
         )}
-
         {orderData.directions.legs && (
           <Polyline
             coordinates={orderData.directions.legs[0].polyline}

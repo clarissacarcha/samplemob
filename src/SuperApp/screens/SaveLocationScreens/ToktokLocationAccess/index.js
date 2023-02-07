@@ -16,12 +16,12 @@ import LocatioAccessIMG from '../../../../assets/images/LocationAccess.png';
 const FULL_WIDTH = Dimensions.get('window').width;
 
 export const ToktokLocationAccess = ({navigation, route}) => {
-  const [locCoordinates, setLocCoordinates] = useState({});
+  const [initialCoordinates, setInitialCoordinates] = useState({});
 
   const getCurrentLocation = async () => {
     const currentLocation = await GeolocationUtility.getCurrentLocation();
     const {latitude, longitude} = currentLocation.coords;
-    setLocCoordinates({
+    setInitialCoordinates({
       latitude: latitude,
       longitude: longitude,
       ...MAP_DELTA_LOW,
@@ -52,7 +52,7 @@ export const ToktokLocationAccess = ({navigation, route}) => {
         <ThrottledOpacity
           delay={4000}
           style={styles.secondaryBtn}
-          onPress={() => navigation.push('ToktokPinLocation', {locCoordinates})}>
+          onPress={() => navigation.push('ToktokPinLocation', {initialCoordinates})}>
           <Text style={styles.secondaryBtnText}>Use My Current Location</Text>
         </ThrottledOpacity>
       </View>

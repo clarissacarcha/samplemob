@@ -12,6 +12,7 @@ const favoriteBills = `
         logo
         firstFieldName
         secondFieldName
+        itemCode
         billType {
           name
         }
@@ -39,6 +40,7 @@ export const GET_FAVORITE_BILLS = gql`
       billItem {
         descriptions
         logo
+        itemCode
         billType {
           name
         }

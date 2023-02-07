@@ -23,16 +23,14 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleURLName</key>
-			<string>ph.cloudpanda.toktok</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>phcloudpandatoktok</string>
-			</array>
-		</dict>
-		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Bundle ID</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>ph.cloudpanda.toktok</string>
+			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
@@ -73,6 +71,8 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Used to auto fill location in sender details.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Used to auto fill location in sender details.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Used to auto fill location in sender details.</string>
 	<key>NSMainNibFile</key>
 	<string>LaunchScreen</string>
@@ -162,5 +162,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+	<array>
+		<string>https://refer-link.toktok.ph</string>
+	</array>
 </dict>
 </plist>
