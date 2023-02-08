@@ -9,7 +9,7 @@ import type {PropsType} from './types';
 import {} from './Styled';
 import validator from 'validator';
 //HELPER & UTIL
-import {AmountLimitHelper} from 'toktokwallet/helper';
+import {AmountLimitHelper, currencyCode, numberFormat} from 'toktokwallet/helper';
 //COMPONENTS
 import {OrangeButton} from 'toktokwallet/components';
 import {BtVerifyContext} from '../BtVerifyContextProvider';
@@ -66,14 +66,16 @@ const BtProceedButton = (props: PropsType): React$Node => {
   const checkInsufficientBalance = () => {
     let totalAmount = fees.totalServiceFee + parseFloat(amount);
     let isInsufficientBalance = parseFloat(totalAmount) > parseFloat(tokwaAccount?.wallet?.transferableBalance);
-    // let isMaxAmount = parseFloat(amount) > parseFloat(10);
+    let isMaxAmount = parseFloat(amount) > parseFloat(10);
     let error = '';
 
     // if (isMaxAmount) {
     //   error = `The maximum amount allowed to cash out is up to ₱${numberFormat(10).replace('.00', '')}`;
-    // } else
+    // }
     if (isInsufficientBalance) {
-      error = 'You have insufficient balance. Kindly cash in or enter lower amount.';
+      error = `Insufficient transferable balance. Your remaining transferable balance is ${currencyCode}${numberFormat(
+        tokwaAccount?.wallet?.transferableBalance,
+      )}.`;
     }
     changeErrorMessages('amount', error);
     return !error;
